@@ -36,7 +36,7 @@ void RpgGame::init(std::string title, bool fullScreen)
 		isRunning = false;
 	}
 
-	player = new GameObject("../assets/Minotaurs/Minotaur_01/PNG Sequences/Walking/Minotaur_01_Walking_000.png", 50, 50);
+	player = new GameObject("../assets/Minotaur.png", 50, 50);
 	map = new Map();
 }
 
