@@ -1,12 +1,17 @@
 #include "RpgGame.hpp"
-#include "GameObject.hpp"
+#include "ECS/Components.hpp"
 #include "Map.hpp"
 #include "TextureManager.hpp"
+#include "Collision.hpp"
 
-GameObject *player;
 Map *map;
 
 SDL_Renderer *RpgGame::renderer = nullptr;
+SDL_Event RpgGame::event;
+
+Manager manager;
+auto &player(manager.addEntity());
+auto &wall(manager.addEntity());
 
 RpgGame::RpgGame() {}
 RpgGame::~RpgGame() {}
@@ -36,13 +41,22 @@ void RpgGame::init(std::string title, bool fullScreen)
 		isRunning = false;
 	}
 
-	player = new GameObject("../assets/Minotaur.png", 50, 50);
+	// player = new GameObject(, 50, 50);
 	map = new Map();
+
+	player.addComponent<TransformComponent>(2);
+	player.addComponent<SpriteComponent>("../assets/Minotaur.png");
+	player.addComponent<KeyboardController>();
+	player.addComponent<ColliderComponent>("Player");
+
+	wall.addComponent<TransformComponent>(200, 200, 300, 20, 1);
+	wall.addComponent<SpriteComponent>("../assets/dirt.png");
+	wall.addComponent<ColliderComponent>("Wall");
 }
 
 void RpgGame::handleEvents()
 {
-	SDL_Event event;
+
 	SDL_PollEvent(&event);
 	switch (event.type) {
 	case SDL_QUIT:
@@ -55,16 +69,19 @@ void RpgGame::handleEvents()
 };
 void RpgGame::update()
 {
-	player->Update();
+	manager.refresh();
+	manager.update();
+
+	if (Collision::AABB(player.getComponent<ColliderComponent>().collider,
+	                    wall.getComponent<ColliderComponent>().collider)) {
+		std::cout << "Wall Hit!" << std::endl;
+	}
 };
 void RpgGame::render()
 {
 	SDL_RenderClear(renderer);
-
 	map->DrawMap();
-	player->Render();
-
-	// put stuff here to render
+	manager.draw();
 	SDL_RenderPresent(renderer);
 };
 void RpgGame::clean()
