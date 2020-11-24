@@ -1,4 +1,5 @@
 #include "TextureManager.hpp"
+#include "RpgGame.hpp"
 
 SDL_Texture *TextureManager::LoadTexture(std::string texture)
 {

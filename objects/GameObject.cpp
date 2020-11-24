@@ -1,12 +1,13 @@
 #include "GameObject.hpp"
+#include "RpgGame.hpp"
 #include "TextureManager.hpp"
 
 GameObject::GameObject(std::string textureSheet, int x, int y)
 {
 	objTexture = TextureManager::LoadTexture(textureSheet);
 
-    xpos = x;
-    ypos = y;
+	xpos = x;
+	ypos = y;
 }
 
 void GameObject::Update()

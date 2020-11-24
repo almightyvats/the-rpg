@@ -1,5 +1,8 @@
 #pragma once
-#include "RpgGame.hpp"
+#include <SDL.h>
+#include <SDL_image.h>
+#include <iostream>
+#include <string>
 
 class Map {
   public:

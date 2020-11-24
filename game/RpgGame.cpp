@@ -1,8 +1,7 @@
 #include "RpgGame.hpp"
-#include "ECS/Components.hpp"
-#include "Map.hpp"
-#include "TextureManager.hpp"
 #include "Collision.hpp"
+#include "Components.hpp"
+#include "Map.hpp"
 
 Map *map;
 
