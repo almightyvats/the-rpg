@@ -22,11 +22,11 @@ set(
     SOURCE_FILES 
     main.cpp
     collision
-    texture
-    ecs
     game
+    texture
     maps
     vectors
+    ecs
     objects
 )
 set(

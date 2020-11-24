@@ -4,13 +4,17 @@
 #include "Map.hpp"
 
 Map *map;
+Manager manager;
 
 SDL_Renderer *RpgGame::renderer = nullptr;
 SDL_Event RpgGame::event;
 
-Manager manager;
+std::vector<ColliderComponent *> RpgGame::colliders;
+
 auto &player(manager.addEntity());
 auto &wall(manager.addEntity());
+
+enum groupLabels : std::size_t { groupMap, groupPlayers, groupEnemies, groupColliders };
 
 RpgGame::RpgGame() {}
 RpgGame::~RpgGame() {}
@@ -40,17 +44,20 @@ void RpgGame::init(std::string title, bool fullScreen)
 		isRunning = false;
 	}
 
-	// player = new GameObject(, 50, 50);
 	map = new Map();
 
-	player.addComponent<TransformComponent>(2);
-	player.addComponent<SpriteComponent>("../assets/Minotaur.png");
+	Map::LoadMap("../maps/test.map.txt", 16, 16);
+
+	player.addComponent<TransformComponent>(0, 0, 115, 75, 1);
+	player.addComponent<SpriteComponent>("../assets/playerSpriteSheet.png", true);
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("Player");
+	player.addGroup(groupPlayers);
 
 	wall.addComponent<TransformComponent>(200, 200, 300, 20, 1);
 	wall.addComponent<SpriteComponent>("../assets/dirt.png");
 	wall.addComponent<ColliderComponent>("Wall");
+	wall.addGroup(groupMap);
 }
 
 void RpgGame::handleEvents()
@@ -71,16 +78,32 @@ void RpgGame::update()
 	manager.refresh();
 	manager.update();
 
-	if (Collision::AABB(player.getComponent<ColliderComponent>().collider,
-	                    wall.getComponent<ColliderComponent>().collider)) {
-		std::cout << "Wall Hit!" << std::endl;
+	for (auto cc : colliders) {
+		if (Collision::AABB(player.getComponent<ColliderComponent>(), *cc)) {
+
+			//	player.getComponent<TransformComponent>().velocity * -1;
+			std::cout << "Wall Hit!" << std::endl;
+		}
 	}
 };
+
+auto &tiles(manager.getGroup(groupMap));
+auto &players(manager.getGroup(groupPlayers));
+auto &enemies(manager.getGroup(groupEnemies));
+
 void RpgGame::render()
 {
 	SDL_RenderClear(renderer);
-	map->DrawMap();
-	manager.draw();
+
+	for (auto &t : tiles) {
+		t->draw();
+	}
+	for (auto &p : players) {
+		p->draw();
+	}
+	for (auto &e : enemies) {
+		e->draw();
+	}
 	SDL_RenderPresent(renderer);
 };
 void RpgGame::clean()
@@ -90,3 +113,10 @@ void RpgGame::clean()
 	SDL_Quit();
 	std::cout << "cleaned" << std::endl;
 };
+
+void RpgGame::AddTile(int id, int x, int y)
+{
+	auto &tile(manager.addEntity());
+	tile.addComponent<TileComponent>(x, y, 32, 32, id);
+	tile.addGroup(groupMap);
+}

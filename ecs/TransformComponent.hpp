@@ -1,29 +1,27 @@
 #pragma once
 
 #include "Components.hpp"
-#include "Vector2D.hpp"
+#include "../vectors/Vector2D.hpp"
 
 struct TransformComponent : public Component {
   public:
 	Vector2D position;
 	Vector2D velocity;
 
-	int height = 720; // 32;
-	int width = 490;  // 32;
+	int height = 32;
+	int width = 32;
 	int scale = 1;
 
 	int speed = 3;
 
 	TransformComponent()
 	{
-		position.x = 0.0f;
-		position.y = 0.0f;
+		position.Zero();
 	}
 
 	TransformComponent(int scale)
 	{
-		position.x = 0.0f;
-		position.y = 0.0f;
+		position.Zero();
 		this->scale = scale;
 	}
 
@@ -44,8 +42,7 @@ struct TransformComponent : public Component {
 
 	void init() override
 	{
-		velocity.x = 0;
-		velocity.y = 0;
+		velocity.Zero();
 	}
 	void update() override
 	{
