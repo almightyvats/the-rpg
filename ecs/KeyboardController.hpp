@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../game/RpgGame.hpp"
 #include "Components.hpp"
+#include "RpgGame.hpp"
 #include "ecs.hpp"
 
 class KeyboardController : public Component {

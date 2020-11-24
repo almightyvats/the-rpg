@@ -3,7 +3,7 @@
 #include "SpriteComponent.hpp"
 #include "TransformComponent.hpp"
 #include "ecs.hpp"
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 class TileComponent : public Component {
   public:

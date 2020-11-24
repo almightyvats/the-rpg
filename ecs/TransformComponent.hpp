@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Components.hpp"
-#include "../vectors/Vector2D.hpp"
+#include "Vector2D.hpp"
 
 struct TransformComponent : public Component {
   public:
@@ -14,10 +14,7 @@ struct TransformComponent : public Component {
 
 	int speed = 3;
 
-	TransformComponent()
-	{
-		position.Zero();
-	}
+	TransformComponent() { position.Zero(); }
 
 	TransformComponent(int scale)
 	{
@@ -40,10 +37,7 @@ struct TransformComponent : public Component {
 		this->scale = scale;
 	}
 
-	void init() override
-	{
-		velocity.Zero();
-	}
+	void init() override { velocity.Zero(); }
 	void update() override
 	{
 		position.x += velocity.x * speed;

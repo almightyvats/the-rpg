@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../texture/TextureManager.hpp"
 #include "Components.hpp"
+#include "TextureManager.hpp"
 #include "animation.hpp"
 #include <map>
 
@@ -38,8 +38,6 @@ class SpriteComponent : public Component {
 		Animation walk_left = Animation(2, 7, 100);
 		Animation walk_right = Animation(3, 7, 100);
 
-		
-
 		animations.emplace("idle_down", idle_down);
 		animations.emplace("idle_up", idle_up);
 		animations.emplace("idle_left", idle_left);
@@ -49,7 +47,6 @@ class SpriteComponent : public Component {
 		animations.emplace("walk_up", walk_up);
 		animations.emplace("walk_left", walk_left);
 		animations.emplace("walk_right", walk_right);
-		
 
 		play("idle_down");
 
@@ -71,7 +68,7 @@ class SpriteComponent : public Component {
 	void update() override
 	{
 		if (animated) {
-			srcRect.x = 2* srcRect.w * static_cast<int>((SDL_GetTicks() / speed) % frames);
+			srcRect.x = 2 * srcRect.w * static_cast<int>((SDL_GetTicks() / speed) % frames);
 		}
 
 		srcRect.y = animIndex * transform->height;
