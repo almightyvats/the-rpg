@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ECS.hpp"
+#include "ecs.hpp"
 #include "TransformComponent.hpp"
 #include "SpriteComponent.hpp"
 #include "KeyboardController.hpp"
