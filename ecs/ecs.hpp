@@ -27,8 +27,8 @@ inline ComponentID getComponentTypeID() noexcept
 	return typeID;
 }
 
-constexpr std::size_t maxComponents = 32;
-constexpr std::size_t maxGroups = 32;
+constexpr std::size_t maxComponents = 1024;
+constexpr std::size_t maxGroups = 1024;
 
 using ComponentBitSet = std::bitset<maxComponents>;
 using GroupBitSet = std::bitset<maxGroups>;

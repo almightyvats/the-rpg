@@ -28,6 +28,9 @@ set(
     vectors
     ecs
     objects
+    vendor/rapidjson/document
+    vendor/rapidjson/writer
+    vendor/rapidjson/stringbuffer
 )
 set(
     GAME_LIBS

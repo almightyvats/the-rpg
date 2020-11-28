@@ -12,7 +12,9 @@ SDL_Event RpgGame::event;
 std::vector<ColliderComponent *> RpgGame::colliders;
 
 auto &player(manager.addEntity());
-auto &wall(manager.addEntity());
+// auto &wall(manager.addEntity());
+
+const std::string mapFile = "../assets/map/pipoya_tileset.png";
 
 enum groupLabels : std::size_t { groupMap, groupPlayers, groupEnemies, groupColliders };
 
@@ -28,7 +30,7 @@ void RpgGame::init(std::string title, bool fullScreen)
 		}
 
 		std::cout << "Initialized ..." << std::endl;
-		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, flags);
+		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 1280, flags);
 		if (window) {
 			std::cout << "Window craeted" << std::endl;
 		}
@@ -46,7 +48,10 @@ void RpgGame::init(std::string title, bool fullScreen)
 
 	map = new Map();
 
-	Map::LoadMap("../maps/test.map.txt", 16, 16);
+	//	Map::LoadMap("../maps/jsonsample.json");
+	// Map::LoadMap("../maps/testmap_5_5.json");
+	// Map::LoadMap("../maps/testmap_10_10.json");
+	 Map::LoadMap("../maps/testmap_50_50.json");
 
 	player.addComponent<TransformComponent>(0, 0, 115, 75, 1);
 	player.addComponent<SpriteComponent>("../assets/playerSpriteSheet.png", true);
@@ -54,10 +59,10 @@ void RpgGame::init(std::string title, bool fullScreen)
 	player.addComponent<ColliderComponent>("Player");
 	player.addGroup(groupPlayers);
 
-	wall.addComponent<TransformComponent>(200, 200, 300, 20, 1);
-	wall.addComponent<SpriteComponent>("../assets/dirt.png");
-	wall.addComponent<ColliderComponent>("Wall");
-	wall.addGroup(groupMap);
+	// wall.addComponent<TransformComponent>(200, 200, 300, 20, 1);
+	// wall.addComponent<SpriteComponent>("../assets/dirt.png");
+	// wall.addComponent<ColliderComponent>("Wall");
+	// wall.addGroup(groupMap);
 }
 
 void RpgGame::handleEvents()
@@ -82,7 +87,7 @@ void RpgGame::update()
 		if (Collision::AABB(player.getComponent<ColliderComponent>(), *cc)) {
 
 			//	player.getComponent<TransformComponent>().velocity * -1;
-			std::cout << "Wall Hit!" << std::endl;
+			// std::cout << "Wall Hit!" << std::endl;
 		}
 	}
 };
@@ -114,9 +119,9 @@ void RpgGame::clean()
 	std::cout << "cleaned" << std::endl;
 };
 
-void RpgGame::AddTile(int id, int x, int y)
+void RpgGame::AddTile(int srcX, int srcY, int xPos, int yPos)
 {
 	auto &tile(manager.addEntity());
-	tile.addComponent<TileComponent>(x, y, 32, 32, id);
+	tile.addComponent<TileComponent>(srcX, srcY, xPos, yPos, mapFile);
 	tile.addGroup(groupMap);
 }
