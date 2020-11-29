@@ -29,6 +29,11 @@ auto &enemies(manager.getGroup(groupEnemies));
 RpgGame::RpgGame() {}
 RpgGame::~RpgGame() {}
 
+static void LoadMapAsync(std::string mapName)
+{
+	Map::LoadMap(mapName);
+}
+
 void RpgGame::init(std::string title, bool fullScreen)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
@@ -56,9 +61,11 @@ void RpgGame::init(std::string title, bool fullScreen)
 
 	map = new Map();
 
-	//	Map::LoadMap("../maps/jsonsample.json");
+	// Map::LoadMap("../maps/jsonsample.json");
 	// Map::LoadMap("../maps/testmap_5_5.json");
-	Map::LoadMap("../maps/testmap_10_10.json");
+
+	m_futures.push_back(std::async(std::launch::async, LoadMapAsync, "../maps/testmap_50_50.json"));
+	// Map::LoadMap("../maps/testmap_10_10.json");
 	// Map::LoadMap("../maps/testmap_50_50.json");
 
 	player.addComponent<TransformComponent>(5 * 32, 5 * 32, 115, 75, 1);
