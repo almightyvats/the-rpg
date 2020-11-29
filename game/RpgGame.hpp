@@ -2,6 +2,7 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <future>
 #include <iostream>
 #include <string.h>
 #include <vector>
@@ -30,4 +31,6 @@ class RpgGame {
   private:
 	bool isRunning;
 	SDL_Window *window;
+
+	std::vector<std::future<void>> m_futures;
 };
