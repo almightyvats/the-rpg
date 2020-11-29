@@ -9,6 +9,8 @@ class TileComponent : public Component {
   public:
 	SDL_Texture *texture;
 	SDL_Rect srcRect, destRect;
+	Vector2D position;
+
 	TileComponent() = default;
 
 	~TileComponent() { SDL_DestroyTexture(texture); }
@@ -16,6 +18,8 @@ class TileComponent : public Component {
 	TileComponent(int srcX, int srcY, int xpos, int ypos, const std::string path)
 	{
 		texture = TextureManager::LoadTexture(path);
+		position.x = xpos;
+		position.y = ypos;
 
 		srcRect.x = srcX;
 		srcRect.y = srcY;
@@ -25,6 +29,11 @@ class TileComponent : public Component {
 		destRect.y = ypos;
 		destRect.w = destRect.h = 64;
 	}
-
+	void update() override
+	{
+		destRect.x = position.x - RpgGame::camera.x;
+		destRect.y = position.y - RpgGame::camera.y;
+	}
+	
 	void draw() override { TextureManager::Draw(texture, srcRect, destRect, SDL_FLIP_NONE); }
 };

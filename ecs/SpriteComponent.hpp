@@ -3,6 +3,7 @@
 #include "Components.hpp"
 #include "TextureManager.hpp"
 #include "animation.hpp"
+#include "RpgGame.hpp"
 #include <map>
 
 class SpriteComponent : public Component {
@@ -73,8 +74,8 @@ class SpriteComponent : public Component {
 
 		srcRect.y = animIndex * transform->height;
 
-		destRect.x = static_cast<int>(transform->position.x);
-		destRect.y = static_cast<int>(transform->position.y);
+		destRect.x = static_cast<int>(transform->position.x) - RpgGame::camera.x;
+		destRect.y = static_cast<int>(transform->position.y) - RpgGame::camera.y;
 		destRect.w = transform->width * transform->scale;
 		destRect.h = transform->height * transform->scale;
 	}

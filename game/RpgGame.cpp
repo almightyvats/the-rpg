@@ -9,7 +9,11 @@ Manager manager;
 SDL_Renderer *RpgGame::renderer = nullptr;
 SDL_Event RpgGame::event;
 
+SDL_Rect RpgGame::camera = {0, 0, 800, 640};
+
 std::vector<ColliderComponent *> RpgGame::colliders;
+
+bool RpgGame::isRunning = false;
 
 auto &player(manager.addEntity());
 // auto &wall(manager.addEntity());
@@ -17,6 +21,10 @@ auto &player(manager.addEntity());
 const std::string mapFile = "../assets/map/pipoya_tileset.png";
 
 enum groupLabels : std::size_t { groupMap, groupPlayers, groupEnemies, groupColliders };
+
+auto &tiles(manager.getGroup(groupMap));
+auto &players(manager.getGroup(groupPlayers));
+auto &enemies(manager.getGroup(groupEnemies));
 
 RpgGame::RpgGame() {}
 RpgGame::~RpgGame() {}
@@ -30,7 +38,7 @@ void RpgGame::init(std::string title, bool fullScreen)
 		}
 
 		std::cout << "Initialized ..." << std::endl;
-		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 1280, flags);
+		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 800, flags);
 		if (window) {
 			std::cout << "Window craeted" << std::endl;
 		}
@@ -50,10 +58,10 @@ void RpgGame::init(std::string title, bool fullScreen)
 
 	//	Map::LoadMap("../maps/jsonsample.json");
 	// Map::LoadMap("../maps/testmap_5_5.json");
-	// Map::LoadMap("../maps/testmap_10_10.json");
-	 Map::LoadMap("../maps/testmap_50_50.json");
+	Map::LoadMap("../maps/testmap_10_10.json");
+	// Map::LoadMap("../maps/testmap_50_50.json");
 
-	player.addComponent<TransformComponent>(0, 0, 115, 75, 1);
+	player.addComponent<TransformComponent>(5 * 32, 5 * 32, 115, 75, 1);
 	player.addComponent<SpriteComponent>("../assets/playerSpriteSheet.png", true);
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("Player");
@@ -83,18 +91,38 @@ void RpgGame::update()
 	manager.refresh();
 	manager.update();
 
-	for (auto cc : colliders) {
-		if (Collision::AABB(player.getComponent<ColliderComponent>(), *cc)) {
+	camera.x = player.getComponent<TransformComponent>().position.x - 400; //-half screen
+	camera.y = player.getComponent<TransformComponent>().position.y - 320; //-half screen
 
-			//	player.getComponent<TransformComponent>().velocity * -1;
-			// std::cout << "Wall Hit!" << std::endl;
-		}
+	if (camera.x < 0) {
+		camera.x = 0;
 	}
-};
+	if (camera.y < 0) {
+		camera.y = 0;
+	}
+	if (camera.x > camera.w) {
+		camera.x = camera.w;
+	}
+	if (camera.y > camera.h) {
+		camera.y = camera.h;
+	}
 
-auto &tiles(manager.getGroup(groupMap));
-auto &players(manager.getGroup(groupPlayers));
-auto &enemies(manager.getGroup(groupEnemies));
+	// Vector2D playerVelocity = player.getComponent<TransformComponent>().velocity;
+	// int playerSpeed = player.getComponent<TransformComponent>().speed;
+
+	// for (auto t : tiles) {
+	// 	t->getComponent<TileComponent>().destRect.x += (-playerVelocity.x * playerSpeed);
+	// 	t->getComponent<TileComponent>().destRect.y += (-playerVelocity.y * playerSpeed);
+	// }
+
+	// for (auto cc : colliders) {
+	// 	if (Collision::AABB(player.getComponent<ColliderComponent>(), *cc)) {
+
+	// 		//	player.getComponent<TransformComponent>().velocity * -1;
+	// 		// std::cout << "Wall Hit!" << std::endl;
+	// 	}
+	// }
+};
 
 void RpgGame::render()
 {

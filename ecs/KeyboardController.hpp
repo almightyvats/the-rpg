@@ -25,7 +25,7 @@ class KeyboardController : public Component {
 			case SDLK_a:
 				transform->velocity.x = -1;
 				sprite->play("walk_left");
-				sprite->spriteFlip = SDL_FLIP_HORIZONTAL;
+				//	sprite->spriteFlip = SDL_FLIP_HORIZONTAL;
 				break;
 			case SDLK_s:
 				transform->velocity.y = 1;
@@ -49,7 +49,7 @@ class KeyboardController : public Component {
 			case SDLK_a:
 				transform->velocity.x = 0;
 				sprite->play("idle_left");
-				sprite->spriteFlip = SDL_FLIP_NONE;
+				// sprite->spriteFlip = SDL_FLIP_NONE;
 				break;
 			case SDLK_s:
 				transform->velocity.y = 0;
@@ -58,6 +58,9 @@ class KeyboardController : public Component {
 			case SDLK_d:
 				transform->velocity.x = 0;
 				sprite->play("idle_right");
+				break;
+			case SDLK_ESCAPE:
+				RpgGame::isRunning = false;
 				break;
 			default:
 				break;
