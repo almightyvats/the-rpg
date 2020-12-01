@@ -10,51 +10,27 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 
-add_subdirectory(collision)
-add_subdirectory(vectors)
-add_subdirectory(ecs)
-add_subdirectory(maps)
-add_subdirectory(game)
-add_subdirectory(texture)
-add_subdirectory(objects)
+file(GLOB_RECURSE rpg_srcs rpg/*.cpp rpg/*.hpp)
 
-set(
-    SOURCE_FILES 
-    main.cpp
-    collision
-    game
-    texture
-    maps
-    vectors
-    ecs
-    objects
-    vendor/rapidjson/document
-    vendor/rapidjson/writer
-    vendor/rapidjson/stringbuffer
-)
-set(
-    GAME_LIBS
-    collision
-    game
-    texture
-    maps
-    vectors
-    ecs
-    objects
-)
+add_subdirectory(vendor/rapidjson)
 
-add_executable(rpg ${SOURCE_FILES})
+add_library( rpg_engine ${rpg_srcs})
 
 target_link_libraries (
-    rpg LINK_PUBLIC 
-    ${GAME_LIBS} ${SDL2_LIBRARIES}
-    ${SDL2_IMAGE_LIBRARIES})
+        rpg_engine PUBLIC
+        ${SDL2_LIBRARIES}
+        ${SDL2_IMAGE_LIBRARIES})
 
 target_include_directories(
-    rpg PUBLIC
-    ${SDL2_INCLUDE_DIRS} 
-    ${SDL2_IMAGE_INCLUDE_DIRS}
+        rpg_engine PUBLIC
+        ${SDL2_INCLUDE_DIRS}
+        ${SDL2_IMAGE_INCLUDE_DIRS}
+        .
 )
+
+add_executable(rpg app/main.cpp)
+target_link_libraries(rpg PUBLIC rpg_engine)
+
 
 
 

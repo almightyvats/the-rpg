@@ -1,6 +1,6 @@
 #include "RpgGame.hpp"
 #include "Collision.hpp"
-#include "Components.hpp"
+#include "ecs/Components.hpp"
 #include "Map.hpp"
 
 Map *map;
@@ -18,7 +18,7 @@ bool RpgGame::isRunning = false;
 auto &player(manager.addEntity());
 // auto &wall(manager.addEntity());
 
-const std::string mapFile = "../assets/map/pipoya_tileset.png";
+const std::string mapFile = "assets/map/pipoya_tileset.png";
 
 enum groupLabels : std::size_t { groupMap, groupPlayers, groupEnemies, groupColliders };
 
@@ -65,11 +65,12 @@ void RpgGame::init(std::string title, bool fullScreen)
 	// Map::LoadMap("../maps/testmap_5_5.json");
 
 	// m_futures.push_back(std::async(std::launch::async, LoadMapAsync, "../maps/testmap_50_50.json"));
-	Map::LoadMap("../maps/testmap_10_10.json");
+
+	Map::LoadMap("assets/map/jsonsample.json");
 	// Map::LoadMap("../maps/testmap_50_50.json");
 
 	player.addComponent<TransformComponent>(5 * 32, 5 * 32, 115, 75, 1);
-	player.addComponent<SpriteComponent>("../assets/playerSpriteSheet.png", true);
+	player.addComponent<SpriteComponent>("assets/playerSpriteSheet.png", true);
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("Player");
 	player.addGroup(groupPlayers);

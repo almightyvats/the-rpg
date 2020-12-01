@@ -1,4 +1,4 @@
-#include "RpgGame.hpp"
+#include "rpg/RpgGame.hpp"
 
 RpgGame *menu = nullptr;
 

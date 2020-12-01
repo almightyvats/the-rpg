@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Components.hpp"
-#include "TextureManager.hpp"
+#include "rpg/TextureManager.hpp"
 #include "animation.hpp"
-#include "RpgGame.hpp"
+#include "rpg/RpgGame.hpp"
 #include <map>
 
 class SpriteComponent : public Component {
