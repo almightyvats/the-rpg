@@ -32,22 +32,20 @@ Map::~Map() {}
 
 void Map::LoadMap(std::string path)
 {
-    std::cout << path << "\n";
+	std::cout << path << "\n";
 	// 1. Parse a JSON string into DOM.
 	std::ifstream t(path);
-
-	if (t.is_open())
-		std::cout << "FIle is open\n";
 
 	std::string json((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
 	rapidjson::Document document;
 	document.Parse(json.c_str());
-	if (!document.Null()) std::cout << "SOMETHING PRESENT\n";
+	if (!document.Null())
+		std::cout << "SOMETHING PRESENT\n";
 	MapSetting setting;
 	setting.height = document["height"].GetInt();
 	setting.width = document["width"].GetInt();
-	setting.tileHeight = document["tile_height"].GetInt();
-	setting.tileWidth = document["tile_width"].GetInt();
+	setting.tileHeight = document["tileheight"].GetInt();
+	setting.tileWidth = document["tilewidth"].GetInt();
 
 	const rapidjson::Value &layers = document["layers"];
 	for (rapidjson::SizeType i = 0; i < layers.Size(); i++) { // Uses SizeType instead of size_t
