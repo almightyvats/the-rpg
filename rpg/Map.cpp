@@ -1,14 +1,14 @@
 #include "Map.hpp"
-#include "../game/RpgGame.hpp"
+#include "../RpgGame.hpp"
 #include "TextureManager.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 
-#include "../vendor/rapidjson/document.h"
-#include "../vendor/rapidjson/stringbuffer.h"
-#include "../vendor/rapidjson/writer.h"
+#include "../../vendor/rapidjson/document.h"
+#include "../../vendor/rapidjson/stringbuffer.h"
+#include "../../vendor/rapidjson/writer.h"
 
 struct MapLayer {
 	int id;
