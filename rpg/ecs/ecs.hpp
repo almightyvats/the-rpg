@@ -1,5 +1,4 @@
 #pragma once
-
 #include <algorithm>
 #include <array>
 #include <bitset>
@@ -16,22 +15,23 @@ using Group = std::size_t;
 
 inline ComponentID getNewComponentTypeID()
 {
-	static ComponentID lastID = 0;
+	static ComponentID lastID = 0u;
 	return lastID++;
 }
 
 template <typename T>
 inline ComponentID getComponentTypeID() noexcept
 {
+	static_assert(std::is_base_of<Component, T>::value, "");
 	static ComponentID typeID = getNewComponentTypeID();
 	return typeID;
 }
 
-constexpr std::size_t maxComponents = 1024;
-constexpr std::size_t maxGroups = 1024;
+constexpr std::size_t maxComponents = 32;
+constexpr std::size_t maxGroups = 32;
 
 using ComponentBitSet = std::bitset<maxComponents>;
-using GroupBitSet = std::bitset<maxGroups>;
+using GroupBitset = std::bitset<maxGroups>;
 
 using ComponentArray = std::array<Component *, maxComponents>;
 
@@ -39,13 +39,10 @@ class Component {
   public:
 	Entity *entity;
 
-	virtual void init(){};
-	virtual void update(){};
-	virtual void draw(){};
-
-	virtual ~Component(){};
-
-  private:
+	virtual void init() {}
+	virtual void update() {}
+	virtual void draw() {}
+	virtual ~Component() {}
 };
 
 class Entity {
@@ -56,22 +53,23 @@ class Entity {
 
 	ComponentArray componentArray;
 	ComponentBitSet componentBitset;
-	GroupBitSet groupBitset;
+	GroupBitset groupBitset;
 
   public:
 	Entity(Manager &mManager) : manager(mManager) {}
 
 	void update()
 	{
-		for (auto &component : components)
-			component->update();
+		for (auto &c : components)
+			c->update();
 	}
 	void draw()
 	{
-		for (auto &component : components)
-			component->draw();
+		for (auto &c : components)
+			c->draw();
 	}
-	bool isActive() { return active; }
+
+	bool isActive() const { return active; }
 	void destroy() { active = false; }
 
 	bool hasGroup(Group mGroup) { return groupBitset[mGroup]; }
@@ -116,21 +114,18 @@ class Manager {
   public:
 	void update()
 	{
-		for (auto &entity : entities)
-			entity->update();
+		for (auto &e : entities)
+			e->update();
 	}
-
 	void draw()
 	{
-		for (auto &entity : entities)
-			entity->draw();
+		for (auto &e : entities)
+			e->draw();
 	}
-
 	void refresh()
 	{
 		for (auto i(0u); i < maxGroups; i++) {
 			auto &v(groupedEntities[i]);
-
 			v.erase(std::remove_if(std::begin(v), std::end(v),
 			                       [i](Entity *mEntity) { return !mEntity->isActive() || !mEntity->hasGroup(i); }),
 			        std::end(v));

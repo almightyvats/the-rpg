@@ -1,51 +1,32 @@
 #include "Map.hpp"
+#include "../vendor/rapidjson/document.h"
+#include "../vendor/rapidjson/stringbuffer.h"
+#include "../vendor/rapidjson/writer.h"
 #include "RpgGame.hpp"
 #include "TextureManager.hpp"
+#include "ecs/Components.hpp"
+#include "ecs/ecs.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 
-#include "../vendor/rapidjson/document.h"
-#include "../vendor/rapidjson/stringbuffer.h"
-#include "../vendor/rapidjson/writer.h"
+extern Manager manager;
 
-struct MapLayer {
-	int id;
-	int height;
-	int width;
-	std::string name;
-	std::vector<int> tiles;
-};
-
-struct MapSetting {
-	int height;
-	int width;
-	int tileHeight;
-	int tileWidth;
-	std::vector<MapLayer> layers;
-};
-
-Map::Map() {}
-
-Map::~Map() {}
-
-void Map::LoadMap(std::string path)
+Map::Map(std::string path, int mapScale)
 {
-	std::cout << path << "\n";
-	// 1. Parse a JSON string into DOM.
 	std::ifstream t(path);
 
 	std::string json((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
 	rapidjson::Document document;
 	document.Parse(json.c_str());
-	//TODO: check for null document
 
-	MapSetting setting;
+	setting.mapScale = mapScale;
 	setting.height = document["height"].GetInt();
 	setting.width = document["width"].GetInt();
 	setting.tileHeight = document["tileheight"].GetInt();
 	setting.tileWidth = document["tilewidth"].GetInt();
+	setting.tileSize = setting.tileHeight; // we use square tiles anyway
 
 	const rapidjson::Value &layers = document["layers"];
 	for (rapidjson::SizeType i = 0; i < layers.Size(); i++) { // Uses SizeType instead of size_t
@@ -61,7 +42,12 @@ void Map::LoadMap(std::string path)
 		}
 		setting.layers.push_back(layer);
 	}
+}
 
+Map::~Map() {}
+
+void Map::LoadMap()
+{
 	int tiles_per_row = 8;
 
 	int counter = 0;
@@ -77,16 +63,26 @@ void Map::LoadMap(std::string path)
 					int xpos = ((tileNumber % tiles_per_row) + 0) * setting.tileWidth;
 					int ypos = ((tileNumber / tiles_per_row) + 0) * setting.tileHeight;
 
-					std::cout << "x: " << x << " y: " << y << " layer: " << setting.layers[layerNumber].name
-					          << " tileNumber: " << tileNumber << " xpos: " << xpos << " ypos: " << ypos << std::endl;
-
-					std::cout << counter << std::endl;
-					RpgGame::AddTile(xpos, ypos, x * 64, y * 64);
+					AddTile(xpos, ypos, x * setting.ScaledWidth(), y * setting.ScaledHeight(), setting.tileSize,
+					        setting.mapScale, setting.layers[layerNumber].name == "Trees");
 					counter++;
 				}
 
 				tileIndex++;
 			}
 		}
+	}
+}
+
+void Map::AddTile(int srcX, int srcY, int xPos, int yPos, int tsize, int tscale, bool withCollision)
+{
+	const std::string mapSprites = "../rpg/assets/map/pipoya_tileset.png";
+	auto &item(manager.addEntity());
+	if (withCollision) {
+		item.addComponent<ColliderComponent>("Trees", srcX, srcY, xPos, yPos, tsize, tscale, mapSprites);
+		item.addGroup(RpgGame::groupColliders);
+	} else {
+		item.addComponent<TileComponent>(srcX, srcY, xPos, yPos, tsize, tscale, mapSprites);
+		item.addGroup(RpgGame::groupMap);
 	}
 }

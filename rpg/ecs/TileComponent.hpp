@@ -15,24 +15,21 @@ class TileComponent : public Component {
 
 	~TileComponent() { SDL_DestroyTexture(texture); }
 
-	TileComponent(int srcX, int srcY, int xpos, int ypos, const std::string path)
+	TileComponent(int srcX, int srcY, int xpos, int ypos, int tsize, int tscale, const std::string path)
 	{
 		texture = TextureManager::LoadTexture(path);
-		position.x = xpos;
-		position.y = ypos;
-
+		
 		srcRect.x = srcX;
 		srcRect.y = srcY;
-		srcRect.w = srcRect.h = 32;
-
-		destRect.x = xpos;
-		destRect.y = ypos;
-		destRect.w = destRect.h = 64;
+		srcRect.w = srcRect.h = tsize;
+		position.x = static_cast<float>(xpos);
+		position.y = static_cast<float>(ypos);
+		destRect.w = destRect.h = tsize * tscale;
 	}
 	void update() override
 	{
-		destRect.x = position.x - RpgGame::camera.x;
-		destRect.y = position.y - RpgGame::camera.y;
+		destRect.x = static_cast<int>(position.x - RpgGame::camera.x);
+		destRect.y = static_cast<int>(position.y - RpgGame::camera.y);
 	}
 	
 	void draw() override { TextureManager::Draw(texture, srcRect, destRect, SDL_FLIP_NONE); }
