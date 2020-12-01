@@ -23,8 +23,8 @@ struct MapSetting {
 	int width;
 	int tileHeight;
 	int tileWidth;
-	std::vector<MapLayer> layers;
-};
+	std::vector<MapLayer> layers;	
+}; //TEST
 
 Map::Map() {}
 
