@@ -2,3 +2,5 @@ build
 .vscode
 vendor
 build-xcode
+.idea
+cmake-build-debug
