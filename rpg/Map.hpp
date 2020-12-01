@@ -31,8 +31,8 @@ class Map {
 	Map(std::string path, int mapScale);
 	~Map();
 
-	void LoadMap();
-	void AddTile(int srcX, int srcY, int xPos, int yPos, int tsize, int tscale, bool withCollision);
+	void LoadMap(std::string id);
+	void AddTile(int srcX, int srcY, int xPos, int yPos, int tsize, int tscale, bool withCollision, std::string id);
 
   private:
 	std::string mapFilePath;

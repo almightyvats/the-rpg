@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Components.hpp"
-#include "rpg/TextureManager.hpp"
 #include "animation.hpp"
+#include "../AssetManager.hpp"
 #include "rpg/RpgGame.hpp"
+#include "rpg/TextureManager.hpp"
 #include <map>
 
 class SpriteComponent : public Component {
@@ -24,8 +25,8 @@ class SpriteComponent : public Component {
 	SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;
 
 	SpriteComponent() = default;
-	SpriteComponent(const std::string path) { setTex(path); }
-	SpriteComponent(const std::string path, bool isAnimated)
+	SpriteComponent(const std::string id) { setTex(id); }
+	SpriteComponent(const std::string id, bool isAnimated)
 	{
 		animated = isAnimated;
 
@@ -51,12 +52,12 @@ class SpriteComponent : public Component {
 
 		play("idle_down");
 
-		setTex(path);
+		setTex(id);
 	}
 
-	~SpriteComponent() { SDL_DestroyTexture(texture); }
+	~SpriteComponent() {}
 
-	void setTex(std::string path) { texture = TextureManager::LoadTexture(path); }
+	void setTex(std::string id) { texture = RpgGame::assets->GetTexture(id); }
 
 	void init() override
 	{

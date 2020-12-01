@@ -15,9 +15,9 @@ class TileComponent : public Component {
 
 	~TileComponent() { SDL_DestroyTexture(texture); }
 
-	TileComponent(int srcX, int srcY, int xpos, int ypos, int tsize, int tscale, const std::string path)
+	TileComponent(int srcX, int srcY, int xpos, int ypos, int tsize, int tscale, const std::string id)
 	{
-		texture = TextureManager::LoadTexture(path);
+		texture = RpgGame::assets->GetTexture(id);
 		
 		srcRect.x = srcX;
 		srcRect.y = srcY;

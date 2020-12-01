@@ -46,7 +46,7 @@ Map::Map(std::string path, int mapScale)
 
 Map::~Map() {}
 
-void Map::LoadMap()
+void Map::LoadMap(std::string id)
 {
 	int tiles_per_row = 8;
 
@@ -64,7 +64,7 @@ void Map::LoadMap()
 					int ypos = ((tileNumber / tiles_per_row) + 0) * setting.tileHeight;
 
 					AddTile(xpos, ypos, x * setting.ScaledWidth(), y * setting.ScaledHeight(), setting.tileSize,
-					        setting.mapScale, setting.layers[layerNumber].name == "Trees");
+					        setting.mapScale, setting.layers[layerNumber].name == "Trees", id);
 					counter++;
 				}
 
@@ -74,15 +74,15 @@ void Map::LoadMap()
 	}
 }
 
-void Map::AddTile(int srcX, int srcY, int xPos, int yPos, int tsize, int tscale, bool withCollision)
+void Map::AddTile(int srcX, int srcY, int xPos, int yPos, int tsize, int tscale, bool withCollision, std::string id)
 {
-	const std::string mapSprites = "../rpg/assets/map/pipoya_tileset.png";
+
 	auto &item(manager.addEntity());
 	if (withCollision) {
-		item.addComponent<ColliderComponent>("Trees", srcX, srcY, xPos, yPos, tsize, tscale, mapSprites);
+		item.addComponent<ColliderComponent>("Trees", srcX, srcY, xPos, yPos, tsize, tscale, id);
 		item.addGroup(RpgGame::groupColliders);
 	} else {
-		item.addComponent<TileComponent>(srcX, srcY, xPos, yPos, tsize, tscale, mapSprites);
+		item.addComponent<TileComponent>(srcX, srcY, xPos, yPos, tsize, tscale, id);
 		item.addGroup(RpgGame::groupMap);
 	}
 }

@@ -7,6 +7,7 @@
 #include <string.h>
 #include <vector>
 
+class AssetManager;
 class ColliderComponent;
 
 class RpgGame {
@@ -27,7 +28,7 @@ class RpgGame {
 	static SDL_Event event;
 	static bool isRunning;
 	static SDL_Rect camera;
-
+	static AssetManager* assets;
 	enum groupLabels : std::size_t { groupMap, groupPlayers, groupColliders };
 
   private:

@@ -1,7 +1,9 @@
 #include "RpgGame.hpp"
+#include "AssetManager.hpp"
 #include "Collision.hpp"
 #include "Map.hpp"
 #include "ecs/Components.hpp"
+#include "AssetManager.hpp"
 
 Map *map;
 Manager manager;
@@ -10,6 +12,8 @@ SDL_Renderer *RpgGame::renderer = nullptr;
 SDL_Event RpgGame::event;
 
 SDL_Rect RpgGame::camera = {0, 0, 800, 640};
+
+AssetManager *RpgGame::assets = new AssetManager(&manager);
 
 bool RpgGame::isRunning = false;
 
@@ -43,8 +47,11 @@ void RpgGame::init(std::string title, bool fullScreen)
 		isRunning = false;
 	}
 
+	assets->AddTexture("player", "../rpg/assets/playerSpriteSheet.png");
+	assets->AddTexture("mapSprites", "../rpg/assets/map/pipoya_tileset.png");
+
 	map = new Map("../rpg/assets/map/testmap_10_10.json", 3);
-	map->LoadMap();
+	map->LoadMap("mapSprites");
 
 	// Map::LoadMap("../maps/jsonsample.json");
 	// Map::LoadMap("../maps/testmap_5_5.json");
@@ -52,7 +59,7 @@ void RpgGame::init(std::string title, bool fullScreen)
 	// Map::LoadMap("../maps/testmap_50_50.json");
 
 	player.addComponent<TransformComponent>(5 * 32, 5 * 32, 115, 75, 1);
-	player.addComponent<SpriteComponent>("../rpg/assets/playerSpriteSheet.png", true);
+	player.addComponent<SpriteComponent>("player", true);
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("Player");
 	player.addGroup(groupPlayers);

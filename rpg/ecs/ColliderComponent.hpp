@@ -6,7 +6,7 @@ class ColliderComponent : public Component {
   public:
 	SDL_Rect collider;
 	std::string tag;
-	std::string path;
+	std::string id;
 
 	SDL_Texture *texture;
 	SDL_Rect srcRect, destRect;
@@ -15,10 +15,11 @@ class ColliderComponent : public Component {
 
 	ColliderComponent(const std::string tag) { this->tag = tag; }
 
-	ColliderComponent(const std::string tag, int srcX, int srcY, int xpos, int ypos, int tsize, int tscale, const std::string path)
+	ColliderComponent(const std::string tag, int srcX, int srcY, int xpos, int ypos, int tsize, int tscale,
+	                  const std::string id)
 	{
 		this->tag = tag;
-		this->path = path;
+		this->id = id;
 
 		srcRect.x = srcX;
 		srcRect.y = srcY;
@@ -26,7 +27,7 @@ class ColliderComponent : public Component {
 
 		collider.x = xpos;
 		collider.y = ypos;
-		collider.w = collider.h = tsize * tscale;		
+		collider.w = collider.h = tsize * tscale;
 	}
 
 	void init() override
@@ -36,8 +37,8 @@ class ColliderComponent : public Component {
 		}
 		transform = &entity->getComponent<TransformComponent>();
 
-		texture = TextureManager::LoadTexture(path);
-		
+		texture = RpgGame::assets->GetTexture(id);
+
 		destRect = {collider.x, collider.y, collider.w, collider.h};
 	}
 
