@@ -39,8 +39,8 @@ void Map::LoadMap(std::string path)
 	std::string json((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
 	rapidjson::Document document;
 	document.Parse(json.c_str());
-	if (!document.Null())
-		std::cout << "SOMETHING PRESENT\n";
+	//TODO: check for null document
+
 	MapSetting setting;
 	setting.height = document["height"].GetInt();
 	setting.width = document["width"].GetInt();

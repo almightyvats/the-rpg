@@ -33,6 +33,4 @@ class RpgGame {
   private:
 	
 	SDL_Window *window;
-
-	//std::vector<std::future<void>> m_futures;
 };
