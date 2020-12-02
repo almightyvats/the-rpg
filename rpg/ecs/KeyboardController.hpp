@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Components.hpp"
-#include "rpg/RpgGame.hpp"
 #include "ecs.hpp"
+#include "rpg/RpgGame.hpp"
 
 class KeyboardController : public Component {
   public:
@@ -20,20 +20,24 @@ class KeyboardController : public Component {
 			switch (RpgGame::event.key.keysym.sym) {
 			case SDLK_w:
 				transform->velocity.y = -1;
+				sprite->spriteFlip = SDL_FLIP_NONE;
 				sprite->play("walk_up");
 				break;
 			case SDLK_a:
+				sprite->spriteFlip = SDL_FLIP_NONE;
 				transform->velocity.x = -1;
 				sprite->play("walk_left");
-				//	sprite->spriteFlip = SDL_FLIP_HORIZONTAL;
 				break;
 			case SDLK_s:
+				sprite->spriteFlip = SDL_FLIP_NONE;
 				transform->velocity.y = 1;
 				sprite->play("walk_down");
 				break;
 			case SDLK_d:
+				sprite->spriteFlip = SDL_FLIP_NONE;
 				transform->velocity.x = 1;
-				sprite->play("walk_right");
+				sprite->spriteFlip = SDL_FLIP_HORIZONTAL;
+				sprite->play("walk_left");
 				break;
 			default:
 				break;
@@ -49,7 +53,6 @@ class KeyboardController : public Component {
 			case SDLK_a:
 				transform->velocity.x = 0;
 				sprite->play("idle_left");
-				// sprite->spriteFlip = SDL_FLIP_NONE;
 				break;
 			case SDLK_s:
 				transform->velocity.y = 0;
@@ -57,7 +60,7 @@ class KeyboardController : public Component {
 				break;
 			case SDLK_d:
 				transform->velocity.x = 0;
-				sprite->play("idle_right");
+				sprite->play("idle_left");//is flipped
 				break;
 			case SDLK_ESCAPE:
 				RpgGame::isRunning = false;

@@ -6,4 +6,5 @@
 #include "KeyboardController.hpp"
 #include "ColliderComponent.hpp"
 #include "TileComponent.hpp"
+#include "ProjectileComponent.hpp"
 

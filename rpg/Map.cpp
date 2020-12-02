@@ -42,6 +42,10 @@ Map::Map(std::string path, int mapScale)
 		}
 		setting.layers.push_back(layer);
 	}
+
+	height = setting.height * setting.tileHeight;
+	width = setting.width * setting.tileWidth;
+	scale = setting.mapScale;
 }
 
 Map::~Map() {}

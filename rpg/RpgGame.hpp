@@ -29,7 +29,7 @@ class RpgGame {
 	static bool isRunning;
 	static SDL_Rect camera;
 	static AssetManager* assets;
-	enum groupLabels : std::size_t { groupMap, groupPlayers, groupColliders };
+	enum groupLabels : std::size_t { groupMap, groupPlayers, groupColliders, groupProjectiles };
 
   private:
 	SDL_Window *window;
