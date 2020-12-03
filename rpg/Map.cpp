@@ -94,14 +94,11 @@ void Map::AddTile(int srcX, int srcY, int xPos, int yPos, int tsize, int tscale,
 {
 
 	auto &item(manager.addEntity());
+	item.addComponent<TileComponent>(srcX, srcY, xPos, yPos, tsize, tscale, id);
 	if (withCollision) {
-		item.addComponent<TileComponent>(srcX, srcY, xPos, yPos, tsize, tscale, id);
-		
 
-		item.addComponent<ColliderComponent>("collisionMapTile", srcX, srcY, xPos, yPos, tsize, tscale, id);
-		item.addGroup(RpgGame::groupMap);
-	} else {
-		item.addComponent<TileComponent>(srcX, srcY, xPos, yPos, tsize, tscale, id);
-		item.addGroup(RpgGame::groupMap);
+		item.addComponent<TransformComponent>(xPos, yPos, tsize, tsize, tscale);
+		item.addComponent<ColliderComponent>("MapTile");
 	}
+	item.addGroup(RpgGame::groupMap);
 }

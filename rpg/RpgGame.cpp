@@ -51,19 +51,14 @@ void RpgGame::init(std::string title, bool fullScreen)
 		isRunning = false;
 	}
 
-	assets->AddTexture("player", "../rpg/assets/playerSpriteSheet.png");	
+	assets->AddTexture("player", "../rpg/assets/playerSpriteSheet.png");
 	assets->AddTexture("fireball", "../rpg/assets/fireball_sprite.png");
 
 	map = new Map("../rpg/assets/map/jsonsample.json", 3);
-	//map = new Map("../rpg/assets/map/testmap_50_50.json", 3);
+	// map = new Map("../rpg/assets/map/testmap_50_50.json", 3);
 	map->LoadMap();
 
-	// Map::LoadMap("../maps/jsonsample.json");
-	// Map::LoadMap("../maps/testmap_5_5.json");
-
-	// Map::LoadMap("../maps/testmap_50_50.json");
-
-	player.addComponent<TransformComponent>(5 * 32, 5 * 32, 115, 75, 1);
+	player.addComponent<TransformComponent>(10 * 32 * 3, 12 * 32 * 3, 115, 75, 1);
 
 	SpriteSheet spriteSheet(11, 75, 115, 75, 5);
 	auto &playerSprite = player.addComponent<SpriteComponent>("player", spriteSheet);
@@ -112,6 +107,15 @@ void RpgGame::update()
 
 	manager.refresh();
 	manager.update();
+
+	for (auto &t : tiles) {
+		if (t->hasComponent<ColliderComponent>()) {
+			SDL_Rect cCol = t->getComponent<ColliderComponent>().collider;
+			if (Collision::AABB(cCol, playerCol)) {
+			std::cout << "Player hit collidable tile" << std::endl;	
+			}
+		}
+	}
 
 	for (auto &c : colliders) {
 		SDL_Rect cCol = c->getComponent<ColliderComponent>().collider;
