@@ -51,12 +51,12 @@ void RpgGame::init(std::string title, bool fullScreen)
 		isRunning = false;
 	}
 
-	assets->AddTexture("player", "../rpg/assets/playerSpriteSheet.png");
-	assets->AddTexture("mapSprites", "../rpg/assets/map/pipoya_tileset.png");
+	assets->AddTexture("player", "../rpg/assets/playerSpriteSheet.png");	
 	assets->AddTexture("fireball", "../rpg/assets/fireball_sprite.png");
 
-	map = new Map("../rpg/assets/map/testmap_50_50.json", 3);
-	map->LoadMap("mapSprites");
+	map = new Map("../rpg/assets/map/jsonsample.json", 3);
+	//map = new Map("../rpg/assets/map/testmap_50_50.json", 3);
+	map->LoadMap();
 
 	// Map::LoadMap("../maps/jsonsample.json");
 	// Map::LoadMap("../maps/testmap_5_5.json");

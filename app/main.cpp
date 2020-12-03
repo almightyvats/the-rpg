@@ -4,7 +4,7 @@ RpgGame *menu = nullptr;
 
 int main(int argc, char *argv[])
 {
-	const int FPS = 60;
+	const int FPS = 200;
 	const int frameDelay = 1000 / FPS;
 
 	Uint32 frameStart;

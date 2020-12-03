@@ -9,8 +9,16 @@ struct MapLayer {
 	int id;
 	int height;
 	int width;
+	bool collision;
 	std::string name;
 	std::vector<int> tiles;
+};
+
+struct TileSet {
+	int firstId;
+	std::string spriteId;
+	int columns;
+	std::string imageName;
 };
 
 struct MapSetting {
@@ -21,6 +29,7 @@ struct MapSetting {
 	int mapScale;
 	int tileSize;
 	std::vector<MapLayer> layers;
+	std::vector<TileSet> tilesets;
 
 	int ScaledHeight() { return tileHeight * mapScale; }
 	int ScaledWidth() { return tileWidth * mapScale; }
@@ -31,7 +40,7 @@ class Map {
 	Map(std::string path, int mapScale);
 	~Map();
 
-	void LoadMap(std::string id);
+	void LoadMap();
 	void AddTile(int srcX, int srcY, int xPos, int yPos, int tsize, int tscale, bool withCollision, std::string id);
 
 	int height;
@@ -41,4 +50,19 @@ class Map {
   private:
 	std::string mapFilePath;
 	MapSetting setting;
+
+	TileSet FindTileset(int tileNumber)
+	{
+		TileSet result;
+		result.firstId = 0; //initial condition
+		// we need the tileset with the maximum firstId lower or equal than the tile number
+		for (auto &tileset : setting.tilesets) {
+			if (tileset.firstId <= tileNumber) {
+				if (tileset.firstId > result.firstId) {
+					result = tileset;
+				}
+			}
+		}
+		return result;
+	}
 };
