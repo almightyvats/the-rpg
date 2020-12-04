@@ -5,16 +5,14 @@
 
 class RpgGameState {
   public:
-    virtual void Pause() = 0;
-    virtual void Resume() = 0;
+	virtual void Pause() = 0;
+	virtual void Resume() = 0;
 
-    virtual void HandleEvents(RpgGame*) = 0;
-    virtual void Update(RpgGame*) = 0;
-    virtual void Render(RpgGame*) = 0;
+	virtual void HandleEvents(RpgGame *) = 0;
+	virtual void Update(RpgGame *) = 0;
+	virtual void Render(RpgGame *) = 0;
 
-    void changeState(RpgGame* game, RpgGameState& state) {
-		game->changeState(state);
-	}
+	void changeState(RpgGame *game, RpgGameState &state) { game->changeState(state); }
 };
 
 #endif // RPG_RPGGAMESTATE_HPP
