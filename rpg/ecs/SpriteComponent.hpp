@@ -5,6 +5,7 @@
 #include "animation.hpp"
 #include "rpg/RpgGame.hpp"
 #include "rpg/TextureManager.hpp"
+#include "rpg/states/RpgPlayState.hpp"
 #include <map>
 
 class SpriteSheet {
@@ -60,7 +61,7 @@ class SpriteComponent : public Component {
 		animated = true;
 	}
 
-	void setTex(std::string id) { texture = RpgGame::assets->GetTexture(id); }
+	void setTex(std::string id) { texture = RpgPlayState::assets->GetTexture(id); }
 
 	void init() override
 	{

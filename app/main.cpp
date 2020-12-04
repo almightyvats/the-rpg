@@ -1,6 +1,7 @@
 #include "rpg/RpgGame.hpp"
+#include "rpg/states/RpgPlayState.hpp"
 
-RpgGame *menu = nullptr;
+RpgGame *game = nullptr;
 
 int main(int argc, char *argv[])
 {
@@ -10,15 +11,17 @@ int main(int argc, char *argv[])
 	Uint32 frameStart;
 	int frameTime;
 
-	menu = new RpgGame();
-	menu->init("The ultimate one and only RPG", false);
+    game = new RpgGame();
+    game->init("The ultimate one and only RPG", false);
 
-	while (menu->running()) {
+	game->changeState(RpgPlayState::Instance());
+
+	while (game->running()) {
 		frameStart = SDL_GetTicks();
 
-		menu->handleEvents();
-		menu->update();
-		menu->render();
+        game->handleEvents();
+        game->update();
+        game->render();
 
 		frameTime = SDL_GetTicks() - frameStart;
 
@@ -27,7 +30,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	menu->clean();
+    game->clean();
 
 	return 0;
 }

@@ -17,7 +17,7 @@ class TileComponent : public Component {
 
 	TileComponent(int srcX, int srcY, int xpos, int ypos, int tsize, int tscale, const std::string id)
 	{
-		texture = RpgGame::assets->GetTexture(id);
+		texture = RpgPlayState::assets->GetTexture(id);
 		
 		srcRect.x = srcX;
 		srcRect.y = srcY;

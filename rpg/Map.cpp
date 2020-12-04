@@ -3,6 +3,7 @@
 #include "../vendor/rapidjson/stringbuffer.h"
 #include "../vendor/rapidjson/writer.h"
 #include "RpgGame.hpp"
+#include "states/RpgPlayState.hpp"
 #include "TextureManager.hpp"
 #include "ecs/Components.hpp"
 #include "ecs/ecs.hpp"
@@ -52,7 +53,7 @@ Map::Map(std::string path, int mapScale)
 		tileset.columns = tilesets[i]["columns"].GetInt();
 		tileset.imageName = tilesets[i]["image"].GetString();
 
-		RpgGame::assets->AddTexture(tileset.spriteId, "../rpg/assets/map_sprites/" + tileset.imageName);
+        RpgPlayState::assets->AddTexture(tileset.spriteId, "../rpg/assets/map_sprites/" + tileset.imageName);
 		setting.tilesets.push_back(tileset);
 	}
 
