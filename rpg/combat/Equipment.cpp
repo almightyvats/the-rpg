@@ -1,6 +1,6 @@
 #include "Equipment.hpp"
 
-Equipment::Equipment(const std::string &name, equipment_class eq_type, int min_level, int agi, int str, int def, int dex,
+Equipment::Equipment(const std::string &name, EquipmentType eq_type, int min_level, int agi, int str, int def, int dex,
                      int perc, int luck)
 {
     name_ = name;

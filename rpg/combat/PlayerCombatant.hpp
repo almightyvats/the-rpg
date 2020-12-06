@@ -4,12 +4,13 @@
 #include <vector>
 
 #include "Combatant.hpp"
+#include "Equipment.hpp"
 
 enum class AddEquipmentError {
     ok,
     max_equipment,
     min_level_not_met,
-}
+};
 
 class PlayerCombatant : public Combatant {
     public:

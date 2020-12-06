@@ -15,10 +15,6 @@ Combatant Combat::ProgressToNextAttack() {
     auto min_cd_enemy = GetSmallestCooldownCombatant(enemy_combatants_);
 
     if (min_cd_player.cooldown_ < min_cd_enemy.cooldown_) {
-        
+        return min_cd_player;
     }
-}
-
-Combatant Combat::LowerGlobalCooldown(int amount) {
-    for (Combatant combatant : )
 }

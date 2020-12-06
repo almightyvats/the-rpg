@@ -2,11 +2,12 @@
 
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 
 #define TOKENS_PER_LEVEL_UP 2
 #define MAX_EQUIPMENT 5
 
-#define ATTACK_SUCKER_PUNCH {"Sucker Punch", melee, single, 5, 0.8, 0, 5, 2, none}
+#define ATTACK_SUCKER_PUNCH {"Sucker Punch", AttackType::melee, AttackTargetType::single, 5, 0.8, 0.0, 1.0, 5, AttackEffect::none}
 
 PlayerCombatant::PlayerCombatant(const std::string& name, int level) {
     name_ = name;
@@ -17,7 +18,7 @@ PlayerCombatant::PlayerCombatant(const std::string& name, int level) {
     std::srand(std::time(nullptr));
 
     max_hp_ = (std::rand() % 200) + 100;
-    hp_ = m_max_hp;
+    hp_ = max_hp_;
     state_ = CombatantState::normal;
 
     agility_ = (std::rand() % 10) + 1;
@@ -27,10 +28,11 @@ PlayerCombatant::PlayerCombatant(const std::string& name, int level) {
     perception_ = (std::rand() % 10) + 1;
     luck_ = (std::rand() % 10) + 1;
 
-    base_attacks_.push_back(ATTACK_SUCKER_PUNCH);
+    Attack base_attack1 = ATTACK_SUCKER_PUNCH;
+    base_attacks_.push_back(base_attack1);
 
     while (level_ < level) {
-        level_up(TOKENS_PER_LEVEL_UP, 0);
+        LevelUp(TOKENS_PER_LEVEL_UP, 0);
     }
 }
 
@@ -72,6 +74,7 @@ void PlayerCombatant::LevelUp(int tokens, int new_exp) {
                 luck_++;
                 break;
         }
+        tokens_left--;
     }
 }
 
@@ -94,16 +97,17 @@ Equipment PlayerCombatant::RemoveEquipment(int index)
         equipment_.erase(equipment_.begin() + index);
         return equipment;
     } else {
-        return NULL;
+        return equipment_.at(index);
     }
 }
 
 std::vector<Attack> PlayerCombatant::GetAttackList()
 {
-    std::vector<Attack> attacks = basic_attacks_;
+    std::vector<Attack> attacks = base_attacks_;
 
     for (auto eq : equipment_) {
-        attacks.insert(attacks.end(), eq.attacks_.begin(), eq.attacks_.end());
+        std::vector<Attack> equipment_attacks = eq.attacks();
+        attacks.insert(attacks.end(), equipment_attacks.begin(), equipment_attacks.end());
     }
 
     return attacks;
@@ -114,13 +118,13 @@ CombatantStats PlayerCombatant::CalculateStats()
     CombatantStats stats = {agility_, strength_, defense_, dexterity_, perception_, luck_};
 
     for (auto eq : equipment_) {
-        stats->agility += eq.GetBonusAgility();
-        stats->strength += eq.GetBonusStrength();
-        stats->defense += eq.GetBonusDefense();
-        stats->dexterity += eq.GetBonusDexterity();
-        stats->perception += eq.GetBonusPerception();
-        stats->luck += eq.GetBonusLuck();
+        stats.agility += eq.bonus_agility();
+        stats.strength += eq.bonus_strength();
+        stats.defense += eq.bonus_defense();
+        stats.dexterity += eq.bonus_dexterity();
+        stats.perception += eq.bonus_perception();
+        stats.luck += eq.bonus_luck();
     }
 
-    return CombatantStats;
+    return stats;
 }

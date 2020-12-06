@@ -22,9 +22,9 @@ struct Attack {
     AttackType type;
     AttackTargetType target_type;
     int damage;
-    int accuracy;
-    int crit_chance;
-    int crit_multiplier;
+    float accuracy;
+    float crit_chance;
+    float crit_multiplier;
     int cooldown;
     AttackEffect effect;
 };
@@ -50,6 +50,8 @@ class Combatant {
 
         virtual std::vector<Attack> GetAttackList() = 0;
         virtual CombatantStats CalculateStats() = 0;
+
+        void PerformAttack(Attack attack, std::vector<Combatant*> targets);
 
         int level() const {return level_;}
         int max_hp() const {return max_hp_;}

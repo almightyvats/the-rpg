@@ -5,7 +5,7 @@ EnemyCombatant::EnemyCombatant(const std::string& name, int level, int max_hp, C
     level_ = level;
     
     max_hp_ = max_hp;
-    hp_ = m_max_hp;
+    hp_ = max_hp_;
     state_ = CombatantState::normal;
 
     agility_ = stats.agility;
@@ -22,10 +22,14 @@ EnemyCombatant::~EnemyCombatant() {
 
 }
 
-EnemyCombatant::GetAttackList() {
+void EnemyCombatant::AddAttack(Attack attack) {
+    attacks_.push_back(attack);
+}
+
+std::vector<Attack> EnemyCombatant::GetAttackList() {
     return attacks_;
 }
 
-EnemyCombatant::CalculateStats() {
+CombatantStats EnemyCombatant::CalculateStats() {
     return {agility_, strength_, defense_ + armor_, dexterity_, perception_, luck_};
 }
