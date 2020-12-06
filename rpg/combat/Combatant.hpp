@@ -40,6 +40,7 @@ struct CombatantStats {
 
 enum class CombatantState {
     normal,
+    dead,
 };
 
 class Combatant {
@@ -52,6 +53,7 @@ class Combatant {
         virtual CombatantStats CalculateStats() = 0;
 
         void PerformAttack(Attack attack, std::vector<Combatant*> targets);
+        bool TakeDamage(int damage, AttackEffect effect);
 
         int level() const {return level_;}
         int max_hp() const {return max_hp_;}
