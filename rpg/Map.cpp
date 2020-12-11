@@ -53,6 +53,7 @@ Map::Map(std::string path, int mapScale)
 		tileset.imageName = tilesets[i]["image"].GetString();
 
 		RpgGame::assets->AddTexture(tileset.spriteId, "../rpg/assets/map_sprites/" + tileset.imageName);
+		std::cout << "registered " << tileset.spriteId << std::endl;
 		setting.tilesets.push_back(tileset);
 	}
 
@@ -79,8 +80,10 @@ void Map::LoadMap()
 					int xpos = ((tileNumber % tileset.columns) + 0) * setting.tileWidth;
 					int ypos = ((tileNumber / tileset.columns) + 0) * setting.tileHeight;
 
-					AddTile(xpos, ypos, x * setting.ScaledWidth(), y * setting.ScaledHeight(), setting.tileSize,
-					        setting.mapScale, setting.layers[layerNumber].collision, tileset.spriteId);
+					RpgGame::assets->CreateMapTile(
+					    xpos, ypos, x * setting.ScaledWidth(), y * setting.ScaledHeight(), setting.tileSize,
+					    setting.mapScale, setting.layers[layerNumber].collision, tileset.spriteId,
+					    SpriteSheet(tileset.columns, setting.tileWidth, setting.tileHeight, 0, 0));
 					counter++;
 				}
 
@@ -88,17 +91,4 @@ void Map::LoadMap()
 			}
 		}
 	}
-}
-
-void Map::AddTile(int srcX, int srcY, int xPos, int yPos, int tsize, int tscale, bool withCollision, std::string id)
-{
-
-	auto &item(manager.addEntity());
-	item.addComponent<TileComponent>(srcX, srcY, xPos, yPos, tsize, tscale, id);
-	if (withCollision) {
-
-		item.addComponent<TransformComponent>(xPos, yPos, tsize, tsize, tscale);
-		item.addComponent<ColliderComponent>("MapTile");
-	}
-	item.addGroup(RpgGame::groupMap);
 }

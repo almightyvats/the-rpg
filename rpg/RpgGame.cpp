@@ -58,7 +58,7 @@ void RpgGame::init(std::string title, bool fullScreen)
 	// map = new Map("../rpg/assets/map/testmap_50_50.json", 3);
 	map->LoadMap();
 
-	player.addComponent<TransformComponent>(10 * 32 * 3, 12 * 32 * 3, 115, 75, 1);
+	player.addComponent<TransformComponent>(2 * 32 * 3, 2 * 32 * 3, 115, 75, 1);
 
 	SpriteSheet spriteSheet(11, 75, 115, 75, 5);
 	auto &playerSprite = player.addComponent<SpriteComponent>("player", spriteSheet);
@@ -112,7 +112,7 @@ void RpgGame::update()
 		if (t->hasComponent<ColliderComponent>()) {
 			SDL_Rect cCol = t->getComponent<ColliderComponent>().collider;
 			if (Collision::AABB(cCol, playerCol)) {
-			std::cout << "Player hit collidable tile" << std::endl;	
+				std::cout << "Player hit collidable tile" << std::endl;
 			}
 		}
 	}
@@ -150,6 +150,20 @@ void RpgGame::update()
 	}
 	if (camera.y > maxDown) {
 		camera.y = maxDown;
+	}
+
+	if (playerPos.y < camera.y) {
+		camera.x = 0;
+		camera.y = 0;
+
+		player.getComponent<TransformComponent>().position.x = 2 * 32 * 3;
+		player.getComponent<TransformComponent>().position.y = 2 * 32 * 3;
+		for (auto &t : tiles) {
+			t->destroy();
+		}
+
+		manager.refresh();
+		map->LoadMap();
 	}
 };
 

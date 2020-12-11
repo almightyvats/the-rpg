@@ -1,32 +1,12 @@
 #pragma once
 
 #include "../AssetManager.hpp"
+#include "../SpriteSheet.hpp"
 #include "Components.hpp"
 #include "animation.hpp"
 #include "rpg/RpgGame.hpp"
 #include "rpg/TextureManager.hpp"
 #include <map>
-
-class SpriteSheet {
-  public:
-	SpriteSheet() {}
-	SpriteSheet(int rows, int spriteWidth, int spriteHeight, int spriteGapX, int spriteGapY)
-	{
-		this->rows = rows;
-		this->spriteWidth = spriteWidth;
-		this->spriteWidth = spriteWidth;
-		this->spriteHeight = spriteHeight;
-		this->spriteGapX = spriteGapX;
-		this->spriteGapY = spriteGapY;
-	};
-	~SpriteSheet(){};
-
-	int rows = 0;
-	int spriteWidth = 32;
-	int spriteHeight = 32;
-	int spriteGapX = 0;
-	int spriteGapY = 0;
-};
 
 class SpriteComponent : public Component {
   private:
@@ -42,6 +22,8 @@ class SpriteComponent : public Component {
   public:
 	int animationIndex = 0;
 
+	std::string id;
+
 	std::map<std::string, Animation> animations;
 
 	SDL_RendererFlip spriteFlip = SDL_FLIP_NONE;
@@ -49,8 +31,22 @@ class SpriteComponent : public Component {
 	SpriteComponent() = default;
 	SpriteComponent(const std::string id, SpriteSheet spriteSheet)
 	{
+		this->id = id;
 		this->spriteSheet = spriteSheet;
 		setTex(id);
+		srcRect.x = srcRect.y = 0;
+		srcRect.w = spriteSheet.spriteWidth;
+		srcRect.h = spriteSheet.spriteHeight;
+	}
+	SpriteComponent(const std::string id, int srcX, int srcY, SpriteSheet spriteSheet)
+	{
+		this->id = id;
+		this->spriteSheet = spriteSheet;
+		setTex(id);
+		srcRect.x = srcX;
+		srcRect.y = srcY;
+		srcRect.w = spriteSheet.spriteWidth;
+		srcRect.h = spriteSheet.spriteHeight;
 	}
 	~SpriteComponent() {}
 
@@ -62,14 +58,7 @@ class SpriteComponent : public Component {
 
 	void setTex(std::string id) { texture = RpgGame::assets->GetTexture(id); }
 
-	void init() override
-	{
-		transform = &entity->getComponent<TransformComponent>();
-
-		srcRect.x = srcRect.y = 0;
-		srcRect.w = spriteSheet.spriteWidth;
-		srcRect.h = spriteSheet.spriteHeight;
-	}
+	void init() override { transform = &entity->getComponent<TransformComponent>(); }
 	void update() override
 	{
 		if (animated) {
@@ -82,7 +71,13 @@ class SpriteComponent : public Component {
 		destRect.w = transform->width * transform->scale;
 		destRect.h = transform->height * transform->scale;
 	}
-	void draw() override { TextureManager::Draw(texture, srcRect, destRect, spriteFlip); }
+	void draw() override
+	{
+		if (id == "everything") {
+			std::cout << srcRect.x << " " << srcRect.y << " " << srcRect.w << " " << srcRect.h << std::endl;
+		}
+		TextureManager::Draw(texture, srcRect, destRect, spriteFlip);
+	}
 
 	void defaultAnimation(std::string tag) { play(tag); }
 

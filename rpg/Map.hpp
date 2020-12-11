@@ -41,7 +41,6 @@ class Map {
 	~Map();
 
 	void LoadMap();
-	void AddTile(int srcX, int srcY, int xPos, int yPos, int tsize, int tscale, bool withCollision, std::string id);
 
 	int height;
 	int width;

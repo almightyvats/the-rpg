@@ -22,6 +22,19 @@ void AssetManager::CreateProjectile(Vector2D position, Vector2D velocity, int ra
 	projectile.addGroup(RpgGame::groupProjectiles);
 }
 
+void AssetManager::CreateMapTile(int srcX, int srcY, int destX, int destY, int tsize, int tscale, bool withCollision,
+                                 std::string id, SpriteSheet spriteSheet)
+{
+	auto &tile(manager->addEntity());
+	tile.addComponent<TransformComponent>(destX, destY, tsize, tsize, tscale);
+	tile.addComponent<SpriteComponent>(id, srcX, srcY, spriteSheet);
+
+	if (withCollision) {
+		tile.addComponent<ColliderComponent>("MapTile");
+	}
+	tile.addGroup(RpgGame::groupMap);
+}
+
 void AssetManager::AddTexture(std::string id, std::string path)
 {
 	textures.emplace(id, TextureManager::LoadTexture(path));
