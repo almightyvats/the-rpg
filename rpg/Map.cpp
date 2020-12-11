@@ -53,7 +53,6 @@ Map::Map(std::string path, int mapScale)
 		tileset.imageName = tilesets[i]["image"].GetString();
 
 		RpgGame::assets->AddTexture(tileset.spriteId, "../rpg/assets/map_sprites/" + tileset.imageName);
-		std::cout << "registered " << tileset.spriteId << std::endl;
 		setting.tilesets.push_back(tileset);
 	}
 

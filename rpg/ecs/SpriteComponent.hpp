@@ -73,9 +73,6 @@ class SpriteComponent : public Component {
 	}
 	void draw() override
 	{
-		if (id == "everything") {
-			std::cout << srcRect.x << " " << srcRect.y << " " << srcRect.w << " " << srcRect.h << std::endl;
-		}
 		TextureManager::Draw(texture, srcRect, destRect, spriteFlip);
 	}
 
