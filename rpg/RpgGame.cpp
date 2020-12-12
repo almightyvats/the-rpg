@@ -102,6 +102,8 @@ void RpgGame::handleEvents()
 		break;
 	}
 };
+std::string newMap;
+Vector2D playerStart;
 void RpgGame::update()
 {
 	SDL_Rect playerCol = player.getComponent<ColliderComponent>().collider;
@@ -114,8 +116,14 @@ void RpgGame::update()
 		if (t->hasComponent<ColliderComponent>()) {
 			SDL_Rect cCol = t->getComponent<ColliderComponent>().collider;
 			if (Collision::AABB(cCol, playerCol)) {
-				
 				player.getComponent<TransformComponent>().position = playerPos;
+
+				if (t->hasComponent<DoorComponent>()) {
+					auto &door = t->getComponent<DoorComponent>();
+					newMap = door.targetMap;
+					playerStart = door.playerStart;
+					fade = -5;
+				}
 			}
 		}
 	}
@@ -177,15 +185,15 @@ void RpgGame::update()
 		camera.x = 0;
 		camera.y = 0;
 
-		player.getComponent<TransformComponent>().position.x = 2 * 32 * 3;
-		player.getComponent<TransformComponent>().position.y = 2 * 32 * 3;
+		player.getComponent<TransformComponent>().position.x = playerStart.x * 32 * 3;
+		player.getComponent<TransformComponent>().position.y = playerStart.y * 32 * 3;
 
 		for (auto &t : tiles) {
 			t->destroy();
 		}
 
 		manager.refresh();
-		map = new Map("../rpg/assets/map/testmap_50_50.json", 3);
+		map = new Map(newMap, 3);
 		map->LoadMap();
 
 		// Loading new map finished -> start fading in again

@@ -16,7 +16,7 @@ public:
 	//game objects
 	void CreateProjectile(Vector2D position,Vector2D velocity, int range, int speed, std::string id);
 
-	void CreateMapTile(int srcX, int srcY, int destX, int destY, int tsize, int tscale, bool withCollision, std::string id, SpriteSheet spriteSheet);
+	void CreateMapTile(int srcX, int srcY, int destX, int destY, int tsize, int tscale, bool withCollision, std::string id, SpriteSheet spriteSheet, std::string map, Vector2D pStart);
 
 	//texture management
 	void AddTexture(std::string id, std::string path);

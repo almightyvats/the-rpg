@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "Vector2D.hpp"
 
 struct MapLayer {
 	int id;
@@ -12,6 +13,8 @@ struct MapLayer {
 	bool collision;
 	std::string name;
 	std::vector<int> tiles;
+	std::string targetMap;
+	Vector2D playerStart;
 };
 
 struct TileSet {

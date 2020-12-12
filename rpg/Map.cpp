@@ -37,6 +37,11 @@ Map::Map(std::string path, int mapScale)
 		layer.name = layers[i]["name"].GetString();
 		layer.collision = layers[i]["collision"].GetBool();
 
+		if (layers[i].HasMember("targetMap")) {
+			layer.targetMap = layers[i]["targetMap"].GetString();
+			layer.playerStart = Vector2D(layers[i]["playerStartX"].GetInt(), layers[i]["playerStartY"].GetInt());
+		}
+
 		const rapidjson::Value &tiles = layers[i]["data"];
 		for (rapidjson::SizeType j = 0; j < tiles.Size(); j++) { // Uses SizeType instead of size_t
 			layer.tiles.push_back(tiles[j].GetInt());
@@ -79,10 +84,22 @@ void Map::LoadMap()
 					int xpos = ((tileNumber % tileset.columns) + 0) * setting.tileWidth;
 					int ypos = ((tileNumber / tileset.columns) + 0) * setting.tileHeight;
 
+					std::string mapTest;
+					Vector2D pPos;
+					if (x == 30 && y == 25) {
+						mapTest = "../rpg/assets/map/shop.json";
+						pPos = Vector2D(4, 7);
+					}
+
+					if (setting.layers[layerNumber].targetMap != "") {
+						mapTest = "../rpg/assets/map/" + setting.layers[layerNumber].targetMap;
+						pPos = setting.layers[layerNumber].playerStart;
+					}
+
 					RpgGame::assets->CreateMapTile(
 					    xpos, ypos, x * setting.ScaledWidth(), y * setting.ScaledHeight(), setting.tileSize,
 					    setting.mapScale, setting.layers[layerNumber].collision, tileset.spriteId,
-					    SpriteSheet(tileset.columns, setting.tileWidth, setting.tileHeight, 0, 0));
+					    SpriteSheet(tileset.columns, setting.tileWidth, setting.tileHeight, 0, 0), mapTest, pPos);
 					counter++;
 				}
 
