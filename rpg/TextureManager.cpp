@@ -10,7 +10,8 @@ SDL_Texture *TextureManager::LoadTexture(std::string texture)
 	return tex;
 }
 
-void TextureManager::Draw(SDL_Texture *tex, SDL_Rect src, SDL_Rect dest, SDL_RendererFlip flip)
+void TextureManager::Draw(SDL_Texture *tex, const SDL_Rect *src, const SDL_Rect *dest, SDL_RendererFlip flip, Uint8 alpha)
 {
-	SDL_RenderCopyEx(RpgGame::renderer, tex, &src, &dest, NULL, NULL, flip);
+	SDL_SetTextureAlphaMod(tex, alpha);
+	SDL_RenderCopyEx(RpgGame::renderer, tex, src, dest, 0, NULL, flip);
 }

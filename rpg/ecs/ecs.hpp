@@ -41,7 +41,7 @@ class Component {
 
 	virtual void init() {}
 	virtual void update() {}
-	virtual void draw() {}
+	virtual void draw(int alpha) {}
 	virtual ~Component() {}
 };
 
@@ -63,10 +63,10 @@ class Entity {
 		for (auto &c : components)
 			c->update();
 	}
-	void draw()
+	void draw(int alpha)
 	{
 		for (auto &c : components)
-			c->draw();
+			c->draw(alpha);
 	}
 
 	bool isActive() const { return active; }
@@ -117,10 +117,10 @@ class Manager {
 		for (auto &e : entities)
 			e->update();
 	}
-	void draw()
+	void draw(int alpha)
 	{
 		for (auto &e : entities)
-			e->draw();
+			e->draw(alpha);
 	}
 	void refresh()
 	{

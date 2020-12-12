@@ -15,6 +15,8 @@ SDL_Rect RpgGame::camera = {0, 0, 0, 0};
 AssetManager *RpgGame::assets = new AssetManager(&manager);
 
 bool RpgGame::isRunning = false;
+Uint8 alpha = SDL_ALPHA_OPAQUE;
+Uint8 fade = 0;
 
 auto &player(manager.addEntity());
 
@@ -42,7 +44,7 @@ void RpgGame::init(std::string title, bool fullScreen)
 
 		renderer = SDL_CreateRenderer(window, -1, 0);
 		if (renderer) {
-			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 			std::cout << "Renderer craeted" << std::endl;
 		}
 
@@ -152,18 +154,41 @@ void RpgGame::update()
 		camera.y = maxDown;
 	}
 
-	if (playerPos.y < camera.y) {
+	alpha += fade;
+
+	if (alpha >= SDL_ALPHA_OPAQUE) {
+		alpha = SDL_ALPHA_OPAQUE;
+		fade = 0;
+	}
+	if (alpha <= SDL_ALPHA_TRANSPARENT) {
+		alpha = SDL_ALPHA_TRANSPARENT;
+		fade = 0;
+	}
+
+	// Player out of screen -> start fading out
+	if ((playerPos.x < camera.x) || (playerPos.y < camera.y) || (playerPos.x > camera.x + camera.w)
+	    || (playerPos.y > camera.y + camera.h)) {
+		fade = -5;
+	}
+
+	// Totally faded out -> load new map, reset player position, etc
+	if (alpha == SDL_ALPHA_TRANSPARENT) {
 		camera.x = 0;
 		camera.y = 0;
 
 		player.getComponent<TransformComponent>().position.x = 2 * 32 * 3;
 		player.getComponent<TransformComponent>().position.y = 2 * 32 * 3;
+
 		for (auto &t : tiles) {
 			t->destroy();
 		}
 
 		manager.refresh();
+		map = new Map("../rpg/assets/map/testmap_50_50.json", 3);
 		map->LoadMap();
+
+		// Loading new map finished -> start fading in again
+		fade = 5;
 	}
 };
 
@@ -172,20 +197,21 @@ void RpgGame::render()
 	SDL_RenderClear(renderer);
 
 	for (auto &t : tiles) {
-		t->draw();
+		t->draw(alpha);
 	}
 
 	for (auto &c : colliders) {
-		c->draw();
+		c->draw(alpha);
 	}
 
 	for (auto &p : players) {
-		p->draw();
+		p->draw(alpha);
 	}
 
 	for (auto &p : projectiles) {
-		p->draw();
+		p->draw(alpha);
 	}
+
 	SDL_RenderPresent(renderer);
 };
 void RpgGame::clean()

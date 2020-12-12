@@ -71,9 +71,10 @@ class SpriteComponent : public Component {
 		destRect.w = transform->width * transform->scale;
 		destRect.h = transform->height * transform->scale;
 	}
-	void draw() override
+	
+	void draw(int alpha) override
 	{
-		TextureManager::Draw(texture, srcRect, destRect, spriteFlip);
+		TextureManager::Draw(texture, &srcRect, &destRect, spriteFlip, alpha);
 	}
 
 	void defaultAnimation(std::string tag) { play(tag); }
