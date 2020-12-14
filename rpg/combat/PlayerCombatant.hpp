@@ -19,6 +19,7 @@ class PlayerCombatant : public Combatant {
         
         std::vector<Attack> GetAttackList();
         CombatantStats CalculateStats();
+        void ChooseAndPerformAction(const std::vector<Combatant*> player_combatants, std::vector<Combatant*> enemy_combatants);
 
         void LevelUp(int tokens, int new_exp);
         AddEquipmentError AddEquipment(Equipment equipment);

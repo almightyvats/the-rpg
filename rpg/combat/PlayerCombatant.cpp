@@ -20,6 +20,7 @@ PlayerCombatant::PlayerCombatant(const std::string& name, int level) {
     max_hp_ = (std::rand() % 200) + 100;
     hp_ = max_hp_;
     state_ = CombatantState::normal;
+    cooldown_ = 0;
 
     agility_ = (std::rand() % 10) + 1;
     strength_ = (std::rand() % 10) + 1;
@@ -127,4 +128,62 @@ CombatantStats PlayerCombatant::CalculateStats()
     }
 
     return stats;
+}
+
+Combatant* ChooseSingleTarget(std::vector<Combatant*> combatants)
+{
+    std::cout << "Available targets: \n";
+    int c = 0;
+
+    for (Combatant* combatant : combatants) {
+        std::cout << c++ << " - " << combatant->name() << "\n";
+    }
+
+    int target_number;
+
+    std::cout << "Choose target: ";
+    std::cin >> target_number;
+
+    while (target_number < 0 || target_number > combatants.size()) {
+        std::cout << "Target number our of range. Choose target: ";
+        std::cin >> target_number;
+    }
+
+    return combatants.at(target_number);
+}
+
+void PlayerCombatant::ChooseAndPerformAction(const std::vector<Combatant*> player_combatants,
+        std::vector<Combatant*> enemy_combatants)
+{
+
+    std::vector<Attack> attacks = GetAttackList();
+    
+    //choose action by menu
+    
+    std::cout << "Available attacks:\n";
+    int c = 0;
+
+    for (Attack attack : attacks) {
+        std::cout << c++ << " - " << attack.name << "\n";
+    }
+    int attack_number;
+
+    std::cout << "Choose attack: ";
+    std::cin >> attack_number;
+
+    while (attack_number < 0 || attack_number > attacks.size()) {
+        std::cout << "Attack number our of range. Choose attack: ";
+        std::cin >> attack_number;
+    }
+
+    Attack chosen_attack = attacks.at(attack_number);
+    std::vector<Combatant*> targets;
+
+    if (chosen_attack.target_type == AttackTargetType::single) {
+        targets.push_back(ChooseSingleTarget(enemy_combatants));
+    } else {
+        targets.insert(targets.end(), enemy_combatants.begin(), enemy_combatants.end());
+    }
+
+    PerformAttack(chosen_attack, targets);
 }

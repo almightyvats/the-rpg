@@ -8,8 +8,11 @@
 
 class Combat {
     public:
-        std::vector<PlayerCombatant> player_combatants_;
-        std::vector<EnemyCombatant> enemy_combatants_;
+        Combat(std::vector<Combatant*> player_combatants, std::vector<Combatant*> enemy_combatants);
 
-        Combatant ProgressToNextAttack();
+        std::vector<Combatant*> player_combatants_;
+        std::vector<Combatant*> enemy_combatants_;
+
+        Combatant* ProgressToNextAttack();
+        void Initiate();
 };

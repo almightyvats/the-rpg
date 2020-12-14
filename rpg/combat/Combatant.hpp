@@ -51,10 +51,12 @@ class Combatant {
 
         virtual std::vector<Attack> GetAttackList() = 0;
         virtual CombatantStats CalculateStats() = 0;
+        virtual void ChooseAndPerformAction(const std::vector<Combatant*> player_combatants, std::vector<Combatant*> enemy_combatants) = 0;
 
         void PerformAttack(Attack attack, std::vector<Combatant*> targets);
         bool TakeDamage(int damage, AttackEffect effect);
 
+        std::string name() const {return name_;}
         int level() const {return level_;}
         int max_hp() const {return max_hp_;}
         int hp() const {return hp_;}

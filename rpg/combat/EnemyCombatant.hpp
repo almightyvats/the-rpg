@@ -13,6 +13,7 @@ class EnemyCombatant : public Combatant {
         
         std::vector<Attack> GetAttackList();
         CombatantStats CalculateStats();
+        void ChooseAndPerformAction(const std::vector<Combatant*> player_combatants, std::vector<Combatant*> enemy_combatants);
     
     protected:
         std::vector<Attack> attacks_;

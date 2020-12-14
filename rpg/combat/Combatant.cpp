@@ -87,6 +87,8 @@ void Combatant::PerformAttack(Attack attack, std::vector<Combatant*> targets)
         std::cout << crit_hit << " " << attack_damage << std::endl;
         target->TakeDamage(attack_damage, attack.effect);
     }
+
+    cooldown_ = attack.cooldown;
 }
 
 bool Combatant::TakeDamage(int damage, AttackEffect effect)
