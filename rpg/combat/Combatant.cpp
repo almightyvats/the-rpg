@@ -10,6 +10,18 @@
 #define MIN_LUCK_FACTOR 0.2f
 #define MAX_LUCK_FACTOR 2.0f
 
+std::string Combatant::state_string() {
+    switch (state_)
+    {
+    case CombatantState::normal:
+        return "normal";
+    case CombatantState::dead:
+        return "dead";
+    default:
+        return "unknown";
+    }
+}
+
 bool CheckAttackHit(int hit_stat, int evade_stat, float accuracy, AttackEffect effect)
 {
     float hit_evade_factor;
@@ -75,7 +87,7 @@ void Combatant::PerformAttack(Attack attack, std::vector<Combatant*> targets)
         }
 
         if (!attack_hit) {
-            std::cout << "missed" << std::endl;
+            std::cout << "Missed" << std::endl;
             continue;
         }
 
@@ -86,6 +98,7 @@ void Combatant::PerformAttack(Attack attack, std::vector<Combatant*> targets)
         int attack_damage = CalculateAttackDamage(attacker_stats.strength, target_stats.defense, damage, attack.effect);
         std::cout << crit_hit << " " << attack_damage << std::endl;
         target->TakeDamage(attack_damage, attack.effect);
+        std::cout << "Hit for " << attack_damage << " damage\n";
     }
 
     cooldown_ = attack.cooldown;

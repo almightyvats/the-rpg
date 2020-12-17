@@ -13,6 +13,12 @@ class Combat {
         std::vector<Combatant*> player_combatants_;
         std::vector<Combatant*> enemy_combatants_;
 
-        Combatant* ProgressToNextAttack();
+        void PrintStatus();
         void Initiate();
+
+    private:
+        std::vector<Combatant*> LivingPlayerCombatants();
+        std::vector<Combatant*> LivingEnemyCombatants();
+        void SetInitialCooldowns();
+
 };

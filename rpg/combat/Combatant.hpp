@@ -60,6 +60,7 @@ class Combatant {
         int level() const {return level_;}
         int max_hp() const {return max_hp_;}
         int hp() const {return hp_;}
+        std::string state_string();
 
         int agility() const {return agility_;}
         int strength() const {return strength_;}
