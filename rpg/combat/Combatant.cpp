@@ -96,9 +96,8 @@ void Combatant::PerformAttack(Attack attack, std::vector<Combatant*> targets)
         int damage = (crit_hit ? attack.damage : (int)(attack.damage * attack.crit_multiplier));
 
         int attack_damage = CalculateAttackDamage(attacker_stats.strength, target_stats.defense, damage, attack.effect);
-        std::cout << crit_hit << " " << attack_damage << std::endl;
         target->TakeDamage(attack_damage, attack.effect);
-        std::cout << "Hit for " << attack_damage << " damage\n";
+        std::cout << (crit_hit ? "Critical " : "") << "Hit for " << attack_damage << " damage\n";
     }
 
     cooldown_ = attack.cooldown;

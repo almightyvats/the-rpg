@@ -62,12 +62,12 @@ void Combat::PrintStatus() {
     std::cout << "Player Team:\n";
 
     for (Combatant* combatant : player_combatants_) {
-        std::cout << "   " << combatant->name() << "  Level: " << combatant->level() << "  State: " << combatant->state_string() << "  HP: " << combatant->hp() << "/" << combatant->max_hp() << "  CD: " << combatant->cooldown_ << "\n";
+        std::cout << "   " << combatant->name() << "  Lvl: " << combatant->level() << "  State: " << combatant->state_string() << "  HP: " << combatant->hp() << "/" << combatant->max_hp() << "  CD: " << combatant->cooldown_ << "\n";
     }
 
     std::cout << "Enemy Team:\n";
     for (Combatant* combatant : enemy_combatants_) {
-        std::cout << "   " << combatant->name() << "  Level: " << combatant->level() << "  State: " << combatant->state_string() << "  HP: " << combatant->hp() << "/" << combatant->max_hp() << "  CD: " << combatant->cooldown_ << "\n";
+        std::cout << "   " << combatant->name() << "  Lvl: " << combatant->level() << "  State: " << combatant->state_string() << "  HP: " << combatant->hp() << "/" << combatant->max_hp() << "  CD: " << combatant->cooldown_ << "\n";
     }
 }
 
@@ -120,6 +120,7 @@ void Combat::Initiate()
         next_attacker->ChooseAndPerformAction(living_player_combatants, living_enemy_combatants);
         living_player_combatants = LivingPlayerCombatants();
         living_enemy_combatants = LivingEnemyCombatants();
+        std::cout << "\n";
     }
 
     if (living_player_combatants.size() == 0) {

@@ -49,7 +49,7 @@ PlayerCombatant::PlayerCombatant(const std::string &name, int level, int max_hp,
 	level_ = level;
 	exp_ = 0;
 
-	max_hp_ = (std::rand() % 200) + 100;
+	max_hp_ = max_hp;
 	hp_ = max_hp_;
 	state_ = CombatantState::normal;
 	cooldown_ = 0;
