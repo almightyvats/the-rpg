@@ -33,6 +33,8 @@ class RpgGame {
 	static SDL_Renderer *renderer;
 	static bool isRunning;
 	static SDL_Rect camera;
+	inline static const int SCREEN_HEIGHT = 768;
+	inline static const int SCREEN_WIDTH = 1024;
 
   private:
 	SDL_Window *window{};

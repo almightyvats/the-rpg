@@ -18,12 +18,12 @@ class RpgPlayState : public RpgGameState {
 		return m_ps;
 	}
 
-	void Pause();
-	void Resume();
+	void Pause() override;
+	void Resume() override;
 
-	void HandleEvents(RpgGame *rpgGame);
-	void Update(RpgGame *rpgGame);
-	void Render(RpgGame *rpgGame);
+	void HandleEvents(RpgGame *rpgGame) override;
+	void Update(RpgGame *rpgGame) override;
+	void Render(RpgGame *rpgGame) override;
 
 	static SDL_Event event;
 	static AssetManager *assets;

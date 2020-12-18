@@ -19,7 +19,8 @@ void RpgGame::init(std::string title, bool fullScreen)
 		}
 
 		std::cout << "Initialized ..." << std::endl;
-		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024, 768, flags);
+		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH,
+		                          SCREEN_HEIGHT, flags);
 		if (window) {
 			std::cout << "Window craeted" << std::endl;
 		}

@@ -1,4 +1,5 @@
 #include "RpgPlayState.hpp"
+#include "RpgMenuState.hpp"
 #include "rpg/AssetManager.hpp"
 #include "rpg/Collision.hpp"
 #include "rpg/Map.hpp"
@@ -60,11 +61,19 @@ void RpgPlayState::Resume()
 
 void RpgPlayState::HandleEvents(RpgGame *rpgGame)
 {
-
 	SDL_PollEvent(&event);
 	switch (event.type) {
 	case SDL_QUIT:
 		rpgGame->quitGame();
+		break;
+	case SDL_KEYDOWN:
+		switch (event.key.keysym.sym) {
+		case SDLK_SPACE:
+			rpgGame->changeState(RpgMenuState::Instance());
+			break;
+			// case SDLK_SPACE:
+			//  break;
+		}
 		break;
 
 	default:
