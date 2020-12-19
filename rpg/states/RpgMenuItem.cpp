@@ -2,9 +2,7 @@
 #include "rpg/RpgGame.hpp"
 #include "rpg/TextureManager.hpp"
 
-RpgMenuItem::RpgMenuItem(float x, float y, float height, float width, std::string menuItemPath
-                         /*,std::function<void(void)> &callbackFucntion*/)
-//, m_callbackFucntion(callbackFucntion)
+RpgMenuItem::RpgMenuItem(float x, float y, float height, float width, std::string menuItemPath, ITEM_TYPE type)
 {
 	m_menuItemTexture = TextureManager::LoadTexture(menuItemPath);
 
@@ -13,10 +11,27 @@ RpgMenuItem::RpgMenuItem(float x, float y, float height, float width, std::strin
 	m_srcRect.w = width;
 	m_srcRect.h = height;
 
-	m_destRect.x = m_position.x = 0;
-	m_destRect.y = m_position.y = 0;
-	m_destRect.w = width;
-	m_destRect.h = height;
+	if (type == ITEM_TYPE::PLAY_BUTTON) {
+		m_destRect.x = m_position.x = (RpgGame::SCREEN_WIDTH / 2 - width / 2);
+		m_destRect.y = m_position.y = ((RpgGame::SCREEN_HEIGHT / 2 - height / 2) + 100);
+		m_destRect.w = width;
+		m_destRect.h = height;
+	} else if (type == ITEM_TYPE::EXIT_BUTTON) {
+		m_destRect.x = m_position.x = (RpgGame::SCREEN_WIDTH / 2 - width / 2);
+		m_destRect.y = m_position.y = ((RpgGame::SCREEN_HEIGHT / 2 - height / 2) + 250);
+		m_destRect.w = width;
+		m_destRect.h = height;
+	} else if (type == ITEM_TYPE::LOGO) {
+		m_destRect.x = m_position.x = (RpgGame::SCREEN_WIDTH / 2 - width / 2);
+		m_destRect.y = m_position.y = ((RpgGame::SCREEN_HEIGHT / 2 - height / 2) - 200);
+		m_destRect.w = width;
+		m_destRect.h = height;
+	} else {
+		m_destRect.x = m_position.x = 0;
+		m_destRect.y = m_position.y = 0;
+		m_destRect.w = width;
+		m_destRect.h = height;
+	}
 }
 
 RpgMenuItem::~RpgMenuItem() {}

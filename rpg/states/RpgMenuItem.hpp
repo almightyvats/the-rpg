@@ -7,6 +7,7 @@
 #include <functional>
 #include <string>
 
+enum class ITEM_TYPE { PLAY_BUTTON = 0, EXIT_BUTTON = 1, LOGO = 2, BACKGROUND = 3 };
 class RpgMenuItem {
   private:
 	float m_xPosition, m_yPosition;
@@ -20,8 +21,7 @@ class RpgMenuItem {
 	SDL_Point m_position;
 
   public:
-	RpgMenuItem(float x, float y, float height, float width, std::string menuItemPath);
-	//             /*,std::function<void(void)> &callbackFucntion*/)
+	RpgMenuItem(float x, float y, float height, float width, std::string menuItemPath, ITEM_TYPE type);
 	~RpgMenuItem();
 
 	bool isClickInBounds(float x, float y);
