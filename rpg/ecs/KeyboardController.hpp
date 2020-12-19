@@ -3,6 +3,7 @@
 #include "Components.hpp"
 #include "ecs.hpp"
 #include "rpg/RpgGame.hpp"
+#include "rpg/states/RpgPlayState.hpp"
 
 class KeyboardController : public Component {
   public:
@@ -16,8 +17,8 @@ class KeyboardController : public Component {
 	}
 	void update() override
 	{
-		if (RpgGame::event.type == SDL_KEYDOWN) {
-			switch (RpgGame::event.key.keysym.sym) {
+		if (RpgPlayState::event.type == SDL_KEYDOWN) {
+			switch (RpgPlayState::event.key.keysym.sym) {
 			case SDLK_w:
 				transform->velocity.y = -1;
 				sprite->spriteFlip = SDL_FLIP_NONE;
@@ -44,8 +45,8 @@ class KeyboardController : public Component {
 			}
 		}
 
-		if (RpgGame::event.type == SDL_KEYUP) {
-			switch (RpgGame::event.key.keysym.sym) {
+		if (RpgPlayState::event.type == SDL_KEYUP) {
+			switch (RpgPlayState::event.key.keysym.sym) {
 			case SDLK_w:
 				transform->velocity.y = 0;
 				sprite->play("idle_up");

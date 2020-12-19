@@ -1,5 +1,6 @@
 #include "AssetManager.hpp"
 #include "ecs/Components.hpp"
+#include "rpg/states/RpgPlayState.hpp"
 
 AssetManager::AssetManager(Manager *man) : manager(man) {}
 
@@ -19,7 +20,7 @@ void AssetManager::CreateProjectile(Vector2D position, Vector2D velocity, int ra
 
 	projectile.addComponent<ProjectileComponent>(range, speed, velocity);
 	projectile.addComponent<ColliderComponent>("projectile", 50, 50, position.x, position.y, 85, 1, id);
-	projectile.addGroup(RpgGame::groupProjectiles);
+	projectile.addGroup(RpgPlayState::groupProjectiles);
 }
 
 void AssetManager::CreateMapTile(int srcX, int srcY, int destX, int destY, int tsize, int tscale, bool withCollision,
@@ -35,7 +36,7 @@ void AssetManager::CreateMapTile(int srcX, int srcY, int destX, int destY, int t
 	if (map != "") {
 		tile.addComponent<DoorComponent>(map, pStart);
 	}
-	tile.addGroup(RpgGame::groupMap);
+	tile.addGroup(RpgPlayState::groupMap);
 }
 
 void AssetManager::AddTexture(std::string id, std::string path)

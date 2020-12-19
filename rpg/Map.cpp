@@ -57,7 +57,7 @@ Map::Map(std::string path, int mapScale)
 		tileset.columns = tilesets[i]["columns"].GetInt();
 		tileset.imageName = tilesets[i]["image"].GetString();
 
-		RpgGame::assets->AddTexture(tileset.spriteId, "../rpg/assets/map_sprites/" + tileset.imageName);
+		RpgPlayState::assets->AddTexture(tileset.spriteId, "../rpg/assets/map_sprites/" + tileset.imageName);
 		setting.tilesets.push_back(tileset);
 	}
 
@@ -96,7 +96,7 @@ void Map::LoadMap()
 						pPos = setting.layers[layerNumber].playerStart;
 					}
 
-					RpgGame::assets->CreateMapTile(
+					RpgPlayState::assets->CreateMapTile(
 					    xpos, ypos, x * setting.ScaledWidth(), y * setting.ScaledHeight(), setting.tileSize,
 					    setting.mapScale, setting.layers[layerNumber].collision, tileset.spriteId,
 					    SpriteSheet(tileset.columns, setting.tileWidth, setting.tileHeight, 0, 0), mapTest, pPos);
