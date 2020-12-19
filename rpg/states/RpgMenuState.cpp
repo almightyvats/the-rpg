@@ -144,7 +144,7 @@ void RpgMenuState::Render(RpgGame *rpgGame)
 	SDL_RenderClear(rpgGame->renderer);
 
 	m_menuBackgroundPtr->Draw();
-	m_logoPtr->Draw();
+	// m_logoPtr->Draw();
 	for (const auto &button : m_buttonsWithState) {
 		auto item = button.first;
 		auto state = button.second;
