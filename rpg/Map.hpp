@@ -10,7 +10,7 @@ struct MapLayer {
 	int id;
 	int height;
 	int width;
-	bool collision;
+	bool collision = false;
 	std::string name;
 	std::vector<int> tiles;
 	std::string targetMap;

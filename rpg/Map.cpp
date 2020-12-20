@@ -35,7 +35,23 @@ Map::Map(std::string path, int mapScale)
 		layer.height = layers[i]["height"].GetInt();
 		layer.width = layers[i]["width"].GetInt();
 		layer.name = layers[i]["name"].GetString();
-		layer.collision = layers[i]["collision"].GetBool();
+
+		if (layers[i].HasMember("properties")) {
+			const rapidjson::Value &properties = layers[i]["properties"];
+			for (rapidjson::SizeType j = 0; j < properties.Size(); j++) { // Uses SizeType instead of size_t^
+				std::string propName = properties[j]["name"].GetString();
+				if (propName.compare("collision") == 0) {
+					layer.collision = properties[j]["value"].GetBool();
+				} else if (propName.compare("targetMap") == 0) {
+					std::string strVal = properties[j]["value"].GetString();
+					layer.targetMap = "../rpg/assets/map/" + strVal + ".json";
+				} else if (propName.compare("playerStartX") == 0) {
+					layer.playerStart.x = properties[j]["value"].GetInt();
+				} else if (propName.compare("playerStartY") == 0) {
+					layer.playerStart.y = properties[j]["value"].GetInt();
+				}
+			}
+		}
 
 		if (layers[i].HasMember("targetMap")) {
 			layer.targetMap = layers[i]["targetMap"].GetString();
@@ -84,22 +100,11 @@ void Map::LoadMap()
 					int xpos = ((tileNumber % tileset.columns) + 0) * setting.tileWidth;
 					int ypos = ((tileNumber / tileset.columns) + 0) * setting.tileHeight;
 
-					std::string mapTest;
-					Vector2D pPos;
-					if (x == 30 && y == 25) {
-						mapTest = "../rpg/assets/map/shop.json";
-						pPos = Vector2D(4, 7);
-					}
-
-					if (setting.layers[layerNumber].targetMap != "") {
-						mapTest = "../rpg/assets/map/" + setting.layers[layerNumber].targetMap;
-						pPos = setting.layers[layerNumber].playerStart;
-					}
-
 					RpgPlayState::assets->CreateMapTile(
 					    xpos, ypos, x * setting.ScaledWidth(), y * setting.ScaledHeight(), setting.tileSize,
 					    setting.mapScale, setting.layers[layerNumber].collision, tileset.spriteId,
-					    SpriteSheet(tileset.columns, setting.tileWidth, setting.tileHeight, 0, 0), mapTest, pPos);
+					    SpriteSheet(tileset.columns, setting.tileWidth, setting.tileHeight, 0, 0),
+					    setting.layers[layerNumber].targetMap, setting.layers[layerNumber].playerStart);
 					counter++;
 				}
 

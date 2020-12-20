@@ -20,11 +20,11 @@ RpgPlayState::RpgPlayState()
 	assets->AddTexture("player", "../rpg/assets/playerSpriteSheet.png");
 	assets->AddTexture("fireball", "../rpg/assets/fireball_sprite.png");
 
-	map = new Map("../rpg/assets/map/jsonsample.json", 3);
+	map = new Map("../rpg/assets/map/town.json", 3);
 	// map = new Map("../rpg/assets/map/testmap_50_50.json", 3);
 	map->LoadMap();
 
-	player.addComponent<TransformComponent>(30 * 32 * 3, 27 * 32 * 3, 115, 75, 1);
+	player.addComponent<TransformComponent>(64 * 32 * 3, 76 * 32 * 3, 115, 75, 1);
 
 	SpriteSheet spriteSheet(11, 75, 115, 75, 5);
 	auto &playerSprite = player.addComponent<SpriteComponent>("player", spriteSheet);
@@ -43,9 +43,9 @@ RpgPlayState::RpgPlayState()
 	player.addComponent<ColliderComponent>("Player");
 	player.addGroup(groupPlayers);
 
-	assets->CreateProjectile(Vector2D(300, 300), Vector2D(0, -1), 200, 0, "fireball");
-	assets->CreateProjectile(Vector2D(0, 300), Vector2D(1, 1), 200, 0, "fireball");
-	assets->CreateProjectile(Vector2D(150, 300), Vector2D(1, 0), 200, 0, "fireball");
+	//assets->CreateProjectile(Vector2D(300, 300), Vector2D(0, -1), 200, 0, "fireball");
+	//assets->CreateProjectile(Vector2D(0, 300), Vector2D(1, 1), 200, 0, "fireball");
+	//assets->CreateProjectile(Vector2D(150, 300), Vector2D(1, 0), 200, 0, "fireball");
 }
 
 RpgPlayState::~RpgPlayState() = default;

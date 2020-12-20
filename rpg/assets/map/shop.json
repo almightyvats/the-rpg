@@ -1,4 +1,12 @@
 { "compressionlevel":-1,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"json",
+         "target":"shop.json"
+        }
+    },
  "height":10,
  "infinite":false,
  "layers":[
@@ -8,12 +16,17 @@
          "id":1,
          "name":"Walls",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"collision",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":10,
          "x":0,
-         "y":0,
-         "collision":true
+         "y":0
         }, 
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 293, 293, 293, 293, 293, 293, 293, 293, 0, 0, 293, 293, 293, 293, 293, 293, 293, 293, 0, 0, 293, 293, 293, 293, 293, 293, 293, 293, 0, 0, 293, 293, 293, 293, 293, 293, 293, 293, 0, 0, 293, 293, 293, 293, 293, 293, 293, 293, 0, 0, 293, 293, 293, 293, 293, 293, 293, 293, 0, 0, 293, 293, 293, 293, 293, 293, 293, 293, 0, 0, 0, 0, 0, 391, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -21,12 +34,17 @@
          "id":2,
          "name":"Deco",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"collision",
+                 "type":"bool",
+                 "value":false
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":10,
          "x":0,
-         "y":0,
-         "collision":false
+         "y":0
         }, 
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 838, 839, 840, 0, 0, 0, 0, 0, 0, 0, 854, 855, 856, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 293, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -34,12 +52,17 @@
          "id":5,
          "name":"Deco2",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"collision",
+                 "type":"bool",
+                 "value":false
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":10,
          "x":0,
-         "y":0,
-         "collision":false
+         "y":0
         }, 
         {
          "data":[0, 777, 0, 0, 0, 817, 818, 819, 0, 0, 0, 785, 0, 0, 863, 825, 826, 827, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 677, 755, 0, 0, 0, 0, 0, 0, 0, 0, 685, 0, 0, 0, 0, 0, 0, 0, 0, 0, 693, 0, 0, 0, 0, 912, 0, 0, 0, 0, 0, 0, 0, 0, 0, 920, 0, 0, 0, 0, 0, 0, 859, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -47,12 +70,17 @@
          "id":3,
          "name":"Objects",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"collision",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":10,
          "x":0,
-         "y":0,
-         "collision":true
+         "y":0
         }, 
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 408, 0, 0, 0, 0, 0, 0, 0, 0, 0, 416, 0, 0, 0, 0, 0],
@@ -60,15 +88,32 @@
          "id":6,
          "name":"Door",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"collision",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"playerStartX",
+                 "type":"int",
+                 "value":64
+                }, 
+                {
+                 "name":"playerStartY",
+                 "type":"int",
+                 "value":76
+                }, 
+                {
+                 "name":"targetMap",
+                 "type":"string",
+                 "value":"town"
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":10,
          "x":0,
-         "y":0,
-         "collision":true,
-         "targetMap":"jsonsample.json",
-         "playerStartX":30,
-         "playerStartY":26
+         "y":0
         }, 
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 1049, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1057, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 996, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1004, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -76,12 +121,17 @@
          "id":4,
          "name":"Objects2",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"collision",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":10,
          "x":0,
-         "y":0,
-         "collision":true
+         "y":0
         }],
  "nextlayerid":7,
  "nextobjectid":1,
@@ -90,12 +140,12 @@
  "tiledversion":"1.4.3",
  "tileheight":32,
  "tilesets":[
-        {
-         "firstgid":1,
-         "columns":8,
-         "spriteId":"base",
-         "image":"[Base]BaseChip_pipo.png"
-        }],
+       {
+        "firstgid":1,
+        "columns":8,
+        "spriteId":"base",
+        "image":"[Base]BaseChip_pipo.png"
+       }],
  "tilewidth":32,
  "type":"map",
  "version":1.4,
