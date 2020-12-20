@@ -3,56 +3,77 @@
 
 RpgSoundManager::~RpgSoundManager() {}
 
-void RpgSoundManager::init() {
-    int audio_rate = 22050;
-    Uint16 audio_format = MIX_DEFAULT_FORMAT;
-    int audio_channels = 2;
-    int audio_buffers = 4096;
+void RpgSoundManager::init()
+{
+	int audio_rate = 22050;
+	Uint16 audio_format = MIX_DEFAULT_FORMAT;
+	int audio_channels = 2;
+	int audio_buffers = 4096;
 
-    if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, audio_buffers) != 0)
-    {
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
 		std::cout << "Couldn't init audio: " << Mix_GetError();
-    }
+	} else {
+		std::cout << "Sound initialised" << std::endl;
+	}
 }
 
-void RpgSoundManager::addMusic(const char *musicPath, const std::string& musicId) {
+void RpgSoundManager::addMusic(const char *musicPath, const std::string &musicId)
+{
 	auto itr = m_MusicStore.find(musicId);
 	if (itr == m_MusicStore.end()) {
 		auto mix_music = Mix_LoadMUS(musicPath);
-		m_MusicStore.insert({musicId, mix_music});
+		if (mix_music != nullptr) {
+			m_MusicStore.insert({musicId, mix_music});
+		} else {
+			std::cout << "Problem Loading " << musicId << " : " << Mix_GetError() << std::endl;
+		}
 	}
 }
 
-void RpgSoundManager::addSoundEffect(const char *effectPath,const std::string& effectId) {
-    auto itr = m_ChunkStore.find(effectId);
-    if (itr == m_ChunkStore.end()) {
-		auto mix_music = Mix_LoadWAV(effectPath);
-		m_ChunkStore.insert({effectId, mix_music});
+void RpgSoundManager::addSoundEffect(const char *effectPath, const std::string &effectId)
+{
+	auto itr = m_ChunkStore.find(effectId);
+	if (itr == m_ChunkStore.end()) {
+		auto mix_chuck = Mix_LoadWAV(effectPath);
+		if (mix_chuck != nullptr) {
+			m_ChunkStore.insert({effectId, mix_chuck});
+		} else {
+			std::cout << "Problem Loading " << effectId << " : " << Mix_GetError() << std::endl;
+		}
 	}
 }
 
-void RpgSoundManager::playMusic(const std::string &musicId) {
-    auto itr = m_MusicStore.find(musicId);
+void RpgSoundManager::playMusic(const std::string &musicId)
+{
+	auto itr = m_MusicStore.find(musicId);
 	if (itr != m_MusicStore.end()) {
-        Mix_PlayMusic(itr->second, -1);
+		std::cout << "Music Found!\n";
+		Mix_Music *music = itr->second;
+		if (isMusicPlaying) {
+			Mix_HaltMusic();
+		}
+		Mix_PlayMusic(music, -1);
 	}
 
-    isMusicPlaying = true;
+	isMusicPlaying = true;
 }
 
-void RpgSoundManager::playEffect(const std::string &effectId) {
-    auto itr = m_ChunkStore.find(effectId);
-    if (itr != m_ChunkStore.end()) {
-        Mix_PlayChannel(-1, itr->second, 0);
-    }
+void RpgSoundManager::playEffect(const std::string &effectId)
+{
+	auto itr = m_ChunkStore.find(effectId);
+	if (itr != m_ChunkStore.end()) {
+		Mix_PlayChannel(-1, itr->second, 0);
+	}
 }
-void RpgSoundManager::pauseMusic() {
 
-    Mix_PauseMusic();
-    isMusicPlaying = false;
+void RpgSoundManager::pauseMusic()
+{
+	Mix_PauseMusic();
+	isMusicPlaying = false;
 }
-void RpgSoundManager::ResumeMusic() {
 
+void RpgSoundManager::ResumeMusic()
+{
 	Mix_ResumeMusic();
 	isMusicPlaying = true;
 }

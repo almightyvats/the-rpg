@@ -25,11 +25,8 @@ void RpgGame::init(std::string title, bool fullScreen)
 		if (window) {
 			std::cout << "Window craeted" << std::endl;
 		}
-		// RpgSoundManager soundManager;
 		RpgSoundManager::init();
-		RpgSoundManager::addMusic("../assets/sound/sample.mp3", "SAMPLE");
-
-		RpgSoundManager::playMusic("SAMPLE");
+		RpgSoundManager::addMusic("../rpg/assets/music/play.wav", "SAMPLE");
 
 		int w, h;
 		SDL_GetWindowSize(window, &w, &h);
