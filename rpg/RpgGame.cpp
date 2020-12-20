@@ -1,5 +1,6 @@
 #include "RpgGame.hpp"
 #include "rpg/states/RpgGameState.hpp"
+#include "sound/RpgSoundManager.hpp"
 
 SDL_Renderer *RpgGame::renderer = nullptr;
 
@@ -24,6 +25,11 @@ void RpgGame::init(std::string title, bool fullScreen)
 		if (window) {
 			std::cout << "Window craeted" << std::endl;
 		}
+		// RpgSoundManager soundManager;
+		RpgSoundManager::init();
+		RpgSoundManager::addMusic("../assets/sound/sample.mp3", "SAMPLE");
+
+		RpgSoundManager::playMusic("SAMPLE");
 
 		int w, h;
 		SDL_GetWindowSize(window, &w, &h);
@@ -61,6 +67,7 @@ void RpgGame::clean()
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
+	Mix_Quit();
 	std::cout << "cleaned" << std::endl;
 };
 
