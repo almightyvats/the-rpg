@@ -5,6 +5,7 @@
 #include "RpgGameState.hpp"
 #include "RpgMenuItem.hpp"
 #include "rpg/RpgGame.hpp"
+#include "rpg/RpgLabel.hpp"
 #include <functional>
 #include <map>
 #include <memory>
@@ -20,6 +21,7 @@ enum BUTTON_STATE {
 };
 
 class RpgMenuItem;
+class RpgLabel;
 
 using MenuItem = std::vector<std::shared_ptr<RpgMenuItem>>;
 class RpgMenuState : public RpgGameState {
@@ -47,7 +49,6 @@ class RpgMenuState : public RpgGameState {
 	void buttonPressed(MenuItem item, RpgGame *rpgGame);
 
 	static SDL_Event m_event;
-	static AssetManager *assets;
 
 	MenuItem m_playButton;
 	MenuItem m_exitButton;
@@ -55,8 +56,7 @@ class RpgMenuState : public RpgGameState {
 	std::shared_ptr<RpgMenuItem> m_logoPtr;
 	std::map<MenuItem, std::function<void(RpgGame *)>> m_buttonFucntions;
 	std::map<MenuItem, BUTTON_STATE> m_buttonsWithState;
-
-	int m_currentSprite;
+	std::shared_ptr<RpgLabel> m_label;
 };
 
 #endif // RPG_RPGMENUSTATE_HPP

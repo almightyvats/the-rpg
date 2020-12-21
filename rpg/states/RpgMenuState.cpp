@@ -37,6 +37,11 @@ RpgMenuState::RpgMenuState()
 	m_buttonsWithState.insert({m_playButton, BUTTON_STATE::BUTTON_SPRITE_MOUSE_OUT});
 	m_buttonsWithState.insert({m_exitButton, BUTTON_STATE::BUTTON_SPRITE_MOUSE_OUT});
 
+	RpgPlayState::assets->AddFont("Ancient", "../rpg/assets/font/ancient.ttf", 20);
+
+	SDL_Color white = {0, 0, 0};
+	m_label = std::make_shared<RpgLabel>(10, 10, "Test String", "Ancient", white);
+
 	RpgSoundManager::playMusic("MENU");
 }
 
@@ -82,9 +87,9 @@ void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 		int mousePosX, mousePosY;
 		SDL_GetMouseState(&mousePosX, &mousePosY);
 
-		SDL_Point menuItemPosition = m_playButton[m_currentSprite]->menuItemPosition();
+		SDL_Point menuItemPosition = m_playButton[0]->menuItemPosition();
 
-		SDL_Point exitButtonPosition = m_exitButton[m_currentSprite]->menuItemPosition();
+		SDL_Point exitButtonPosition = m_exitButton[0]->menuItemPosition();
 
 		bool insidePlayButton = true;
 		bool insideExitButton = true;
@@ -143,11 +148,7 @@ void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 	}
 }
 
-void RpgMenuState::Update(RpgGame *rpgGame)
-{
-	m_playButton[m_currentSprite]->Update();
-	m_exitButton[m_currentSprite]->Update();
-}
+void RpgMenuState::Update(RpgGame *rpgGame) {}
 
 void RpgMenuState::Render(RpgGame *rpgGame)
 {
@@ -160,6 +161,8 @@ void RpgMenuState::Render(RpgGame *rpgGame)
 		auto state = button.second;
 		item[state]->Draw();
 	}
+
+	m_label->Draw();
 
 	SDL_RenderPresent(rpgGame->renderer);
 }
