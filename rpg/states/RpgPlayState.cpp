@@ -15,6 +15,12 @@ Uint8 alpha = SDL_ALPHA_OPAQUE;
 
 auto &player(manager.addEntity());
 
+bool godMode = false;
+SDL_Keycode conamiCode[] = {SDLK_UP,    SDLK_UP,   SDLK_DOWN,  SDLK_DOWN, SDLK_LEFT,
+                            SDLK_RIGHT, SDLK_LEFT, SDLK_RIGHT, SDLK_b,    SDLK_a};
+bool conamiCodeInput[] = {false, false, false, false, false, false, false, false, false, false};
+int conamiCodeIndex = 0;
+
 RpgPlayState::RpgPlayState()
 {
 	assets->AddTexture("player", "../rpg/assets/playerSpriteSheet.png");
@@ -62,25 +68,59 @@ void RpgPlayState::Resume()
 	printf("CPlayState Resume\n");
 }
 
+bool CheckKonami(SDL_Keycode keyCode)
+{
+	// Check for special input
+	if (conamiCode[conamiCodeIndex] == keyCode) {
+		bool prevInputCorrect = true;
+		for (int i = 0; i < conamiCodeIndex; i++) {
+			prevInputCorrect &= conamiCodeInput[i];
+		}
+		if (prevInputCorrect) {
+			conamiCodeInput[conamiCodeIndex] = true;
+			conamiCodeIndex++;
+		} else {
+			conamiCodeIndex = 0;
+		}
+	} else {
+		conamiCodeIndex = 0;
+	}
+
+	if (conamiCodeIndex == 0) {
+		for (int i = 0; i < 10; i++) {
+			conamiCodeInput[i] = false;
+		}
+	}
+	return conamiCodeInput[9];
+}
+
 void RpgPlayState::HandleEvents(RpgGame *rpgGame)
 {
-	SDL_PollEvent(&event);
-	switch (event.type) {
-	case SDL_QUIT:
-		rpgGame->quitGame();
-		break;
-	case SDL_KEYDOWN:
-		switch (event.key.keysym.sym) {
-		case SDLK_SPACE:
-			rpgGame->changeState(RpgMenuState::Instance());
+	if (SDL_PollEvent(&event) == 1) {
+		switch (event.type) {
+		case SDL_QUIT:
+			rpgGame->quitGame();
 			break;
-			// case SDLK_SPACE:
-			//  break;
+		case SDL_KEYDOWN:
+			switch (event.key.keysym.sym) {
+			case SDLK_SPACE:
+				rpgGame->changeState(RpgMenuState::Instance());
+				break;
+			}
+			break;
+		case SDL_KEYUP:
+			if (CheckKonami(event.key.keysym.sym)) {
+				godMode = !godMode;
+				if (godMode) {
+					std::cout << "Godmode activated" << std::endl;
+				} else {
+					std::cout << "Godmode deactivated" << std::endl;
+				}
+			}
+			break;
+		default:
+			break;
 		}
-		break;
-
-	default:
-		break;
 	}
 }
 
@@ -100,8 +140,9 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 		if (t->hasComponent<ColliderComponent>()) {
 			SDL_Rect cCol = t->getComponent<ColliderComponent>().collider;
 			if (Collision::AABB(cCol, playerCol)) {
-				player.getComponent<TransformComponent>().position = playerPos;
-
+				if (!godMode) {
+					player.getComponent<TransformComponent>().position = playerPos;
+				}
 				if (t->hasComponent<DoorComponent>()) {
 					auto &door = t->getComponent<DoorComponent>();
 					newMap = door.targetMap;
