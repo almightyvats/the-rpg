@@ -49,13 +49,13 @@ void RpgSoundManager::playMusic(const std::string &musicId)
 	if (itr != m_MusicStore.end()) {
 		std::cout << "Music Found!\n";
 		Mix_Music *music = itr->second;
-		if (isMusicPlaying) {
+		if (m_isMusicPlaying) {
 			Mix_HaltMusic();
 		}
 		Mix_PlayMusic(music, -1);
 	}
 
-	isMusicPlaying = true;
+	m_isMusicPlaying = true;
 }
 
 void RpgSoundManager::playEffect(const std::string &effectId)
@@ -68,12 +68,16 @@ void RpgSoundManager::playEffect(const std::string &effectId)
 
 void RpgSoundManager::pauseMusic()
 {
-	Mix_PauseMusic();
-	isMusicPlaying = false;
+	if (m_isMusicPlaying) {
+		Mix_PauseMusic();
+	}
+	m_isMusicPlaying = false;
 }
 
-void RpgSoundManager::ResumeMusic()
+void RpgSoundManager::resumeMusic()
 {
-	Mix_ResumeMusic();
-	isMusicPlaying = true;
+	if (!m_isMusicPlaying) {
+		Mix_ResumeMusic();
+	}
+	m_isMusicPlaying = true;
 }

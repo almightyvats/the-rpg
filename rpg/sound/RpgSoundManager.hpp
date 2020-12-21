@@ -10,7 +10,8 @@ class RpgSoundManager {
 	inline static std::map<std::string, Mix_Chunk *> m_ChunkStore;
 	inline static std::map<std::string, Mix_Music *> m_MusicStore;
 
-	inline static bool isMusicPlaying;
+	inline static bool m_isMusicPlaying;
+	inline static std::string m_lastPlayedFrom;
 
   public:
 	RpgSoundManager() = default;
@@ -25,7 +26,7 @@ class RpgSoundManager {
 	static void playEffect(const std::string &effectId);
 
 	static void pauseMusic();
-	static void ResumeMusic();
+	static void resumeMusic();
 };
 
 #endif

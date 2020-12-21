@@ -2,6 +2,7 @@
 #include "RpgMenuState.hpp"
 #include "RpgPlayState.hpp"
 #include "rpg/AssetManager.hpp"
+#include "rpg/sound/RpgSoundManager.hpp"
 
 SDL_Event RpgMenuState::m_event;
 
@@ -35,6 +36,8 @@ RpgMenuState::RpgMenuState()
 
 	m_buttonsWithState.insert({m_playButton, BUTTON_STATE::BUTTON_SPRITE_MOUSE_OUT});
 	m_buttonsWithState.insert({m_exitButton, BUTTON_STATE::BUTTON_SPRITE_MOUSE_OUT});
+
+	RpgSoundManager::playMusic("MENU");
 }
 
 RpgMenuState::~RpgMenuState() {}
@@ -48,8 +51,15 @@ void RpgMenuState::buttonPressed(MenuItem item, RpgGame *rpgGame)
 	}
 }
 
-void RpgMenuState::Pause() {}
-void RpgMenuState::Resume() {}
+void RpgMenuState::Pause()
+{
+	RpgSoundManager::pauseMusic();
+}
+
+void RpgMenuState::Resume()
+{
+	RpgSoundManager::resumeMusic();
+}
 
 void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 {

@@ -4,6 +4,7 @@
 #include "rpg/Collision.hpp"
 #include "rpg/Map.hpp"
 #include "rpg/ecs/Components.hpp"
+#include "rpg/sound/RpgSoundManager.hpp"
 
 Map *map;
 Manager manager;
@@ -46,6 +47,8 @@ RpgPlayState::RpgPlayState()
 	assets->CreateProjectile(Vector2D(300, 300), Vector2D(0, -1), 200, 0, "fireball");
 	assets->CreateProjectile(Vector2D(0, 300), Vector2D(1, 1), 200, 0, "fireball");
 	assets->CreateProjectile(Vector2D(150, 300), Vector2D(1, 0), 200, 0, "fireball");
+
+	RpgSoundManager::playMusic("PLAY");
 }
 
 RpgPlayState::~RpgPlayState() = default;
@@ -55,11 +58,16 @@ auto &players(manager.getGroup(RpgPlayState::groupPlayers));
 auto &colliders(manager.getGroup(RpgPlayState::groupColliders));
 auto &projectiles(manager.getGroup(RpgPlayState::groupProjectiles));
 
-void RpgPlayState::Pause() {}
+void RpgPlayState::Pause()
+{
+	std::cout << "PlayState - Pause\n";
+	RpgSoundManager::pauseMusic();
+}
 
 void RpgPlayState::Resume()
 {
-	printf("CPlayState Resume\n");
+	std::cout << "PlayState - Resume\n";
+	RpgSoundManager::resumeMusic();
 }
 
 void RpgPlayState::HandleEvents(RpgGame *rpgGame)
