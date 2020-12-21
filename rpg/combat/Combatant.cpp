@@ -17,6 +17,8 @@ std::string Combatant::state_string() {
         return "normal";
     case CombatantState::dead:
         return "dead";
+    case CombatantState::blocking:
+        return "blocking";
     default:
         return "unknown";
     }
@@ -102,14 +104,45 @@ void Combatant::PerformAttack(Attack attack, std::vector<Combatant*> targets)
             attack_damage = CalculateAttackDamage(attack.force, target_stats.defense, damage, attack.effect); 
         }
 
-        target->TakeDamage(attack_damage, attack.effect);
-        std::cout << (crit_hit ? "Critical " : "") << "Hit for " << attack_damage << " damage\n";
+        if (target->state_ == CombatantState::blocking) {
+            target->state_ = CombatantState::normal;
+            std::cout << "Block broken\n";
+        } else {
+            target->TakeDamage(attack_damage);
+            std::cout << (crit_hit ? "Critical " : "") << "Hit for " << attack_damage << " damage\n";
+        }
     }
 
     cooldown_ = attack.cooldown;
 }
 
-bool Combatant::TakeDamage(int damage, AttackEffect effect)
+void Combatant::UseAbility(Ability ability, std::vector<Combatant*> targets)
+{
+    std::srand(std::time(nullptr));
+
+    for (Combatant* target : targets) {
+
+        float roll_needed = ability.accuracy;
+        int roll = (std::rand() % 1000);
+
+        if (ability.accuracy == 1.0 || roll < roll_needed) {
+            if (ability.heal != 0) {
+                target->TakeDamage(-ability.heal);
+            }
+            if (ability.damage != 0) {
+                target->TakeDamage(ability.damage);
+            }
+
+            if (ability.effect == AbilityEffect::block) {
+                target->state_ = CombatantState::blocking;
+            }
+        }
+    }
+
+    cooldown_ = ability.cooldown;
+}
+
+bool Combatant::TakeDamage(int damage)
 {
     hp_ -= damage;
     

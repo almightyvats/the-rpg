@@ -41,7 +41,7 @@ enum class AbilityTargetType {
 
 enum class AbilityEffect {
     none,
-    protection,
+    block,
 };
 
 struct Ability {
@@ -66,6 +66,7 @@ struct CombatantStats {
 enum class CombatantState {
     normal,
     dead,
+    blocking,
 };
 
 class Combatant {
@@ -81,7 +82,8 @@ class Combatant {
         virtual void ChooseAndPerformAction(const std::vector<Combatant*> player_combatants, std::vector<Combatant*> enemy_combatants) = 0;
 
         void PerformAttack(Attack attack, std::vector<Combatant*> targets);
-        bool TakeDamage(int damage, AttackEffect effect);
+        void UseAbility(Ability ability, std::vector<Combatant*> targets);
+        bool TakeDamage(int damage);
 
         std::string name() const {return name_;}
         int level() const {return level_;}

@@ -36,4 +36,8 @@ class PlayerCombatant : public Combatant {
         std::vector<Ability> base_abilities_;
 
         int exp_;
+    
+    private:
+        void ChooseAttackTargetAndPerformAttack(Attack attack, std::vector<Combatant *> enemy_combatants);
+        void ChooseAbilityTargetAndUseAbility(Ability ability, const std::vector<Combatant *> player_combatants, std::vector<Combatant *> enemy_combatants);
 };
