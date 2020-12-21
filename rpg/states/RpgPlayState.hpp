@@ -27,7 +27,7 @@ class RpgPlayState : public RpgGameState {
 
 	static SDL_Event event;
 	static AssetManager *assets;
-	enum groupLabels : std::size_t { groupMap, groupPlayers, groupColliders, groupProjectiles };
+	enum groupLabels : std::size_t { groupMap, groupPlayers, groupColliders, groupProjectiles, groupNpcs };
 };
 
 #endif // RPG_RPGPLAYSTATE_HPP

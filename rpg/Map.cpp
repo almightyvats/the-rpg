@@ -77,6 +77,14 @@ Map::Map(std::string path, int mapScale)
 		setting.tilesets.push_back(tileset);
 	}
 
+	if (document.HasMember("npcs")) {
+		const rapidjson::Value &npcs = document["npcs"];
+		for (rapidjson::SizeType n = 0; n < npcs.Size(); n++) { // Uses SizeType instead of size_t^
+			setting.npcs.emplace_back<Npc>(
+			    {npcs[n]["x"].GetInt(), npcs[n]["y"].GetInt(), npcs[n]["model"].GetString()});
+		}
+	}
+
 	height = setting.height * setting.tileHeight;
 	width = setting.width * setting.tileWidth;
 	scale = setting.mapScale;
@@ -111,5 +119,8 @@ void Map::LoadMap()
 				tileIndex++;
 			}
 		}
+	}
+	for (auto npc : setting.npcs) {
+		RpgPlayState::assets->CreateNpc(Vector2D(npc.xPos, npc.yPos), setting.tileSize, scale, npc.spriteId);
 	}
 }

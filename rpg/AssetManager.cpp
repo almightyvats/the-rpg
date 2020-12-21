@@ -6,6 +6,24 @@ AssetManager::AssetManager(Manager *man) : manager(man) {}
 
 AssetManager::~AssetManager() {}
 
+void AssetManager::CreateNpc(Vector2D position, int tileSize, int mapScale, std::string id)
+{
+	RpgPlayState::assets->AddTexture(id, "../rpg/assets/" + id + ".png");
+
+	auto &npc(manager->addEntity());
+	npc.addComponent<TransformComponent>(position.x * tileSize * mapScale, position.y * tileSize * mapScale, 115, 115,
+	                                     1);
+
+	SpriteSheet spriteSheet(30, 100, 100, 0, 0);
+	auto &npcSprite = npc.addComponent<SpriteComponent>(id, spriteSheet);
+	{
+		npcSprite.addAnimation("idle_down", Animation(0, 30, 100));
+		npcSprite.defaultAnimation("idle_down");
+	}
+	npc.addComponent<ColliderComponent>("NPC");
+	npc.addGroup(RpgPlayState::groupNpcs);
+}
+
 void AssetManager::CreateProjectile(Vector2D position, Vector2D velocity, int range, int speed, std::string id)
 {
 	auto &projectile(manager->addEntity());

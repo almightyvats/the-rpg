@@ -149,5 +149,12 @@
  "tilewidth":32,
  "type":"map",
  "version":1.4,
- "width":10
+ "width":10,
+ "npcs": [   
+       {
+              "x": 7,
+              "y": 4,
+              "model": "astrologer"
+       }
+]
 }

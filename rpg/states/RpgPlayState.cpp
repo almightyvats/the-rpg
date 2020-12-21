@@ -60,6 +60,7 @@ auto &tiles(manager.getGroup(RpgPlayState::groupMap));
 auto &players(manager.getGroup(RpgPlayState::groupPlayers));
 auto &colliders(manager.getGroup(RpgPlayState::groupColliders));
 auto &projectiles(manager.getGroup(RpgPlayState::groupProjectiles));
+auto &npcs(manager.getGroup(RpgPlayState::groupNpcs));
 
 void RpgPlayState::Pause() {}
 
@@ -153,6 +154,16 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 		}
 	}
 
+	for (auto &n : npcs) {
+		if (n->hasComponent<ColliderComponent>()) {
+			SDL_Rect cCol = n->getComponent<ColliderComponent>().collider;
+			if (Collision::AABB(cCol, playerCol)) {
+				player.getComponent<TransformComponent>().position = playerPos;
+				std::cout << "NPC encountered" << std::endl;
+			}
+		}
+	}
+
 	for (auto &c : colliders) {
 		SDL_Rect cCol = c->getComponent<ColliderComponent>().collider;
 		if (Collision::AABB(cCol, playerCol)) {
@@ -217,6 +228,9 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 		for (auto &t : tiles) {
 			t->destroy();
 		}
+		for (auto &n : npcs) {
+			n->destroy();
+		}
 
 		manager.refresh();
 		map = new Map(newMap, 3);
@@ -237,6 +251,10 @@ void RpgPlayState::Render(RpgGame *rpgGame)
 
 	for (auto &c : colliders) {
 		c->draw(alpha);
+	}
+
+	for (auto &n : npcs) {
+		n->draw(alpha);
 	}
 
 	for (auto &p : players) {

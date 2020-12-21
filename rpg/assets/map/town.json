@@ -440,5 +440,47 @@
  "tilewidth":32,
  "type":"map",
  "version":1.4,
- "width":100
+ "width":100,
+ "npcs": [
+       {
+              "x": 88,
+              "y": 80,
+              "model": "citicen"
+       },
+       {
+              "x": 77,
+              "y": 43,
+              "model": "artist"
+       },
+       {
+              "x": 42,
+              "y": 58,
+              "model": "citicen"
+       },
+       {
+              "x": 60,
+              "y": 74,
+              "model": "astrologer"
+       },
+       {
+              "x": 10,
+              "y": 86,
+              "model": "herbalist"
+       },
+       {
+              "x": 24,
+              "y": 59,
+              "model": "hunter"
+       },
+       {
+              "x": 31,
+              "y": 36,
+              "model": "astrologer"
+       },
+       {
+              "x": 70,
+              "y": 11,
+              "model": "jeweler"
+       }
+]
 }
