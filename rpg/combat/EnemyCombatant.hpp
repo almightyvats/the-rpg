@@ -10,13 +10,16 @@ class EnemyCombatant : public Combatant {
         ~EnemyCombatant();
 
         void AddAttack(Attack attack);
+        void AddAbility(Ability ability);
         
         std::vector<Attack> GetAttackList();
+        std::vector<Ability> GetAbilityList();
         CombatantStats CalculateStats();
         void ChooseAndPerformAction(const std::vector<Combatant*> player_combatants, std::vector<Combatant*> enemy_combatants);
     
     protected:
         std::vector<Attack> attacks_;
+        std::vector<Ability> abilities_;
 
         int armor_;
 };

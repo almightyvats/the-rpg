@@ -7,10 +7,8 @@
 #define TOKENS_PER_LEVEL_UP 2
 #define MAX_EQUIPMENT 5
 
-#define ATTACK_SUCKER_PUNCH \
-	{ \
-		"Sucker Punch", AttackType::melee, AttackTargetType::single, 5, 0.8, 0.0, 1.0, 5, AttackEffect::none \
-	}
+#define ATTACK_SUCKER_PUNCH {"Sucker Punch", AttackType::melee, AttackTargetType::single, 5, 0, 0.8, 0.0, 1.0, 5, AttackEffect::none}
+#define ABILITY_BLOCK {"Block", AbilityTargetType::self, 0, 0, 1.0, 5, AbilityEffect::protection}
 
 PlayerCombatant::PlayerCombatant(const std::string &name, int level)
 {
@@ -36,6 +34,9 @@ PlayerCombatant::PlayerCombatant(const std::string &name, int level)
 	Attack base_attack1 = ATTACK_SUCKER_PUNCH;
 	base_attacks_.push_back(base_attack1);
 
+    //Ability base_ability1 = ABILITY_BLOCK;
+    //base_abilities_.push_back(base_ability1);
+
 	while (level_ < level) {
 		LevelUp(TOKENS_PER_LEVEL_UP, 0);
 	}
@@ -53,6 +54,7 @@ PlayerCombatant::PlayerCombatant(const std::string &name, int level, int max_hp,
 	hp_ = max_hp_;
 	state_ = CombatantState::normal;
 	cooldown_ = 0;
+    state_reset_countdown_ = 0;
 
 	agility_ = agility;
 	strength_ = strength;
@@ -63,6 +65,9 @@ PlayerCombatant::PlayerCombatant(const std::string &name, int level, int max_hp,
 
 	Attack base_attack1 = ATTACK_SUCKER_PUNCH;
 	base_attacks_.push_back(base_attack1);
+
+    //Ability base_ability1 = ABILITY_BLOCK;
+    //base_abilities_.push_back(base_ability1);
 }
 
 PlayerCombatant::~PlayerCombatant()
@@ -142,6 +147,18 @@ std::vector<Attack> PlayerCombatant::GetAttackList()
 	}
 
 	return attacks;
+}
+
+std::vector<Ability> PlayerCombatant::GetAbilityList()
+{
+	std::vector<Ability> abilities = base_abilities_;
+
+	for (auto eq : equipment_) {
+		std::vector<Ability> equipment_abilities = eq.abilities();
+		abilities.insert(abilities.end(), equipment_abilities.begin(), equipment_abilities.end());
+	}
+
+	return abilities;
 }
 
 CombatantStats PlayerCombatant::CalculateStats()

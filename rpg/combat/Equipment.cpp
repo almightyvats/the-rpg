@@ -23,3 +23,8 @@ void Equipment::AddAttack(Attack attack)
 {
     attacks_.push_back(attack);
 }
+
+void Equipment::AddAbility(Ability ability)
+{
+    abilities_.push_back(ability);
+}

@@ -18,12 +18,14 @@ class Equipment {
         ~Equipment();
 
         void AddAttack(Attack attack);
+        void AddAbility(Ability ability);
 
         std::string name() const {return name_;}
         EquipmentType type() const {return type_;}
         int min_level() const {return min_level_;}
 
         std::vector<Attack> attacks() const {return attacks_;}
+        std::vector<Ability> abilities() const {return abilities_;}
         int bonus_agility() const {return bonus_agility_;}
         int bonus_strength() const {return bonus_strength_;}
         int bonus_defense() const {return bonus_defense_;}
@@ -38,6 +40,7 @@ class Equipment {
         int min_level_;
 
         std::vector<Attack> attacks_;
+        std::vector<Ability> abilities_;
 
         int bonus_agility_;
         int bonus_strength_;

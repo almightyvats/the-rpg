@@ -22,11 +22,36 @@ struct Attack {
     AttackType type;
     AttackTargetType target_type;
     int damage;
+    int force;
     float accuracy;
     float crit_chance;
     float crit_multiplier;
     int cooldown;
     AttackEffect effect;
+};
+
+enum class AbilityTargetType {
+    self,
+    team_single,
+    team_multi,
+    enemy_single,
+    enemy_multi,
+    all,
+};
+
+enum class AbilityEffect {
+    none,
+    protection,
+};
+
+struct Ability {
+    std::string name;
+    AbilityTargetType target_type;
+    int heal;
+    int damage;
+    float accuracy;
+    int cooldown;
+    AbilityEffect effect;
 };
 
 struct CombatantStats {
@@ -48,8 +73,10 @@ class Combatant {
     public:
         int cooldown_;
         CombatantState state_;
+        int state_reset_countdown_;
 
         virtual std::vector<Attack> GetAttackList() = 0;
+        virtual std::vector<Ability> GetAbilityList() = 0;
         virtual CombatantStats CalculateStats() = 0;
         virtual void ChooseAndPerformAction(const std::vector<Combatant*> player_combatants, std::vector<Combatant*> enemy_combatants) = 0;
 

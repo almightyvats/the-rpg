@@ -20,6 +20,7 @@ class PlayerCombatant : public Combatant {
         ~PlayerCombatant();
         
         std::vector<Attack> GetAttackList();
+        std::vector<Ability> GetAbilityList();
         CombatantStats CalculateStats();
         void ChooseAndPerformAction(const std::vector<Combatant*> player_combatants, std::vector<Combatant*> enemy_combatants);
 
@@ -32,6 +33,7 @@ class PlayerCombatant : public Combatant {
     protected:
         std::vector<Equipment> equipment_;
         std::vector<Attack> base_attacks_;
+        std::vector<Ability> base_abilities_;
 
         int exp_;
 };

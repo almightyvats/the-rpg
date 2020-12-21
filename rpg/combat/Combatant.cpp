@@ -64,10 +64,10 @@ bool CheckCritHit(int attacker_luck, int defender_luck, float crit_chance, Attac
     return roll < roll_needed;
 }
 
-int CalculateAttackDamage(int attacker_strength, int defender_defense, int damage, AttackEffect effect)
+int CalculateAttackDamage(int attacker_force, int defender_defense, int damage, AttackEffect effect)
 {
-    float strength_defense_factor = (float) attacker_strength / (float) defender_defense;
-    return (int) (strength_defense_factor * damage);
+    float force_defense_factor = (float) attacker_force / (float) defender_defense;
+    return (int) (force_defense_factor * damage);
 }
 
 void Combatant::PerformAttack(Attack attack, std::vector<Combatant*> targets)
@@ -94,8 +94,14 @@ void Combatant::PerformAttack(Attack attack, std::vector<Combatant*> targets)
         bool crit_hit = CheckCritHit(attacker_stats.luck, target_stats.luck, attack.crit_chance, attack.effect);
 
         int damage = (crit_hit ? attack.damage : (int)(attack.damage * attack.crit_multiplier));
+        int attack_damage;
 
-        int attack_damage = CalculateAttackDamage(attacker_stats.strength, target_stats.defense, damage, attack.effect);
+        if (attack.type == AttackType::melee) {
+            attack_damage = CalculateAttackDamage(attacker_stats.strength, target_stats.defense, damage, attack.effect);  
+        } else {
+            attack_damage = CalculateAttackDamage(attack.force, target_stats.defense, damage, attack.effect); 
+        }
+
         target->TakeDamage(attack_damage, attack.effect);
         std::cout << (crit_hit ? "Critical " : "") << "Hit for " << attack_damage << " damage\n";
     }
