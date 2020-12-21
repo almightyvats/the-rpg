@@ -49,6 +49,8 @@ RpgPlayState::RpgPlayState()
 	assets->CreateProjectile(Vector2D(150, 300), Vector2D(1, 0), 200, 0, "fireball");
 
 	RpgSoundManager::playMusic("PLAY");
+	RpgSoundManager::addSoundEffect("../rpg/assets/music/explosion.wav", "Explosion");
+	RpgSoundManager::addSoundEffect("../rpg/assets/music/rewind.wav", "Rewind");
 }
 
 RpgPlayState::~RpgPlayState() = default;
@@ -60,14 +62,12 @@ auto &projectiles(manager.getGroup(RpgPlayState::groupProjectiles));
 
 void RpgPlayState::Pause()
 {
-	std::cout << "PlayState - Pause\n";
 	RpgSoundManager::pauseMusic();
 }
 
 void RpgPlayState::Resume()
 {
-	std::cout << "PlayState - Resume\n";
-	RpgSoundManager::resumeMusic();
+	RpgSoundManager::resumeMusic("PLAY");
 }
 
 void RpgPlayState::HandleEvents(RpgGame *rpgGame)
@@ -82,8 +82,12 @@ void RpgPlayState::HandleEvents(RpgGame *rpgGame)
 		case SDLK_SPACE:
 			rpgGame->changeState(RpgMenuState::Instance());
 			break;
-			// case SDLK_SPACE:
-			//  break;
+		case SDLK_e:
+			RpgSoundManager::playEffect("Explosion");
+			break;
+		case SDLK_r:
+			RpgSoundManager::playEffect("Rewind");
+			break;
 		}
 		break;
 

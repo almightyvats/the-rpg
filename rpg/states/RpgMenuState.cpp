@@ -58,7 +58,7 @@ void RpgMenuState::Pause()
 
 void RpgMenuState::Resume()
 {
-	RpgSoundManager::resumeMusic();
+	RpgSoundManager::resumeMusic("MENU");
 }
 
 void RpgMenuState::HandleEvents(RpgGame *rpgGame)

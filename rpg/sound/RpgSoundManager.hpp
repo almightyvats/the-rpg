@@ -11,7 +11,7 @@ class RpgSoundManager {
 	inline static std::map<std::string, Mix_Music *> m_MusicStore;
 
 	inline static bool m_isMusicPlaying;
-	inline static std::string m_lastPlayedFrom;
+	inline static std::string m_lastPlayedId;
 
   public:
 	RpgSoundManager() = default;
@@ -26,7 +26,7 @@ class RpgSoundManager {
 	static void playEffect(const std::string &effectId);
 
 	static void pauseMusic();
-	static void resumeMusic();
+	static void resumeMusic(const std::string &musicId);
 };
 
 #endif

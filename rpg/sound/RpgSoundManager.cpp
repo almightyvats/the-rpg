@@ -54,7 +54,7 @@ void RpgSoundManager::playMusic(const std::string &musicId)
 		}
 		Mix_PlayMusic(music, -1);
 	}
-
+	m_lastPlayedId = musicId;
 	m_isMusicPlaying = true;
 }
 
@@ -74,10 +74,15 @@ void RpgSoundManager::pauseMusic()
 	m_isMusicPlaying = false;
 }
 
-void RpgSoundManager::resumeMusic()
+void RpgSoundManager::resumeMusic(const std::string &musicId)
 {
-	if (!m_isMusicPlaying) {
+	if (m_lastPlayedId != musicId) {
+		Mix_HaltMusic();
+		playMusic(musicId);
+	} else if (!m_isMusicPlaying) {
 		Mix_ResumeMusic();
 	}
+
+	m_lastPlayedId = musicId;
 	m_isMusicPlaying = true;
 }
