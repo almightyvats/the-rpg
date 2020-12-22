@@ -15,6 +15,7 @@ enum class AttackTargetType {
 
 enum class AttackEffect {
     none,
+    ignite,
 };
 
 struct Attack {
@@ -42,6 +43,7 @@ enum class AbilityTargetType {
 enum class AbilityEffect {
     none,
     block,
+    ignite,
 };
 
 struct Ability {
@@ -67,6 +69,7 @@ enum class CombatantState {
     normal,
     dead,
     blocking,
+    burning,
 };
 
 class Combatant {
@@ -83,8 +86,10 @@ class Combatant {
 
         void PerformAttack(Attack attack, std::vector<Combatant*> targets);
         void UseAbility(Ability ability, std::vector<Combatant*> targets);
-        bool TakeDamage(int damage);
         void PerformStateReset();
+
+        bool TakeDamage(int damage);
+        void TakeBurnDamage();
 
         std::string name() const {return name_;}
         int level() const {return level_;}

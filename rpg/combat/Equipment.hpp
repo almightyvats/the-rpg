@@ -9,6 +9,7 @@ enum class EquipmentType {
     sword,
     bow,
     armor,
+    heal_item,
 };
 
 class Equipment {
