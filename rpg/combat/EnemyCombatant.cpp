@@ -13,7 +13,7 @@ EnemyCombatant::EnemyCombatant(const std::string& name, int level, int max_hp, C
     hp_ = max_hp_;
     state_ = CombatantState::normal;
     cooldown_ = 0;
-    state_reset_countdown_ = 0;
+    state_reset_countdown_ = -1;
 
     agility_ = stats.agility;
     strength_ = stats.strength;

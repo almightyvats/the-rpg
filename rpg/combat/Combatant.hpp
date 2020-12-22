@@ -84,6 +84,7 @@ class Combatant {
         void PerformAttack(Attack attack, std::vector<Combatant*> targets);
         void UseAbility(Ability ability, std::vector<Combatant*> targets);
         bool TakeDamage(int damage);
+        void PerformStateReset();
 
         std::string name() const {return name_;}
         int level() const {return level_;}

@@ -10,6 +10,8 @@
 #define MIN_LUCK_FACTOR 0.2f
 #define MAX_LUCK_FACTOR 2.0f
 
+#define BLOCK_RESET_COOLDOWN 4
+
 std::string Combatant::state_string() {
     switch (state_)
     {
@@ -135,6 +137,7 @@ void Combatant::UseAbility(Ability ability, std::vector<Combatant*> targets)
 
             if (ability.effect == AbilityEffect::block) {
                 target->state_ = CombatantState::blocking;
+                target->state_reset_countdown_ = BLOCK_RESET_COOLDOWN;
             }
         }
     }
@@ -153,4 +156,18 @@ bool Combatant::TakeDamage(int damage)
     } else {
         return false;
     }
+}
+
+void Combatant::PerformStateReset() {
+    switch (state_)
+    {
+    case CombatantState::blocking:
+        state_ = CombatantState::normal;
+        std::cout << name() << " has stopped blocking\n";
+        break;
+    
+    default:
+        break;
+    }
+    state_reset_countdown_ = -1;
 }

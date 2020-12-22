@@ -23,6 +23,7 @@ PlayerCombatant::PlayerCombatant(const std::string &name, int level)
 	hp_ = max_hp_;
 	state_ = CombatantState::normal;
 	cooldown_ = 0;
+	state_reset_countdown_ = -1;
 
 	agility_ = (std::rand() % 10) + 1;
 	strength_ = (std::rand() % 10) + 1;
