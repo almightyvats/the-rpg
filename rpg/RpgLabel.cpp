@@ -21,13 +21,14 @@ void RpgLabel::setLabelText(std::string fontId, std::string labelText)
 	auto fontPtr = RpgPlayState::assets->GetFont(fontId);
 	if (fontPtr == nullptr) {
 		std::cout << "Rpglabel not getting font\n";
+	} else {
+		SDL_Surface *labelSurface = TTF_RenderText_Solid(fontPtr, labelText.c_str(), m_color);
+		m_labelTexture = SDL_CreateTextureFromSurface(RpgGame::renderer, labelSurface);
+
+		SDL_FreeSurface(labelSurface);
+		labelSurface = nullptr;
+		SDL_QueryTexture(m_labelTexture, nullptr, nullptr, &m_position.w, &m_position.h);
 	}
-
-	SDL_Surface *labelSurface = TTF_RenderText_Solid(fontPtr, labelText.c_str(), m_color);
-	m_labelTexture = SDL_CreateTextureFromSurface(RpgGame::renderer, labelSurface);
-
-	SDL_FreeSurface(labelSurface);
-	SDL_QueryTexture(m_labelTexture, nullptr, nullptr, &m_position.w, &m_position.h);
 }
 
 void RpgLabel::Draw()
