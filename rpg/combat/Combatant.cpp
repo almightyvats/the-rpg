@@ -14,6 +14,7 @@
 #define BURN_RESET_COOLDOWN 8
 #define BURN_RESET_COOLDOWN_HIT_INCREASE 1
 #define BURN_DAMAGE level()
+#define SLOW_COOLDOWN_HIT_INCREASE 3
 
 std::string Combatant::state_string() {
     switch (state_)
@@ -105,10 +106,16 @@ void Combatant::PerformAttack(Attack attack, std::vector<Combatant*> targets)
         int damage = (crit_hit ? attack.damage : (int)(attack.damage * attack.crit_multiplier));
         int attack_damage;
 
+        int target_defense = target_stats.defense;
+
+        if (attack.effect == AttackEffect::armor_breaking) {
+            target_defense = target->defense();
+        }
+
         if (attack.type == AttackType::melee) {
-            attack_damage = CalculateAttackDamage(attacker_stats.strength, target_stats.defense, damage, attack.effect);  
+            attack_damage = CalculateAttackDamage(attacker_stats.strength, target_defense, damage, attack.effect);  
         } else {
-            attack_damage = CalculateAttackDamage(attack.force, target_stats.defense, damage, attack.effect); 
+            attack_damage = CalculateAttackDamage(attack.force, target_defense, damage, attack.effect); 
         }
 
         if (target->state_ == CombatantState::blocking) {
@@ -122,6 +129,9 @@ void Combatant::PerformAttack(Attack attack, std::vector<Combatant*> targets)
                 target->state_ = CombatantState::burning;
                 target->state_reset_countdown_ = BURN_RESET_COOLDOWN;
                 std::cout << target->name() << " is now burning\n";
+            } else if (attack.effect == AttackEffect::slow) {
+                target->cooldown_ += SLOW_COOLDOWN_HIT_INCREASE;
+                std::cout << target->name() << " is slowed\n";
             }
         }
     }

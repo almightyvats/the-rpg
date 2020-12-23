@@ -16,6 +16,8 @@ enum class AttackTargetType {
 enum class AttackEffect {
     none,
     ignite,
+    armor_breaking,
+    slow,
 };
 
 struct Attack {
