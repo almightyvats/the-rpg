@@ -3,8 +3,8 @@
 #include "rpg/AssetManager.hpp"
 #include "rpg/Collision.hpp"
 #include "rpg/Map.hpp"
+#include "rpg/RpgSoundManager.hpp"
 #include "rpg/ecs/Components.hpp"
-#include "rpg/sound/RpgSoundManager.hpp"
 
 Map *map;
 Manager manager;

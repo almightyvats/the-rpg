@@ -2,7 +2,7 @@
 #include "RpgMenuState.hpp"
 #include "RpgPlayState.hpp"
 #include "rpg/AssetManager.hpp"
-#include "rpg/sound/RpgSoundManager.hpp"
+#include "rpg/RpgSoundManager.hpp"
 
 SDL_Event RpgMenuState::m_event;
 

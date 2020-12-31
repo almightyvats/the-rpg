@@ -1,6 +1,6 @@
 #include "RpgGame.hpp"
+#include "RpgSoundManager.hpp"
 #include "rpg/states/RpgGameState.hpp"
-#include "sound/RpgSoundManager.hpp"
 
 SDL_Renderer *RpgGame::renderer = nullptr;
 
