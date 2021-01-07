@@ -91,6 +91,16 @@ Map::Map(std::string path, int mapScale)
 		}
 	}
 
+	if (document.HasMember("projectiles")) {
+		const rapidjson::Value &projectiles = document["projectiles"];
+		for (rapidjson::SizeType n = 0; n < projectiles.Size(); n++) { // Uses SizeType instead of size_t^
+			setting.projectiles.emplace_back<Projectile>(
+			    {projectiles[n]["xPos"].GetInt(), projectiles[n]["yPos"].GetInt(), projectiles[n]["xVel"].GetInt(),
+			     projectiles[n]["yVel"].GetInt(), projectiles[n]["range"].GetInt(), projectiles[n]["speed"].GetInt(),
+			     projectiles[n]["model"].GetString()});
+		}
+	}
+
 	height = setting.height * setting.tileHeight;
 	width = setting.width * setting.tileWidth;
 	scale = setting.mapScale;
@@ -132,5 +142,12 @@ void Map::LoadMap()
 
 	for (auto enemy : setting.enemies) {
 		RpgGame::assets->CreateEnemy(Vector2D(enemy.xPos, enemy.yPos), setting.tileSize, scale, enemy.spriteId);
+	}
+
+	for (auto projectile : setting.projectiles) {
+		RpgGame::assets->CreateProjectile(Vector2D(projectile.xPos * setting.tileSize * setting.mapScale,
+		                                           projectile.yPos * setting.tileSize * setting.mapScale),
+		                                  Vector2D(projectile.xVel, projectile.yVel), projectile.range,
+		                                  projectile.speed, projectile.spriteId);
 	}
 }

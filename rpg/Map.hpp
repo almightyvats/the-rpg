@@ -36,6 +36,16 @@ struct Enemy {
 	std::string spriteId;
 };
 
+struct Projectile {
+	int xPos;
+	int yPos;
+	int xVel;
+	int yVel;
+	int range;
+	int speed;
+	std::string spriteId;
+};
+
 struct MapSetting {
 	int height;
 	int width;
@@ -47,6 +57,7 @@ struct MapSetting {
 	std::vector<TileSet> tilesets;
 	std::vector<Npc> npcs;
 	std::vector<Enemy> enemies;
+	std::vector<Projectile> projectiles;
 
 	int ScaledHeight() { return tileHeight * mapScale; }
 	int ScaledWidth() { return tileWidth * mapScale; }

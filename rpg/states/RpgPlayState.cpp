@@ -28,10 +28,11 @@ RpgPlayState::RpgPlayState()
 	RpgGame::assets->AddTexture("fireball", "../rpg/assets/fireball_sprite.png");
 
 	map = new Map("../rpg/assets/map/outdoor_01.json", 3);
+	
 
 	map->LoadMap();
 
-	player.addComponent<TransformComponent>(11 * 32 * 3, 88 * 32 * 3, 115, 75, 1);
+	player.addComponent<TransformComponent>(11 * 32 * 3, 88 * 32 * 3, 115, 75, 1);	
 
 	SpriteSheet spriteSheet(11, 75, 115, 75, 5);
 	auto &playerSprite = player.addComponent<SpriteComponent>("player", spriteSheet);
@@ -48,11 +49,7 @@ RpgPlayState::RpgPlayState()
 	}
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("Player");
-	player.addGroup(groupPlayers);
-
-	// assets->CreateProjectile(Vector2D(300, 300), Vector2D(0, -1), 200, 0, "fireball");
-	// assets->CreateProjectile(Vector2D(0, 300), Vector2D(1, 1), 200, 0, "fireball");
-	// assets->CreateProjectile(Vector2D(150, 300), Vector2D(1, 0), 200, 0, "fireball");
+	player.addGroup(groupPlayers);	
 }
 
 RpgPlayState::~RpgPlayState() = default;
@@ -269,6 +266,9 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 		}
 		for (auto &n : npcs) {
 			n->destroy();
+		}
+		for (auto &p : projectiles) {
+			p->destroy();
 		}
 
 		manager.refresh();

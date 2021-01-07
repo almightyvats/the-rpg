@@ -39,7 +39,7 @@ RpgMenuState::RpgMenuState()
 	m_buttonsWithState.insert({m_exitButton, BUTTON_STATE::BUTTON_SPRITE_MOUSE_OUT});
 
 	RpgGame::assets->AddTexture("fireball", "../rpg/assets/fireball_sprite.png");
-	RpgGame::assets->CreateProjectile(Vector2D(700, 400), Vector2D(0, 0), 200, 0, "fireball");
+	//RpgGame::assets->CreateProjectile(Vector2D(700, 400), Vector2D(0, 0), 200, 0, "fireball");
 }
 
 RpgMenuState::~RpgMenuState() {}
