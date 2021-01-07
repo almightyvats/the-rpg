@@ -27,11 +27,11 @@ RpgPlayState::RpgPlayState()
 	RpgGame::assets->AddTexture("player", "../rpg/assets/playerSpriteSheet.png");
 	RpgGame::assets->AddTexture("fireball", "../rpg/assets/fireball_sprite.png");
 
-	map = new Map("../rpg/assets/map/town.json", 3);
+	map = new Map("../rpg/assets/map/outdoor_01.json", 3);
 
 	map->LoadMap();
 
-	player.addComponent<TransformComponent>(62 * 32 * 3, 22 * 32 * 3, 115, 75, 1);
+	player.addComponent<TransformComponent>(11 * 32 * 3, 88 * 32 * 3, 115, 75, 1);
 
 	SpriteSheet spriteSheet(11, 75, 115, 75, 5);
 	auto &playerSprite = player.addComponent<SpriteComponent>("player", spriteSheet);
