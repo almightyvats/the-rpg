@@ -14,6 +14,7 @@ class AssetManager {
 
 	// game objects
 	void CreateNpc(Vector2D position, int tileSize, int mapScale, std::string id);
+	void CreateEnemy(Vector2D position, int tileSize, int mapScale, std::string id);
 	void CreateProjectile(Vector2D position, Vector2D velocity, int range, int speed, std::string id);
 	void CreateMapTile(int srcX, int srcY, int destX, int destY, int tsize, int tscale, bool withCollision,
 	                   std::string id, SpriteSheet spriteSheet, std::string map, Vector2D pStart);

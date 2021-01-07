@@ -24,6 +24,24 @@ void AssetManager::CreateNpc(Vector2D position, int tileSize, int mapScale, std:
 	npc.addGroup(RpgPlayState::groupNpcs);
 }
 
+void AssetManager::CreateEnemy(Vector2D position, int tileSize, int mapScale, std::string id)
+{
+	RpgPlayState::assets->AddTexture(id, "../rpg/assets/enemies/" + id + ".png");
+
+	auto &enemy(manager->addEntity());
+	enemy.addComponent<TransformComponent>(position.x * tileSize * mapScale, position.y * tileSize * mapScale, 115, 115,
+	                                     1);
+
+	SpriteSheet spriteSheet(12, 124, 100, 0, 0);
+	auto &enemySprite = enemy.addComponent<SpriteComponent>(id, spriteSheet);
+	{
+		enemySprite.addAnimation("idle_down", Animation(0, 12, 100));
+		enemySprite.defaultAnimation("idle_down");
+	}
+	enemy.addComponent<ColliderComponent>("ENEMY");
+	enemy.addGroup(RpgPlayState::groupEnemies);
+}
+
 void AssetManager::CreateProjectile(Vector2D position, Vector2D velocity, int range, int speed, std::string id)
 {
 	auto &projectile(manager->addEntity());

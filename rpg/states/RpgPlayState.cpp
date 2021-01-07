@@ -3,6 +3,7 @@
 #include "rpg/AssetManager.hpp"
 #include "rpg/Collision.hpp"
 #include "rpg/Map.hpp"
+#include "rpg/Vector2D.hpp"
 #include "rpg/ecs/Components.hpp"
 
 Map *map;
@@ -30,7 +31,7 @@ RpgPlayState::RpgPlayState()
 
 	map->LoadMap();
 
-	player.addComponent<TransformComponent>(82 * 32 * 3, 70 * 32 * 3, 115, 75, 1);
+	player.addComponent<TransformComponent>(62 * 32 * 3, 22 * 32 * 3, 115, 75, 1);
 
 	SpriteSheet spriteSheet(11, 75, 115, 75, 5);
 	auto &playerSprite = player.addComponent<SpriteComponent>("player", spriteSheet);
@@ -61,6 +62,7 @@ auto &players(manager.getGroup(RpgPlayState::groupPlayers));
 auto &colliders(manager.getGroup(RpgPlayState::groupColliders));
 auto &projectiles(manager.getGroup(RpgPlayState::groupProjectiles));
 auto &npcs(manager.getGroup(RpgPlayState::groupNpcs));
+auto &enemies(manager.getGroup(RpgPlayState::groupEnemies));
 
 void RpgPlayState::Pause() {}
 
@@ -104,6 +106,9 @@ void RpgPlayState::HandleEvents(RpgGame *rpgGame)
 			break;
 		case SDL_KEYDOWN:
 			switch (event.key.keysym.sym) {
+			case SDLK_ESCAPE:
+				rpgGame->changeState(RpgMenuState::Instance());
+				break;
 			case SDLK_SPACE:
 				rpgGame->changeState(RpgMenuState::Instance());
 				break;
@@ -157,9 +162,43 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 	for (auto &n : npcs) {
 		if (n->hasComponent<ColliderComponent>()) {
 			SDL_Rect cCol = n->getComponent<ColliderComponent>().collider;
+
 			if (Collision::AABB(cCol, playerCol)) {
 				player.getComponent<TransformComponent>().position = playerPos;
 				std::cout << "NPC encountered" << std::endl;
+			}
+		}
+	}
+
+	for (auto &e : enemies) {
+		if (e->hasComponent<TransformComponent>()) {
+			Vector2D enemyPos = e->getComponent<TransformComponent>().position;
+
+			// if the player enters a certainr range of the enemy, the enemy will follow
+			if (Vector2D::Distance(playerPos, enemyPos) < 350) {
+				Vector2D enemyVelocity = e->getComponent<TransformComponent>().velocity;
+
+				enemyVelocity.x = (enemyPos.x + playerPos.x) / 2;
+				enemyVelocity.y = (enemyPos.y + playerPos.y) / 2;
+
+				enemyVelocity -= enemyPos;
+				enemyVelocity = Vector2D::Normalize(enemyVelocity);
+
+				e->getComponent<TransformComponent>().velocity = enemyVelocity;
+				e->getComponent<TransformComponent>().speed = 1;
+			} else {
+				e->getComponent<TransformComponent>().velocity = Vector2D(0, 0);
+				e->getComponent<TransformComponent>().speed = 0;
+			}
+		}
+
+		if (e->hasComponent<ColliderComponent>()) {
+			SDL_Rect cCol = e->getComponent<ColliderComponent>().collider;
+			if (Collision::AABB(cCol, playerCol)) {
+				//player.getComponent<TransformComponent>().position = playerPos;
+				std::cout << "ENEMY encountered" << std::endl;
+				//TODO: start combat (for colliding enemy + enemies in certain range?)
+				e->destroy();
 			}
 		}
 	}
@@ -263,6 +302,10 @@ void RpgPlayState::Render(RpgGame *rpgGame)
 
 	for (auto &p : projectiles) {
 		p->draw(alpha);
+	}
+
+	for (auto &e : enemies) {
+		e->draw(alpha);
 	}
 
 	SDL_RenderPresent(rpgGame->renderer);

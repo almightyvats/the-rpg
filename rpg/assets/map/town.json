@@ -482,5 +482,42 @@
               "y": 11,
               "model": "jeweler"
        }
-]
+       ],
+       "enemies": [
+              {
+                     "x": 64,
+                     "y": 13,
+                     "model": "wraith_1"
+              },
+              {
+                     "x": 52,
+                     "y": 10,
+                     "model": "wraith_2"
+              },
+              {
+                     "x": 59,
+                     "y": 5,
+                     "model": "wraith_3"
+              },
+              {
+                     "x": 70,
+                     "y": 7,
+                     "model": "wraith_3"
+              },
+              {
+                     "x": 4,
+                     "y": 90,
+                     "model": "wraith_3"
+              },
+              {
+                     "x": 2,
+                     "y": 85,
+                     "model": "wraith_2"
+              },
+              {
+                     "x": 91,
+                     "y": 4,
+                     "model": "wraith_2"
+              }
+       ]
 }

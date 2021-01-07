@@ -85,6 +85,14 @@ Map::Map(std::string path, int mapScale)
 		}
 	}
 
+	if (document.HasMember("enemies")) {
+		const rapidjson::Value &enemies = document["enemies"];
+		for (rapidjson::SizeType n = 0; n < enemies.Size(); n++) { // Uses SizeType instead of size_t^
+			setting.enemies.emplace_back<Enemy>(
+			    {enemies[n]["x"].GetInt(), enemies[n]["y"].GetInt(), enemies[n]["model"].GetString()});
+		}
+	}
+
 	height = setting.height * setting.tileHeight;
 	width = setting.width * setting.tileWidth;
 	scale = setting.mapScale;
@@ -122,5 +130,9 @@ void Map::LoadMap()
 	}
 	for (auto npc : setting.npcs) {
 		RpgPlayState::assets->CreateNpc(Vector2D(npc.xPos, npc.yPos), setting.tileSize, scale, npc.spriteId);
+	}
+
+	for (auto enemy : setting.enemies) {
+		RpgPlayState::assets->CreateEnemy(Vector2D(enemy.xPos, enemy.yPos), setting.tileSize, scale, enemy.spriteId);
 	}
 }
