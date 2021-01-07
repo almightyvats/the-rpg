@@ -8,7 +8,7 @@
 
 Map *map;
 Manager manager;
-AssetManager *RpgPlayState::assets = new AssetManager(&manager);
+AssetManager *RpgGame::assets = new AssetManager(&manager);
 SDL_Event RpgPlayState::event;
 
 Uint8 fade = 0;
@@ -24,8 +24,8 @@ int conamiCodeIndex = 0;
 
 RpgPlayState::RpgPlayState()
 {
-	assets->AddTexture("player", "../rpg/assets/playerSpriteSheet.png");
-	assets->AddTexture("fireball", "../rpg/assets/fireball_sprite.png");
+	RpgGame::assets->AddTexture("player", "../rpg/assets/playerSpriteSheet.png");
+	RpgGame::assets->AddTexture("fireball", "../rpg/assets/fireball_sprite.png");
 
 	map = new Map("../rpg/assets/map/town.json", 3);
 

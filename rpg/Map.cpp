@@ -11,8 +11,6 @@
 #include <sstream>
 #include <string>
 
-extern Manager manager;
-
 Map::Map(std::string path, int mapScale)
 {
 	std::ifstream t(path);
@@ -73,7 +71,7 @@ Map::Map(std::string path, int mapScale)
 		tileset.columns = tilesets[i]["columns"].GetInt();
 		tileset.imageName = tilesets[i]["image"].GetString();
 
-		RpgPlayState::assets->AddTexture(tileset.spriteId, "../rpg/assets/map_sprites/" + tileset.imageName);
+		RpgGame::assets->AddTexture(tileset.spriteId, "../rpg/assets/map_sprites/" + tileset.imageName);
 		setting.tilesets.push_back(tileset);
 	}
 
@@ -116,7 +114,7 @@ void Map::LoadMap()
 					int xpos = ((tileNumber % tileset.columns) + 0) * setting.tileWidth;
 					int ypos = ((tileNumber / tileset.columns) + 0) * setting.tileHeight;
 
-					RpgPlayState::assets->CreateMapTile(
+					RpgGame::assets->CreateMapTile(
 					    xpos, ypos, x * setting.ScaledWidth(), y * setting.ScaledHeight(), setting.tileSize,
 					    setting.mapScale, setting.layers[layerNumber].collision, tileset.spriteId,
 					    SpriteSheet(tileset.columns, setting.tileWidth, setting.tileHeight, 0, 0),
@@ -129,10 +127,10 @@ void Map::LoadMap()
 		}
 	}
 	for (auto npc : setting.npcs) {
-		RpgPlayState::assets->CreateNpc(Vector2D(npc.xPos, npc.yPos), setting.tileSize, scale, npc.spriteId);
+		RpgGame::assets->CreateNpc(Vector2D(npc.xPos, npc.yPos), setting.tileSize, scale, npc.spriteId);
 	}
 
 	for (auto enemy : setting.enemies) {
-		RpgPlayState::assets->CreateEnemy(Vector2D(enemy.xPos, enemy.yPos), setting.tileSize, scale, enemy.spriteId);
+		RpgGame::assets->CreateEnemy(Vector2D(enemy.xPos, enemy.yPos), setting.tileSize, scale, enemy.spriteId);
 	}
 }

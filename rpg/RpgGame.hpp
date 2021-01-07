@@ -36,6 +36,8 @@ class RpgGame {
 	inline static const int SCREEN_HEIGHT = 768;
 	inline static const int SCREEN_WIDTH = 1024;
 
+	static AssetManager *assets;
+
   private:
 	SDL_Window *window{};
 	std::vector<std::reference_wrapper<RpgGameState>> m_states;

@@ -47,7 +47,6 @@ class RpgMenuState : public RpgGameState {
 	void buttonPressed(MenuItem item, RpgGame *rpgGame);
 
 	static SDL_Event m_event;
-	static AssetManager *assets;
 
 	MenuItem m_playButton;
 	MenuItem m_exitButton;

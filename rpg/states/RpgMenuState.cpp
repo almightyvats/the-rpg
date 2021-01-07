@@ -5,6 +5,8 @@
 
 SDL_Event RpgMenuState::m_event;
 
+extern Manager manager;
+
 RpgMenuState::RpgMenuState()
 {
 	std::string playButtonSpritePath = "../rpg/assets/menu/Play.png";
@@ -35,6 +37,9 @@ RpgMenuState::RpgMenuState()
 
 	m_buttonsWithState.insert({m_playButton, BUTTON_STATE::BUTTON_SPRITE_MOUSE_OUT});
 	m_buttonsWithState.insert({m_exitButton, BUTTON_STATE::BUTTON_SPRITE_MOUSE_OUT});
+
+	RpgGame::assets->AddTexture("fireball", "../rpg/assets/fireball_sprite.png");
+	RpgGame::assets->CreateProjectile(Vector2D(700, 400), Vector2D(0, 0), 200, 0, "fireball");
 }
 
 RpgMenuState::~RpgMenuState() {}
@@ -47,6 +52,8 @@ void RpgMenuState::buttonPressed(MenuItem item, RpgGame *rpgGame)
 		}
 	}
 }
+
+auto &menuProjectiles(manager.getGroup(RpgPlayState::groupProjectiles));
 
 void RpgMenuState::Pause() {}
 void RpgMenuState::Resume() {}
@@ -137,6 +144,9 @@ void RpgMenuState::Update(RpgGame *rpgGame)
 {
 	m_playButton[m_currentSprite]->Update();
 	m_exitButton[m_currentSprite]->Update();
+
+	manager.refresh();
+	manager.update();
 }
 
 void RpgMenuState::Render(RpgGame *rpgGame)
@@ -149,6 +159,10 @@ void RpgMenuState::Render(RpgGame *rpgGame)
 		auto item = button.first;
 		auto state = button.second;
 		item[state]->Draw();
+	}
+
+	for (auto &p : menuProjectiles) {
+		p->draw(SDL_ALPHA_OPAQUE);
 	}
 
 	SDL_RenderPresent(rpgGame->renderer);

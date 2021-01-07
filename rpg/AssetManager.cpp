@@ -8,7 +8,7 @@ AssetManager::~AssetManager() {}
 
 void AssetManager::CreateNpc(Vector2D position, int tileSize, int mapScale, std::string id)
 {
-	RpgPlayState::assets->AddTexture(id, "../rpg/assets/" + id + ".png");
+	RpgGame::assets->AddTexture(id, "../rpg/assets/" + id + ".png");
 
 	auto &npc(manager->addEntity());
 	npc.addComponent<TransformComponent>(position.x * tileSize * mapScale, position.y * tileSize * mapScale, 115, 115,
@@ -26,7 +26,7 @@ void AssetManager::CreateNpc(Vector2D position, int tileSize, int mapScale, std:
 
 void AssetManager::CreateEnemy(Vector2D position, int tileSize, int mapScale, std::string id)
 {
-	RpgPlayState::assets->AddTexture(id, "../rpg/assets/enemies/" + id + ".png");
+	RpgGame::assets->AddTexture(id, "../rpg/assets/enemies/" + id + ".png");
 
 	auto &enemy(manager->addEntity());
 	enemy.addComponent<TransformComponent>(position.x * tileSize * mapScale, position.y * tileSize * mapScale, 115, 115,
