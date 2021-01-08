@@ -4,6 +4,7 @@
 #include <SDL_ttf.h>
 #include <string>
 
+enum class LabelType { NONE = -1, NEWGAME = 0, LOADGAME = 1, EXIT = 2 };
 class RpgLabel {
   private:
 	SDL_Rect m_position;
@@ -14,10 +15,14 @@ class RpgLabel {
 
   public:
 	RpgLabel(int xPosition, int yPosition, std::string labelText, std::string font, SDL_Color &color);
+
+	RpgLabel(LabelType type, std::string labelText, std::string font, SDL_Color &color);
 	~RpgLabel();
 
 	void Draw();
 	void setLabelText(std::string font, std::string labelText);
+	void setLabelColor(const SDL_Color &color);
+	void getLabelDims(SDL_Rect &dims);
 };
 
 #endif

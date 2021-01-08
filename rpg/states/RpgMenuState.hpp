@@ -24,6 +24,9 @@ class RpgMenuItem;
 class RpgLabel;
 
 using MenuItem = std::vector<std::shared_ptr<RpgMenuItem>>;
+using LabelItem = std::shared_ptr<RpgLabel>;
+using MenuLabel = std::vector<LabelItem>;
+
 class RpgMenuState : public RpgGameState {
 
 	RpgMenuState();
@@ -46,7 +49,7 @@ class RpgMenuState : public RpgGameState {
 	void Update(RpgGame *rpgGame) override;
 	void Render(RpgGame *rpgGame) override;
 
-	void buttonPressed(MenuItem item, RpgGame *rpgGame);
+	void buttonPressed(LabelItem item, RpgGame *rpgGame);
 
 	static SDL_Event m_event;
 
@@ -54,9 +57,11 @@ class RpgMenuState : public RpgGameState {
 	MenuItem m_exitButton;
 	std::shared_ptr<RpgMenuItem> m_menuBackgroundPtr;
 	std::shared_ptr<RpgMenuItem> m_logoPtr;
-	std::map<MenuItem, std::function<void(RpgGame *)>> m_buttonFucntions;
-	std::map<MenuItem, BUTTON_STATE> m_buttonsWithState;
-	std::shared_ptr<RpgLabel> m_label;
+	std::map<LabelItem, std::function<void(RpgGame *)>> m_buttonFucntions;
+	// std::map<MenuItem, BUTTON_STATE> m_buttonsWithState;
+	MenuLabel m_Labels;
+	SDL_Color m_colors[2] = {{255, 255, 255}, {255, 0, 0}};
+	bool selected[3] = {0, 0, 0};
 };
 
 #endif // RPG_RPGMENUSTATE_HPP

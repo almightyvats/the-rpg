@@ -15,41 +15,29 @@ RpgMenuState::RpgMenuState()
 	std::string backgroundPath = "../rpg/assets/menu/menu_background.png";
 	std::string logoPath = "../rpg/assets/menu/logo.png";
 
-	for (int i = 0; i < BUTTON_STATE::BUTTON_SPRITE_TOTAL; i++) {
-		auto menuItem =
-		    std::make_shared<RpgMenuItem>(0, i * (BUTTON_PROPS::BUTTON_HEIGHT + 120), BUTTON_PROPS::BUTTON_HEIGHT,
-		                                  BUTTON_PROPS::BUTTON_WIDTH, playButtonSpritePath, ITEM_TYPE::PLAY_BUTTON);
-		m_playButton.push_back(menuItem);
-	}
-
-	for (int i = 0; i < BUTTON_STATE::BUTTON_SPRITE_TOTAL; i++) {
-		auto menuItem =
-		    std::make_shared<RpgMenuItem>(0, i * (BUTTON_PROPS::BUTTON_HEIGHT + 150), BUTTON_PROPS::BUTTON_HEIGHT,
-		                                  BUTTON_PROPS::BUTTON_WIDTH, exitButtonSpritePath, ITEM_TYPE::EXIT_BUTTON);
-		m_exitButton.push_back(menuItem);
-	}
-
-	m_buttonFucntions.insert({m_playButton, [](RpgGame *rpgGame) { rpgGame->changeState(RpgPlayState::Instance()); }});
-	m_buttonFucntions.insert({m_exitButton, [](RpgGame *rpgGame) { rpgGame->quitGame(); }});
-
 	m_menuBackgroundPtr = std::make_shared<RpgMenuItem>(0, 0, RpgGame::SCREEN_HEIGHT, RpgGame::SCREEN_WIDTH,
 	                                                    backgroundPath, ITEM_TYPE::BACKGROUND);
 	m_logoPtr = std::make_shared<RpgMenuItem>(0, 0, 400, 500, logoPath, ITEM_TYPE::LOGO);
 
-	m_buttonsWithState.insert({m_playButton, BUTTON_STATE::BUTTON_SPRITE_MOUSE_OUT});
-	m_buttonsWithState.insert({m_exitButton, BUTTON_STATE::BUTTON_SPRITE_MOUSE_OUT});
+	RpgGame::assets->AddFont("Ancient", "../rpg/assets/font/ancient.ttf", 45);
 
-	RpgGame::assets->AddFont("Ancient", "../rpg/assets/font/ancient.ttf", 20);
+	auto newGameLabel = std::make_shared<RpgLabel>(LabelType::NEWGAME, "New game", "Ancient", m_colors[0]);
+	auto loadGameLabel = std::make_shared<RpgLabel>(LabelType::LOADGAME, "Load game", "Ancient", m_colors[0]);
+	auto exitLabel = std::make_shared<RpgLabel>(LabelType::EXIT, "Exit", "Ancient", m_colors[0]);
+	m_Labels.push_back(newGameLabel);
+	m_Labels.push_back(loadGameLabel);
+	m_Labels.push_back(exitLabel);
 
-	SDL_Color white = {0, 0, 0};
-	m_label = std::make_shared<RpgLabel>(10, 10, "Test String", "Ancient", white);
+	m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) { rpgGame->changeState(RpgPlayState::Instance()); }});
+	m_buttonFucntions.insert({loadGameLabel, [](RpgGame *rpgGame) { std::cout << "Load game item clicked! \n"; }});
+	m_buttonFucntions.insert({exitLabel, [](RpgGame *rpgGame) { rpgGame->quitGame(); }});
 
 	RpgSoundManager::playMusic("MENU");
 }
 
 RpgMenuState::~RpgMenuState() {}
 
-void RpgMenuState::buttonPressed(MenuItem item, RpgGame *rpgGame)
+void RpgMenuState::buttonPressed(LabelItem item, RpgGame *rpgGame)
 {
 	for (auto button : m_buttonFucntions) {
 		if (button.first == item) {
@@ -89,58 +77,32 @@ void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 		int mousePosX, mousePosY;
 		SDL_GetMouseState(&mousePosX, &mousePosY);
 
-		SDL_Point menuItemPosition = m_playButton[0]->menuItemPosition();
+		for (int i = 0; i < m_Labels.size(); i++) {
+			SDL_Rect menuItemDims;
+			m_Labels[i]->getLabelDims(menuItemDims);
 
-		SDL_Point exitButtonPosition = m_exitButton[0]->menuItemPosition();
+			bool insideButton = true;
 
-		bool insidePlayButton = true;
-		bool insideExitButton = true;
-
-		if (mousePosX < menuItemPosition.x || mousePosX > (menuItemPosition.x + BUTTON_PROPS::BUTTON_WIDTH)
-		    || mousePosY < menuItemPosition.y || mousePosY > (menuItemPosition.y + BUTTON_PROPS::BUTTON_HEIGHT)) {
-			insidePlayButton = false;
-		}
-
-		if (mousePosX < exitButtonPosition.x || mousePosX > (exitButtonPosition.x + BUTTON_PROPS::BUTTON_WIDTH)
-		    || mousePosY < exitButtonPosition.y || mousePosY > (exitButtonPosition.y + BUTTON_PROPS::BUTTON_HEIGHT)) {
-			insideExitButton = false;
-		}
-
-		if (!insidePlayButton) {
-			m_buttonsWithState[m_playButton] = BUTTON_STATE::BUTTON_SPRITE_MOUSE_OUT;
-		} else {
-			switch (m_event.type) {
-			case SDL_MOUSEMOTION:
-				m_buttonsWithState[m_playButton] = BUTTON_STATE::BUTTON_SPRITE_MOUSE_OVER_MOTION;
-				break;
-			case SDL_MOUSEBUTTONUP:
-				m_buttonsWithState[m_playButton] = BUTTON_STATE::BUTTON_SPRITE_MOUSE_OVER_MOTION;
-				break;
-			case SDL_MOUSEBUTTONDOWN:
-				m_buttonsWithState[m_playButton] = BUTTON_STATE::BUTTON_SPRITE_MOUSE_DOWN;
-				buttonPressed(m_playButton, rpgGame);
-				break;
-			default:
-				break;
+			if (mousePosX < menuItemDims.x || mousePosX > (menuItemDims.x + menuItemDims.w)
+			    || mousePosY < menuItemDims.y || mousePosY > (menuItemDims.y + menuItemDims.h)) {
+				insideButton = false;
 			}
-		}
 
-		if (!insideExitButton) {
-			m_buttonsWithState[m_exitButton] = BUTTON_STATE::BUTTON_SPRITE_MOUSE_OUT;
-		} else {
-			switch (m_event.type) {
-			case SDL_MOUSEMOTION:
-				m_buttonsWithState[m_exitButton] = BUTTON_STATE::BUTTON_SPRITE_MOUSE_OVER_MOTION;
-				break;
-			case SDL_MOUSEBUTTONUP:
-				m_buttonsWithState[m_exitButton] = BUTTON_STATE::BUTTON_SPRITE_MOUSE_OVER_MOTION;
-				break;
-			case SDL_MOUSEBUTTONDOWN:
-				m_buttonsWithState[m_exitButton] = BUTTON_STATE::BUTTON_SPRITE_MOUSE_DOWN;
-				buttonPressed(m_exitButton, rpgGame);
-				break;
-			default:
-				break;
+			if (!insideButton) {
+				m_Labels[i]->setLabelColor(m_colors[0]);
+			} else {
+				switch (m_event.type) {
+				case SDL_MOUSEMOTION:
+				case SDL_MOUSEBUTTONUP:
+					m_Labels[i]->setLabelColor(m_colors[1]);
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					m_Labels[i]->setLabelColor(m_colors[1]);
+					buttonPressed(m_Labels[i], rpgGame);
+					break;
+				default:
+					break;
+				}
 			}
 		}
 
@@ -154,9 +116,6 @@ auto &menuProjectiles(manager.getGroup(RpgPlayState::groupProjectiles));
 
 void RpgMenuState::Update(RpgGame *rpgGame)
 {
-	// m_playButton[m_currentSprite]->Update();
-	// m_exitButton[m_currentSprite]->Update();
-
 	manager.refresh();
 	manager.update();
 }
@@ -166,16 +125,13 @@ void RpgMenuState::Render(RpgGame *rpgGame)
 	SDL_RenderClear(rpgGame->renderer);
 
 	m_menuBackgroundPtr->Draw();
-	// m_logoPtr->Draw();
-	for (const auto &button : m_buttonsWithState) {
-		auto item = button.first;
-		auto state = button.second;
-		item[state]->Draw();
-	}
 
 	for (auto &p : menuProjectiles) {
 		p->draw(SDL_ALPHA_OPAQUE);
 	}
-	m_label->Draw();
+	for (auto &l : m_Labels) {
+		l->Draw();
+	}
+
 	SDL_RenderPresent(rpgGame->renderer);
 }
