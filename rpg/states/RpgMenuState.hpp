@@ -58,10 +58,8 @@ class RpgMenuState : public RpgGameState {
 	std::shared_ptr<RpgMenuItem> m_menuBackgroundPtr;
 	std::shared_ptr<RpgMenuItem> m_logoPtr;
 	std::map<LabelItem, std::function<void(RpgGame *)>> m_buttonFucntions;
-	// std::map<MenuItem, BUTTON_STATE> m_buttonsWithState;
 	MenuLabel m_Labels;
 	SDL_Color m_colors[2] = {{255, 255, 255}, {255, 0, 0}};
-	bool selected[3] = {0, 0, 0};
 };
 
 #endif // RPG_RPGMENUSTATE_HPP
