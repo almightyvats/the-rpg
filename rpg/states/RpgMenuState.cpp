@@ -2,6 +2,7 @@
 #include "RpgMenuState.hpp"
 #include "RpgPlayState.hpp"
 #include "rpg/AssetManager.hpp"
+#include "rpg/sound/RpgSoundManager.hpp"
 
 SDL_Event RpgMenuState::m_event;
 
@@ -38,8 +39,12 @@ RpgMenuState::RpgMenuState()
 	m_buttonsWithState.insert({m_playButton, BUTTON_STATE::BUTTON_SPRITE_MOUSE_OUT});
 	m_buttonsWithState.insert({m_exitButton, BUTTON_STATE::BUTTON_SPRITE_MOUSE_OUT});
 
-	RpgGame::assets->AddTexture("fireball", "../rpg/assets/fireball_sprite.png");
-	//RpgGame::assets->CreateProjectile(Vector2D(700, 400), Vector2D(0, 0), 200, 0, "fireball");
+	RpgGame::assets->AddFont("Ancient", "../rpg/assets/font/ancient.ttf", 20);
+
+	SDL_Color white = {0, 0, 0};
+	m_label = std::make_shared<RpgLabel>(10, 10, "Test String", "Ancient", white);
+
+	RpgSoundManager::playMusic("MENU");
 }
 
 RpgMenuState::~RpgMenuState() {}
@@ -53,10 +58,15 @@ void RpgMenuState::buttonPressed(MenuItem item, RpgGame *rpgGame)
 	}
 }
 
-auto &menuProjectiles(manager.getGroup(RpgPlayState::groupProjectiles));
+void RpgMenuState::Pause()
+{
+	RpgSoundManager::pauseMusic();
+}
 
-void RpgMenuState::Pause() {}
-void RpgMenuState::Resume() {}
+void RpgMenuState::Resume()
+{
+	RpgSoundManager::resumeMusic("MENU");
+}
 
 void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 {
@@ -79,9 +89,9 @@ void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 		int mousePosX, mousePosY;
 		SDL_GetMouseState(&mousePosX, &mousePosY);
 
-		SDL_Point menuItemPosition = m_playButton[m_currentSprite]->menuItemPosition();
+		SDL_Point menuItemPosition = m_playButton[0]->menuItemPosition();
 
-		SDL_Point exitButtonPosition = m_exitButton[m_currentSprite]->menuItemPosition();
+		SDL_Point exitButtonPosition = m_exitButton[0]->menuItemPosition();
 
 		bool insidePlayButton = true;
 		bool insideExitButton = true;
@@ -140,10 +150,12 @@ void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 	}
 }
 
+auto &menuProjectiles(manager.getGroup(RpgPlayState::groupProjectiles));
+
 void RpgMenuState::Update(RpgGame *rpgGame)
 {
-	m_playButton[m_currentSprite]->Update();
-	m_exitButton[m_currentSprite]->Update();
+	// m_playButton[m_currentSprite]->Update();
+	// m_exitButton[m_currentSprite]->Update();
 
 	manager.refresh();
 	manager.update();
@@ -164,6 +176,6 @@ void RpgMenuState::Render(RpgGame *rpgGame)
 	for (auto &p : menuProjectiles) {
 		p->draw(SDL_ALPHA_OPAQUE);
 	}
-
+	m_label->Draw();
 	SDL_RenderPresent(rpgGame->renderer);
 }

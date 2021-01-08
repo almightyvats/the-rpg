@@ -1,5 +1,6 @@
 #include "RpgGame.hpp"
 #include "rpg/states/RpgGameState.hpp"
+#include "sound/RpgSoundManager.hpp"
 
 SDL_Renderer *RpgGame::renderer = nullptr;
 
@@ -23,6 +24,15 @@ void RpgGame::init(std::string title, bool fullScreen)
 		                          SCREEN_HEIGHT, flags);
 		if (window) {
 			std::cout << "Window craeted" << std::endl;
+		}
+		RpgSoundManager::init();
+		RpgSoundManager::addMusic("../rpg/assets/music/menu.wav", "MENU");
+		RpgSoundManager::addMusic("../rpg/assets/music/play.wav", "PLAY");
+
+		if (TTF_Init() < 0) {
+			std::cout << "Error in loading TTF: " << TTF_GetError() << std::endl;
+		} else {
+			std::cout << "TTF initialised" << std::endl;
 		}
 
 		int w, h;
@@ -61,6 +71,8 @@ void RpgGame::clean()
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
+	Mix_CloseAudio();
+	Mix_Quit();
 	std::cout << "cleaned" << std::endl;
 };
 
@@ -75,10 +87,13 @@ void RpgGame::pushState(RpgGameState &state)
 
 void RpgGame::changeState(RpgGameState &state)
 {
-	if (!m_states.empty())
+	if (!m_states.empty()) {
+		m_states.back().get().Pause();
 		m_states.pop_back();
+	}
 
 	m_states.emplace_back(state);
+	m_states.back().get().Resume();
 }
 
 void RpgGame::popState()

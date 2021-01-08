@@ -77,10 +77,26 @@ void AssetManager::CreateMapTile(int srcX, int srcY, int destX, int destY, int t
 
 void AssetManager::AddTexture(std::string id, std::string path)
 {
-	textures.emplace(id, TextureManager::LoadTexture(path));
+	m_textures.emplace(id, TextureManager::LoadTexture(path));
 }
 
 SDL_Texture *AssetManager::GetTexture(std::string id)
 {
-	return textures[id];
+	return m_textures[id];
+}
+
+void AssetManager::AddFont(const std::string &id, const std::string &path, const int &fontSize)
+{
+	auto openFontPtr = TTF_OpenFont(path.c_str(), fontSize);
+	if (openFontPtr == nullptr) {
+		std::cout << "Problem with open font\n";
+	} else {
+		std::cout << "Font loaded\n";
+	}
+	m_fonts.emplace(id, openFontPtr);
+}
+
+TTF_Font *AssetManager::GetFont(const std::string &id)
+{
+	return m_fonts[id];
 }

@@ -5,6 +5,7 @@
 #include "rpg/Map.hpp"
 #include "rpg/Vector2D.hpp"
 #include "rpg/ecs/Components.hpp"
+#include "rpg/sound/RpgSoundManager.hpp"
 
 Map *map;
 Manager manager;
@@ -28,11 +29,10 @@ RpgPlayState::RpgPlayState()
 	RpgGame::assets->AddTexture("fireball", "../rpg/assets/fireball_sprite.png");
 
 	map = new Map("../rpg/assets/map/outdoor_01.json", 3);
-	
 
 	map->LoadMap();
 
-	player.addComponent<TransformComponent>(11 * 32 * 3, 88 * 32 * 3, 115, 75, 1);	
+	player.addComponent<TransformComponent>(11 * 32 * 3, 88 * 32 * 3, 115, 75, 1);
 
 	SpriteSheet spriteSheet(11, 75, 115, 75, 5);
 	auto &playerSprite = player.addComponent<SpriteComponent>("player", spriteSheet);
@@ -49,7 +49,7 @@ RpgPlayState::RpgPlayState()
 	}
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("Player");
-	player.addGroup(groupPlayers);	
+	player.addGroup(groupPlayers);
 }
 
 RpgPlayState::~RpgPlayState() = default;
@@ -61,11 +61,14 @@ auto &projectiles(manager.getGroup(RpgPlayState::groupProjectiles));
 auto &npcs(manager.getGroup(RpgPlayState::groupNpcs));
 auto &enemies(manager.getGroup(RpgPlayState::groupEnemies));
 
-void RpgPlayState::Pause() {}
+void RpgPlayState::Pause()
+{
+	RpgSoundManager::pauseMusic();
+}
 
 void RpgPlayState::Resume()
 {
-	printf("CPlayState Resume\n");
+	RpgSoundManager::resumeMusic("PLAY");
 }
 
 bool CheckKonami(SDL_Keycode keyCode)
@@ -192,9 +195,9 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 		if (e->hasComponent<ColliderComponent>()) {
 			SDL_Rect cCol = e->getComponent<ColliderComponent>().collider;
 			if (Collision::AABB(cCol, playerCol)) {
-				//player.getComponent<TransformComponent>().position = playerPos;
+				// player.getComponent<TransformComponent>().position = playerPos;
 				std::cout << "ENEMY encountered" << std::endl;
-				//TODO: start combat (for colliding enemy + enemies in certain range?)
+				// TODO: start combat (for colliding enemy + enemies in certain range?)
 				e->destroy();
 			}
 		}
