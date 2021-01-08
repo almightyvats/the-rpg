@@ -86,3 +86,13 @@ void RpgSoundManager::resumeMusic(const std::string &musicId)
 	m_lastPlayedId = musicId;
 	m_isMusicPlaying = true;
 }
+
+void RpgSoundManager::setMusicVolume(int volume)
+{
+	Mix_VolumeMusic(volume);
+}
+
+int RpgSoundManager::getMusicVolume()
+{
+	return Mix_VolumeMusic(-1);
+}

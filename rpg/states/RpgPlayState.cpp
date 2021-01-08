@@ -4,11 +4,12 @@
 #include "rpg/Collision.hpp"
 #include "rpg/Map.hpp"
 #include "rpg/RpgSoundManager.hpp"
+#include "rpg/Vector2D.hpp"
 #include "rpg/ecs/Components.hpp"
 
 Map *map;
 Manager manager;
-AssetManager *RpgPlayState::assets = new AssetManager(&manager);
+AssetManager *RpgGame::assets = new AssetManager(&manager);
 SDL_Event RpgPlayState::event;
 
 Uint8 fade = 0;
@@ -16,16 +17,22 @@ Uint8 alpha = SDL_ALPHA_OPAQUE;
 
 auto &player(manager.addEntity());
 
+bool godMode = false;
+SDL_Keycode conamiCode[] = {SDLK_UP,    SDLK_UP,   SDLK_DOWN,  SDLK_DOWN, SDLK_LEFT,
+                            SDLK_RIGHT, SDLK_LEFT, SDLK_RIGHT, SDLK_b,    SDLK_a};
+bool conamiCodeInput[] = {false, false, false, false, false, false, false, false, false, false};
+int conamiCodeIndex = 0;
+
 RpgPlayState::RpgPlayState()
 {
-	assets->AddTexture("player", "../rpg/assets/playerSpriteSheet.png");
-	assets->AddTexture("fireball", "../rpg/assets/fireball_sprite.png");
+	RpgGame::assets->AddTexture("player", "../rpg/assets/playerSpriteSheet.png");
+	RpgGame::assets->AddTexture("fireball", "../rpg/assets/fireball_sprite.png");
 
-	map = new Map("../rpg/assets/map/jsonsample.json", 3);
-	// map = new Map("../rpg/assets/map/testmap_50_50.json", 3);
+	map = new Map("../rpg/assets/map/outdoor_01.json", 3);
+
 	map->LoadMap();
 
-	player.addComponent<TransformComponent>(30 * 32 * 3, 27 * 32 * 3, 115, 75, 1);
+	player.addComponent<TransformComponent>(11 * 32 * 3, 88 * 32 * 3, 115, 75, 1);
 
 	SpriteSheet spriteSheet(11, 75, 115, 75, 5);
 	auto &playerSprite = player.addComponent<SpriteComponent>("player", spriteSheet);
@@ -43,14 +50,6 @@ RpgPlayState::RpgPlayState()
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("Player");
 	player.addGroup(groupPlayers);
-
-	assets->CreateProjectile(Vector2D(300, 300), Vector2D(0, -1), 200, 0, "fireball");
-	assets->CreateProjectile(Vector2D(0, 300), Vector2D(1, 1), 200, 0, "fireball");
-	assets->CreateProjectile(Vector2D(150, 300), Vector2D(1, 0), 200, 0, "fireball");
-
-	RpgSoundManager::playMusic("PLAY");
-	RpgSoundManager::addSoundEffect("../rpg/assets/music/explosion.wav", "Explosion");
-	RpgSoundManager::addSoundEffect("../rpg/assets/music/rewind.wav", "Rewind");
 }
 
 RpgPlayState::~RpgPlayState() = default;
@@ -59,6 +58,8 @@ auto &tiles(manager.getGroup(RpgPlayState::groupMap));
 auto &players(manager.getGroup(RpgPlayState::groupPlayers));
 auto &colliders(manager.getGroup(RpgPlayState::groupColliders));
 auto &projectiles(manager.getGroup(RpgPlayState::groupProjectiles));
+auto &npcs(manager.getGroup(RpgPlayState::groupNpcs));
+auto &enemies(manager.getGroup(RpgPlayState::groupEnemies));
 
 void RpgPlayState::Pause()
 {
@@ -70,29 +71,62 @@ void RpgPlayState::Resume()
 	RpgSoundManager::resumeMusic("PLAY");
 }
 
+bool CheckKonami(SDL_Keycode keyCode)
+{
+	// Check for special input
+	if (conamiCode[conamiCodeIndex] == keyCode) {
+		bool prevInputCorrect = true;
+		for (int i = 0; i < conamiCodeIndex; i++) {
+			prevInputCorrect &= conamiCodeInput[i];
+		}
+		if (prevInputCorrect) {
+			conamiCodeInput[conamiCodeIndex] = true;
+			conamiCodeIndex++;
+		} else {
+			conamiCodeIndex = 0;
+		}
+	} else {
+		conamiCodeIndex = 0;
+	}
+
+	if (conamiCodeIndex == 0) {
+		for (int i = 0; i < 10; i++) {
+			conamiCodeInput[i] = false;
+		}
+	}
+	return conamiCodeInput[9];
+}
+
 void RpgPlayState::HandleEvents(RpgGame *rpgGame)
 {
-	SDL_PollEvent(&event);
-	switch (event.type) {
-	case SDL_QUIT:
-		rpgGame->quitGame();
-		break;
-	case SDL_KEYDOWN:
-		switch (event.key.keysym.sym) {
-		case SDLK_SPACE:
-			rpgGame->changeState(RpgMenuState::Instance());
+	if (SDL_PollEvent(&event) == 1) {
+		switch (event.type) {
+		case SDL_QUIT:
+			rpgGame->quitGame();
 			break;
-		case SDLK_e:
-			RpgSoundManager::playEffect("Explosion");
+		case SDL_KEYDOWN:
+			switch (event.key.keysym.sym) {
+			case SDLK_ESCAPE:
+				rpgGame->changeState(RpgMenuState::Instance());
+				break;
+			case SDLK_SPACE:
+				rpgGame->changeState(RpgMenuState::Instance());
+				break;
+			}
 			break;
-		case SDLK_r:
-			RpgSoundManager::playEffect("Rewind");
+		case SDL_KEYUP:
+			if (CheckKonami(event.key.keysym.sym)) {
+				godMode = !godMode;
+				if (godMode) {
+					std::cout << "Godmode activated" << std::endl;
+				} else {
+					std::cout << "Godmode deactivated" << std::endl;
+				}
+			}
+			break;
+		default:
 			break;
 		}
-		break;
-
-	default:
-		break;
 	}
 }
 
@@ -112,14 +146,59 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 		if (t->hasComponent<ColliderComponent>()) {
 			SDL_Rect cCol = t->getComponent<ColliderComponent>().collider;
 			if (Collision::AABB(cCol, playerCol)) {
-				player.getComponent<TransformComponent>().position = playerPos;
-
+				if (!godMode) {
+					player.getComponent<TransformComponent>().position = playerPos;
+				}
 				if (t->hasComponent<DoorComponent>()) {
 					auto &door = t->getComponent<DoorComponent>();
 					newMap = door.targetMap;
 					playerStart = door.playerStart;
 					fade = -5;
 				}
+			}
+		}
+	}
+
+	for (auto &n : npcs) {
+		if (n->hasComponent<ColliderComponent>()) {
+			SDL_Rect cCol = n->getComponent<ColliderComponent>().collider;
+
+			if (Collision::AABB(cCol, playerCol)) {
+				player.getComponent<TransformComponent>().position = playerPos;
+				std::cout << "NPC encountered" << std::endl;
+			}
+		}
+	}
+
+	for (auto &e : enemies) {
+		if (e->hasComponent<TransformComponent>()) {
+			Vector2D enemyPos = e->getComponent<TransformComponent>().position;
+
+			// if the player enters a certainr range of the enemy, the enemy will follow
+			if (Vector2D::Distance(playerPos, enemyPos) < 350) {
+				Vector2D enemyVelocity = e->getComponent<TransformComponent>().velocity;
+
+				enemyVelocity.x = (enemyPos.x + playerPos.x) / 2;
+				enemyVelocity.y = (enemyPos.y + playerPos.y) / 2;
+
+				enemyVelocity -= enemyPos;
+				enemyVelocity = Vector2D::Normalize(enemyVelocity);
+
+				e->getComponent<TransformComponent>().velocity = enemyVelocity;
+				e->getComponent<TransformComponent>().speed = 1;
+			} else {
+				e->getComponent<TransformComponent>().velocity = Vector2D(0, 0);
+				e->getComponent<TransformComponent>().speed = 0;
+			}
+		}
+
+		if (e->hasComponent<ColliderComponent>()) {
+			SDL_Rect cCol = e->getComponent<ColliderComponent>().collider;
+			if (Collision::AABB(cCol, playerCol)) {
+				// player.getComponent<TransformComponent>().position = playerPos;
+				std::cout << "ENEMY encountered" << std::endl;
+				// TODO: start combat (for colliding enemy + enemies in certain range?)
+				e->destroy();
 			}
 		}
 	}
@@ -188,6 +267,12 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 		for (auto &t : tiles) {
 			t->destroy();
 		}
+		for (auto &n : npcs) {
+			n->destroy();
+		}
+		for (auto &p : projectiles) {
+			p->destroy();
+		}
 
 		manager.refresh();
 		map = new Map(newMap, 3);
@@ -210,12 +295,20 @@ void RpgPlayState::Render(RpgGame *rpgGame)
 		c->draw(alpha);
 	}
 
+	for (auto &n : npcs) {
+		n->draw(alpha);
+	}
+
 	for (auto &p : players) {
 		p->draw(alpha);
 	}
 
 	for (auto &p : projectiles) {
 		p->draw(alpha);
+	}
+
+	for (auto &e : enemies) {
+		e->draw(alpha);
 	}
 
 	SDL_RenderPresent(rpgGame->renderer);

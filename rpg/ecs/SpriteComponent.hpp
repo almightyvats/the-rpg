@@ -57,7 +57,7 @@ class SpriteComponent : public Component {
 		animated = true;
 	}
 
-	void setTex(std::string id) { texture = RpgPlayState::assets->GetTexture(id); }
+	void setTex(std::string id) { texture = RpgGame::assets->GetTexture(id); }
 
 	void init() override { transform = &entity->getComponent<TransformComponent>(); }
 	void update() override

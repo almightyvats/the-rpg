@@ -24,8 +24,13 @@ class Vector2D {
 	Vector2D &operator*=(const Vector2D &vec);
 	Vector2D &operator/=(const Vector2D &vec);
 
-	Vector2D &operator*(const int& i);
+	Vector2D &operator*(const int &i);
+	Vector2D &operator*(const float &f);
 	Vector2D &Zero();
+
+	static float Distance(const Vector2D &vec1, const Vector2D &vec2);
+	static float Length(const Vector2D &vec);
+	static Vector2D Normalize(const Vector2D &vec);
 
 	friend std::ostream &operator<<(std::ostream &stream, const Vector2D &vec);
 };

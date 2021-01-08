@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
+#include <SDL_ttf.h>
 #include <functional>
 #include <iostream>
 #include <string>
@@ -36,6 +37,8 @@ class RpgGame {
 	static SDL_Rect camera;
 	inline static const int SCREEN_HEIGHT = 768;
 	inline static const int SCREEN_WIDTH = 1024;
+
+	static AssetManager *assets;
 
   private:
 	SDL_Window *window{};

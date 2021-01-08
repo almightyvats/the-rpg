@@ -5,6 +5,7 @@
 #include "RpgGameState.hpp"
 #include "RpgMenuItem.hpp"
 #include "rpg/RpgGame.hpp"
+#include "rpg/RpgLabel.hpp"
 #include <functional>
 #include <map>
 #include <memory>
@@ -20,8 +21,12 @@ enum BUTTON_STATE {
 };
 
 class RpgMenuItem;
+class RpgLabel;
 
 using MenuItem = std::vector<std::shared_ptr<RpgMenuItem>>;
+using LabelItem = std::shared_ptr<RpgLabel>;
+using MenuLabel = std::vector<LabelItem>;
+
 class RpgMenuState : public RpgGameState {
 
 	RpgMenuState();
@@ -44,19 +49,17 @@ class RpgMenuState : public RpgGameState {
 	void Update(RpgGame *rpgGame) override;
 	void Render(RpgGame *rpgGame) override;
 
-	void buttonPressed(MenuItem item, RpgGame *rpgGame);
+	void buttonPressed(LabelItem item, RpgGame *rpgGame);
 
 	static SDL_Event m_event;
-	static AssetManager *assets;
 
 	MenuItem m_playButton;
 	MenuItem m_exitButton;
 	std::shared_ptr<RpgMenuItem> m_menuBackgroundPtr;
 	std::shared_ptr<RpgMenuItem> m_logoPtr;
-	std::map<MenuItem, std::function<void(RpgGame *)>> m_buttonFucntions;
-	std::map<MenuItem, BUTTON_STATE> m_buttonsWithState;
-
-	int m_currentSprite;
+	std::map<LabelItem, std::function<void(RpgGame *)>> m_buttonFucntions;
+	MenuLabel m_Labels;
+	SDL_Color m_colors[2] = {{255, 255, 255}, {255, 0, 0}};
 };
 
 #endif // RPG_RPGMENUSTATE_HPP

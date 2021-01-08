@@ -29,6 +29,12 @@ void RpgGame::init(std::string title, bool fullScreen)
 		RpgSoundManager::addMusic("../rpg/assets/music/menu.wav", "MENU");
 		RpgSoundManager::addMusic("../rpg/assets/music/play.wav", "PLAY");
 
+		if (TTF_Init() < 0) {
+			std::cout << "Error in loading TTF: " << TTF_GetError() << std::endl;
+		} else {
+			std::cout << "TTF initialised" << std::endl;
+		}
+
 		int w, h;
 		SDL_GetWindowSize(window, &w, &h);
 		camera.w = w;

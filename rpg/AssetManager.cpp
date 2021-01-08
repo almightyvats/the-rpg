@@ -6,6 +6,42 @@ AssetManager::AssetManager(Manager *man) : manager(man) {}
 
 AssetManager::~AssetManager() {}
 
+void AssetManager::CreateNpc(Vector2D position, int tileSize, int mapScale, std::string id)
+{
+	RpgGame::assets->AddTexture(id, "../rpg/assets/" + id + ".png");
+
+	auto &npc(manager->addEntity());
+	npc.addComponent<TransformComponent>(position.x * tileSize * mapScale, position.y * tileSize * mapScale, 115, 115,
+	                                     1);
+
+	SpriteSheet spriteSheet(30, 100, 100, 0, 0);
+	auto &npcSprite = npc.addComponent<SpriteComponent>(id, spriteSheet);
+	{
+		npcSprite.addAnimation("idle_down", Animation(0, 30, 100));
+		npcSprite.defaultAnimation("idle_down");
+	}
+	npc.addComponent<ColliderComponent>("NPC");
+	npc.addGroup(RpgPlayState::groupNpcs);
+}
+
+void AssetManager::CreateEnemy(Vector2D position, int tileSize, int mapScale, std::string id)
+{
+	RpgGame::assets->AddTexture(id, "../rpg/assets/enemies/" + id + ".png");
+
+	auto &enemy(manager->addEntity());
+	enemy.addComponent<TransformComponent>(position.x * tileSize * mapScale, position.y * tileSize * mapScale, 115, 115,
+	                                     1);
+
+	SpriteSheet spriteSheet(12, 124, 100, 0, 0);
+	auto &enemySprite = enemy.addComponent<SpriteComponent>(id, spriteSheet);
+	{
+		enemySprite.addAnimation("idle_down", Animation(0, 12, 100));
+		enemySprite.defaultAnimation("idle_down");
+	}
+	enemy.addComponent<ColliderComponent>("ENEMY");
+	enemy.addGroup(RpgPlayState::groupEnemies);
+}
+
 void AssetManager::CreateProjectile(Vector2D position, Vector2D velocity, int range, int speed, std::string id)
 {
 	auto &projectile(manager->addEntity());
@@ -41,10 +77,26 @@ void AssetManager::CreateMapTile(int srcX, int srcY, int destX, int destY, int t
 
 void AssetManager::AddTexture(std::string id, std::string path)
 {
-	textures.emplace(id, TextureManager::LoadTexture(path));
+	m_textures.emplace(id, TextureManager::LoadTexture(path));
 }
 
 SDL_Texture *AssetManager::GetTexture(std::string id)
 {
-	return textures[id];
+	return m_textures[id];
+}
+
+void AssetManager::AddFont(const std::string &id, const std::string &path, const int &fontSize)
+{
+	auto openFontPtr = TTF_OpenFont(path.c_str(), fontSize);
+	if (openFontPtr == nullptr) {
+		std::cout << "Problem with open font\n";
+	} else {
+		std::cout << "Font loaded\n";
+	}
+	m_fonts.emplace(id, openFontPtr);
+}
+
+TTF_Font *AssetManager::GetFont(const std::string &id)
+{
+	return m_fonts[id];
 }

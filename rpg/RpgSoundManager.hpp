@@ -27,6 +27,9 @@ class RpgSoundManager {
 
 	static void pauseMusic();
 	static void resumeMusic(const std::string &musicId);
+
+	static void setMusicVolume(int volume);
+	static int getMusicVolume();
 };
 
 #endif

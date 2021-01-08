@@ -11,8 +11,6 @@
 #include <sstream>
 #include <string>
 
-extern Manager manager;
-
 Map::Map(std::string path, int mapScale)
 {
 	std::ifstream t(path);
@@ -35,7 +33,23 @@ Map::Map(std::string path, int mapScale)
 		layer.height = layers[i]["height"].GetInt();
 		layer.width = layers[i]["width"].GetInt();
 		layer.name = layers[i]["name"].GetString();
-		layer.collision = layers[i]["collision"].GetBool();
+
+		if (layers[i].HasMember("properties")) {
+			const rapidjson::Value &properties = layers[i]["properties"];
+			for (rapidjson::SizeType j = 0; j < properties.Size(); j++) { // Uses SizeType instead of size_t^
+				std::string propName = properties[j]["name"].GetString();
+				if (propName.compare("collision") == 0) {
+					layer.collision = properties[j]["value"].GetBool();
+				} else if (propName.compare("targetMap") == 0) {
+					std::string strVal = properties[j]["value"].GetString();
+					layer.targetMap = "../rpg/assets/map/" + strVal + ".json";
+				} else if (propName.compare("playerStartX") == 0) {
+					layer.playerStart.x = properties[j]["value"].GetInt();
+				} else if (propName.compare("playerStartY") == 0) {
+					layer.playerStart.y = properties[j]["value"].GetInt();
+				}
+			}
+		}
 
 		if (layers[i].HasMember("targetMap")) {
 			layer.targetMap = layers[i]["targetMap"].GetString();
@@ -57,8 +71,34 @@ Map::Map(std::string path, int mapScale)
 		tileset.columns = tilesets[i]["columns"].GetInt();
 		tileset.imageName = tilesets[i]["image"].GetString();
 
-		RpgPlayState::assets->AddTexture(tileset.spriteId, "../rpg/assets/map_sprites/" + tileset.imageName);
+		RpgGame::assets->AddTexture(tileset.spriteId, "../rpg/assets/map_sprites/" + tileset.imageName);
 		setting.tilesets.push_back(tileset);
+	}
+
+	if (document.HasMember("npcs")) {
+		const rapidjson::Value &npcs = document["npcs"];
+		for (rapidjson::SizeType n = 0; n < npcs.Size(); n++) { // Uses SizeType instead of size_t^
+			setting.npcs.emplace_back<Npc>(
+			    {npcs[n]["x"].GetInt(), npcs[n]["y"].GetInt(), npcs[n]["model"].GetString()});
+		}
+	}
+
+	if (document.HasMember("enemies")) {
+		const rapidjson::Value &enemies = document["enemies"];
+		for (rapidjson::SizeType n = 0; n < enemies.Size(); n++) { // Uses SizeType instead of size_t^
+			setting.enemies.emplace_back<Enemy>(
+			    {enemies[n]["x"].GetInt(), enemies[n]["y"].GetInt(), enemies[n]["model"].GetString()});
+		}
+	}
+
+	if (document.HasMember("projectiles")) {
+		const rapidjson::Value &projectiles = document["projectiles"];
+		for (rapidjson::SizeType n = 0; n < projectiles.Size(); n++) { // Uses SizeType instead of size_t^
+			setting.projectiles.emplace_back<Projectile>(
+			    {projectiles[n]["xPos"].GetInt(), projectiles[n]["yPos"].GetInt(), projectiles[n]["xVel"].GetInt(),
+			     projectiles[n]["yVel"].GetInt(), projectiles[n]["range"].GetInt(), projectiles[n]["speed"].GetInt(),
+			     projectiles[n]["model"].GetString()});
+		}
 	}
 
 	height = setting.height * setting.tileHeight;
@@ -84,27 +124,30 @@ void Map::LoadMap()
 					int xpos = ((tileNumber % tileset.columns) + 0) * setting.tileWidth;
 					int ypos = ((tileNumber / tileset.columns) + 0) * setting.tileHeight;
 
-					std::string mapTest;
-					Vector2D pPos;
-					if (x == 30 && y == 25) {
-						mapTest = "../rpg/assets/map/shop.json";
-						pPos = Vector2D(4, 7);
-					}
-
-					if (setting.layers[layerNumber].targetMap != "") {
-						mapTest = "../rpg/assets/map/" + setting.layers[layerNumber].targetMap;
-						pPos = setting.layers[layerNumber].playerStart;
-					}
-
-					RpgPlayState::assets->CreateMapTile(
+					RpgGame::assets->CreateMapTile(
 					    xpos, ypos, x * setting.ScaledWidth(), y * setting.ScaledHeight(), setting.tileSize,
 					    setting.mapScale, setting.layers[layerNumber].collision, tileset.spriteId,
-					    SpriteSheet(tileset.columns, setting.tileWidth, setting.tileHeight, 0, 0), mapTest, pPos);
+					    SpriteSheet(tileset.columns, setting.tileWidth, setting.tileHeight, 0, 0),
+					    setting.layers[layerNumber].targetMap, setting.layers[layerNumber].playerStart);
 					counter++;
 				}
 
 				tileIndex++;
 			}
 		}
+	}
+	for (auto npc : setting.npcs) {
+		RpgGame::assets->CreateNpc(Vector2D(npc.xPos, npc.yPos), setting.tileSize, scale, npc.spriteId);
+	}
+
+	for (auto enemy : setting.enemies) {
+		RpgGame::assets->CreateEnemy(Vector2D(enemy.xPos, enemy.yPos), setting.tileSize, scale, enemy.spriteId);
+	}
+
+	for (auto projectile : setting.projectiles) {
+		RpgGame::assets->CreateProjectile(Vector2D(projectile.xPos * setting.tileSize * setting.mapScale,
+		                                           projectile.yPos * setting.tileSize * setting.mapScale),
+		                                  Vector2D(projectile.xVel, projectile.yVel), projectile.range,
+		                                  projectile.speed, projectile.spriteId);
 	}
 }

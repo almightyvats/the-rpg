@@ -1,4 +1,5 @@
 #include "Vector2D.hpp"
+#include <math.h>
 
 Vector2D::Vector2D()
 {
@@ -83,6 +84,14 @@ Vector2D &Vector2D::operator*(const int &i)
 	return *this;
 }
 
+Vector2D &Vector2D::operator*(const float &f)
+{
+	this->x *= f;
+	this->y *= f;
+
+	return *this;
+}
+
 Vector2D &Vector2D::Zero()
 {
 	this->x = 0.0f;
@@ -95,4 +104,26 @@ std::ostream &operator<<(std::ostream &stream, const Vector2D &vec)
 {
 	stream << "(" << vec.x << "," << vec.y << ")";
 	return stream;
+}
+
+float Vector2D::Distance(const Vector2D &vec1, const Vector2D &vec2)
+{
+	return sqrt(pow((vec1.x - vec2.x), 2) + pow((vec1.y - vec2.y), 2));
+}
+
+float Vector2D::Length(const Vector2D &vec)
+{
+	if (vec.x == 0.0f && vec.y == 0.0f) {
+		return 0.0f;
+	}
+	return sqrt(pow(vec.x, 2) + pow(vec.y, 2));
+}
+
+Vector2D Vector2D::Normalize(const Vector2D &vec)
+{
+	float length = Vector2D::Length(vec);
+	return Vector2D(vec.x * (1.0f / length), vec.y * (1.0f / length));
+	// std::cout << Vector2D(vec.x, vec.y) << " * " << (1 / Vector2D(this->x, this->y).Length()) << "="
+	//           << Vector2D(this->x, this->y) * (1 / Vector2D(this->x, this->y).Length()) << std::endl;
+	//return vec * (1.0f / length);
 }
