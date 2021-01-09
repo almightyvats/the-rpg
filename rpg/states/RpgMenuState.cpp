@@ -10,10 +10,16 @@ extern Manager manager;
 
 RpgMenuState::RpgMenuState()
 {
-	std::string playButtonSpritePath = "../rpg/assets/menu/Play.png";
-	std::string exitButtonSpritePath = "../rpg/assets/menu/Exit.png";
+	std::string volumeButtonSpritePath = "../rpg/assets/menu/volume.png";
 	std::string backgroundPath = "../rpg/assets/menu/menu_background.png";
 	std::string logoPath = "../rpg/assets/menu/logo.png";
+
+	auto menuItem1 = std::make_shared<RpgMenuItem>(0, 0, 61, 43, volumeButtonSpritePath, ITEM_TYPE::MUTE_BUTTON);
+	m_volumeButton.push_back(menuItem1);
+	auto menuItem2 = std::make_shared<RpgMenuItem>(43, 0, 61, 52, volumeButtonSpritePath, ITEM_TYPE::UNMUTE_BUTTON);
+	m_volumeButton.push_back(menuItem2);
+
+	m_muteBtnWithStates.insert({m_volumeButton, MUTE_BUTTON_STATE::BUTTON_SPRITE_UNMUTED});
 
 	m_menuBackgroundPtr = std::make_shared<RpgMenuItem>(0, 0, RpgGame::SCREEN_HEIGHT, RpgGame::SCREEN_WIDTH,
 	                                                    backgroundPath, ITEM_TYPE::BACKGROUND);
@@ -32,18 +38,50 @@ RpgMenuState::RpgMenuState()
 	m_buttonFucntions.insert({loadGameLabel, [](RpgGame *rpgGame) { std::cout << "Load game item clicked! \n"; }});
 	m_buttonFucntions.insert({exitLabel, [](RpgGame *rpgGame) { rpgGame->quitGame(); }});
 
+	RpgSoundManager::setMusicVolume(15);
+	int oldVolume = RpgSoundManager::getMusicVolume();
+	auto volumeMinusLabel = std::make_shared<RpgLabel>(50, 10, "-", "Ancient", m_colors[0]);
+	// auto volumeNumberLabel = std::make_shared<RpgLabel>(150, 10, std::to_string(oldVolume), "Ancient", m_colors[0]);
+	auto volumePlusLabel = std::make_shared<RpgLabel>(200, 10, "+", "Ancient", m_colors[0]);
+
+	m_buttonFucntions.insert({volumeMinusLabel, [](RpgGame *rpgGame) {
+		                          if (!RpgSoundManager::isMusicMuted()) {
+			                          int oldVolume = RpgSoundManager::getMusicVolume();
+			                          int newVolume = (oldVolume - 15 <= 0) ? 0 : oldVolume - 15;
+			                          RpgSoundManager::setMusicVolume(newVolume);
+		                          }
+	                          }});
+
+	m_buttonFucntions.insert({volumePlusLabel, [](RpgGame *rpgGame) {
+		                          if (!RpgSoundManager::isMusicMuted()) {
+			                          int oldVolume = RpgSoundManager::getMusicVolume();
+			                          int newVolume =
+			                              (oldVolume + 15 >= MIX_MAX_VOLUME) ? MIX_MAX_VOLUME : oldVolume + 15;
+			                          RpgSoundManager::setMusicVolume(newVolume);
+		                          }
+	                          }});
+
+	m_Labels.push_back(volumeMinusLabel);
+	// m_Labels.push_back(volumeNumberLabel);
+	m_Labels.push_back(volumePlusLabel);
+
 	RpgSoundManager::playMusic("MENU");
 }
 
 RpgMenuState::~RpgMenuState() {}
 
-void RpgMenuState::buttonPressed(LabelItem item, RpgGame *rpgGame)
+void RpgMenuState::labelPressed(LabelItem item, RpgGame *rpgGame)
 {
 	for (auto button : m_buttonFucntions) {
 		if (button.first == item) {
 			button.second(rpgGame);
 		}
 	}
+}
+
+void RpgMenuState::muteBtnPressed()
+{
+	RpgSoundManager::toggleMuteVolume();
 }
 
 void RpgMenuState::Pause()
@@ -55,6 +93,9 @@ void RpgMenuState::Resume()
 {
 	RpgSoundManager::resumeMusic("MENU");
 }
+
+bool isLabelClicked = false;
+bool isMuteBtnClicked = false;
 
 void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 {
@@ -81,28 +122,64 @@ void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 			SDL_Rect menuItemDims;
 			m_Labels[i]->getLabelDims(menuItemDims);
 
-			bool insideButton = true;
+			bool insideLabel = true;
 
 			if (mousePosX < menuItemDims.x || mousePosX > (menuItemDims.x + menuItemDims.w)
 			    || mousePosY < menuItemDims.y || mousePosY > (menuItemDims.y + menuItemDims.h)) {
-				insideButton = false;
+				insideLabel = false;
 			}
 
-			if (!insideButton) {
+			if (!insideLabel) {
 				m_Labels[i]->setLabelColor(m_colors[0]);
 			} else {
 				switch (m_event.type) {
 				case SDL_MOUSEMOTION:
 				case SDL_MOUSEBUTTONUP:
 					m_Labels[i]->setLabelColor(m_colors[1]);
+					isLabelClicked = false;
 					break;
 				case SDL_MOUSEBUTTONDOWN:
 					m_Labels[i]->setLabelColor(m_colors[1]);
-					buttonPressed(m_Labels[i], rpgGame);
+					if (!isLabelClicked) {
+						labelPressed(m_Labels[i], rpgGame);
+						isLabelClicked = true;
+					}
 					break;
 				default:
 					break;
 				}
+			}
+		}
+
+		SDL_Rect menuItemDims;
+		m_volumeButton[0]->getMenuItemDims(menuItemDims);
+
+		bool insideMuteButton = true;
+
+		if (mousePosX < menuItemDims.x || mousePosX > (menuItemDims.x + menuItemDims.w) || mousePosY < menuItemDims.y
+		    || mousePosY > (menuItemDims.y + menuItemDims.h)) {
+			insideMuteButton = false;
+		}
+
+		if (!insideMuteButton) {
+
+		} else {
+			switch (m_event.type) {
+			case SDL_MOUSEBUTTONUP:
+				isMuteBtnClicked = false;
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				if (!isMuteBtnClicked) {
+					m_muteBtnWithStates[m_volumeButton] =
+					    m_muteBtnWithStates[m_volumeButton] == MUTE_BUTTON_STATE::BUTTON_SPRITE_UNMUTED
+					        ? MUTE_BUTTON_STATE::BUTTON_SPRITE_MUTED
+					        : MUTE_BUTTON_STATE::BUTTON_SPRITE_UNMUTED;
+					muteBtnPressed();
+					isMuteBtnClicked = true;
+				}
+				break;
+			default:
+				break;
 			}
 		}
 
@@ -131,6 +208,10 @@ void RpgMenuState::Render(RpgGame *rpgGame)
 	}
 	for (auto &l : m_Labels) {
 		l->Draw();
+	}
+
+	for (const auto &btn : m_muteBtnWithStates) {
+		btn.first[btn.second]->Draw();
 	}
 
 	SDL_RenderPresent(rpgGame->renderer);

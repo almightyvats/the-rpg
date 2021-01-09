@@ -11,21 +11,14 @@
 #include <memory>
 #include <vector>
 
-enum BUTTON_PROPS { BUTTON_HEIGHT = 150, BUTTON_WIDTH = 300 };
-
-enum BUTTON_STATE {
-	BUTTON_SPRITE_MOUSE_OUT = 0,
-	BUTTON_SPRITE_MOUSE_OVER_MOTION = 1,
-	BUTTON_SPRITE_MOUSE_DOWN = 2,
-	BUTTON_SPRITE_TOTAL = 3
-};
+enum MUTE_BUTTON_STATE { BUTTON_SPRITE_UNMUTED = 0, BUTTON_SPRITE_MUTED = 1 };
 
 class RpgMenuItem;
 class RpgLabel;
 
 using MenuItem = std::vector<std::shared_ptr<RpgMenuItem>>;
 using LabelItem = std::shared_ptr<RpgLabel>;
-using MenuLabel = std::vector<LabelItem>;
+using MenuLabelList = std::vector<LabelItem>;
 
 class RpgMenuState : public RpgGameState {
 
@@ -49,16 +42,17 @@ class RpgMenuState : public RpgGameState {
 	void Update(RpgGame *rpgGame) override;
 	void Render(RpgGame *rpgGame) override;
 
-	void buttonPressed(LabelItem item, RpgGame *rpgGame);
+	void labelPressed(LabelItem item, RpgGame *rpgGame);
+	void muteBtnPressed();
 
 	static SDL_Event m_event;
 
-	MenuItem m_playButton;
-	MenuItem m_exitButton;
+	MenuItem m_volumeButton;
+	std::map<MenuItem, MUTE_BUTTON_STATE> m_muteBtnWithStates;
 	std::shared_ptr<RpgMenuItem> m_menuBackgroundPtr;
 	std::shared_ptr<RpgMenuItem> m_logoPtr;
 	std::map<LabelItem, std::function<void(RpgGame *)>> m_buttonFucntions;
-	MenuLabel m_Labels;
+	MenuLabelList m_Labels;
 	SDL_Color m_colors[2] = {{255, 255, 255}, {255, 0, 0}};
 };
 

@@ -96,3 +96,23 @@ int RpgSoundManager::getMusicVolume()
 {
 	return Mix_VolumeMusic(-1);
 }
+
+void RpgSoundManager::toggleMuteVolume()
+{
+	m_isMuted = !m_isMuted;
+	if (m_isMuted) {
+		m_lastVolume = getMusicVolume();
+		setMusicVolume(0);
+	} else
+		setMusicVolume(m_lastVolume);
+}
+
+int RpgSoundManager::getLastSetMusicVolume()
+{
+	return m_lastVolume;
+}
+
+bool RpgSoundManager::isMusicMuted()
+{
+	return m_isMuted;
+}

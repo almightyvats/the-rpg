@@ -13,6 +13,9 @@ class RpgSoundManager {
 	inline static bool m_isMusicPlaying;
 	inline static std::string m_lastPlayedId;
 
+	inline static int m_lastVolume;
+	inline static bool m_isMuted = false;
+
   public:
 	RpgSoundManager() = default;
 	~RpgSoundManager();
@@ -30,6 +33,9 @@ class RpgSoundManager {
 
 	static void setMusicVolume(int volume);
 	static int getMusicVolume();
+	static void toggleMuteVolume();
+	static bool isMusicMuted();
+	static int getLastSetMusicVolume();
 };
 
 #endif

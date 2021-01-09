@@ -11,14 +11,14 @@ RpgMenuItem::RpgMenuItem(float x, float y, float height, float width, std::strin
 	m_srcRect.w = width;
 	m_srcRect.h = height;
 
-	if (type == ITEM_TYPE::PLAY_BUTTON) {
-		m_destRect.x = m_position.x = (RpgGame::SCREEN_WIDTH / 2 - width / 2);
-		m_destRect.y = m_position.y = ((RpgGame::SCREEN_HEIGHT / 2 - height / 2) + 100);
+	if (type == ITEM_TYPE::MUTE_BUTTON) {
+		m_destRect.x = m_position.x = 110;
+		m_destRect.y = m_position.y = 0;
 		m_destRect.w = width;
 		m_destRect.h = height;
-	} else if (type == ITEM_TYPE::EXIT_BUTTON) {
-		m_destRect.x = m_position.x = (RpgGame::SCREEN_WIDTH / 2 - width / 2);
-		m_destRect.y = m_position.y = ((RpgGame::SCREEN_HEIGHT / 2 - height / 2) + 250);
+	} else if (type == ITEM_TYPE::UNMUTE_BUTTON) {
+		m_destRect.x = m_position.x = 101;
+		m_destRect.y = m_position.y = 0;
 		m_destRect.w = width;
 		m_destRect.h = height;
 	} else if (type == ITEM_TYPE::LOGO) {
@@ -36,19 +36,9 @@ RpgMenuItem::RpgMenuItem(float x, float y, float height, float width, std::strin
 
 RpgMenuItem::~RpgMenuItem() {}
 
-SDL_Point RpgMenuItem::menuItemPosition() const
+void RpgMenuItem::getMenuItemDims(SDL_Rect &dims) const
 {
-	return m_position;
-}
-
-bool RpgMenuItem::isClickInBounds(float x, float y)
-{
-	if (m_xPosition >= x && m_xPosition <= x + m_width) {
-		if (m_yPosition >= y && m_yPosition <= y + m_height) {
-			return true;
-		}
-	}
-	return false;
+	dims = {m_position.x, m_position.y, m_destRect.w, m_destRect.h};
 }
 
 void RpgMenuItem::Update() {}

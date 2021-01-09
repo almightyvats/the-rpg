@@ -7,7 +7,7 @@
 #include <functional>
 #include <string>
 
-enum class ITEM_TYPE { PLAY_BUTTON = 0, EXIT_BUTTON = 1, LOGO = 2, BACKGROUND = 3 };
+enum class ITEM_TYPE { MUTE_BUTTON = 0, UNMUTE_BUTTON = 1, LOGO = 2, BACKGROUND = 3 };
 class RpgMenuItem {
   private:
 	float m_xPosition, m_yPosition;
@@ -24,11 +24,10 @@ class RpgMenuItem {
 	RpgMenuItem(float x, float y, float height, float width, std::string menuItemPath, ITEM_TYPE type);
 	~RpgMenuItem();
 
-	bool isClickInBounds(float x, float y);
 	void Draw();
 	void Update();
 
-	SDL_Point menuItemPosition() const;
+	void getMenuItemDims(SDL_Rect &dims) const;
 };
 
 #endif
