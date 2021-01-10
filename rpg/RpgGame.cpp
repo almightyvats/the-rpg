@@ -88,12 +88,10 @@ void RpgGame::pushState(RpgGameState &state)
 void RpgGame::changeState(RpgGameState &state)
 {
 	if (!m_states.empty()) {
-		m_states.back().get().Pause();
 		m_states.pop_back();
 	}
 
 	m_states.emplace_back(state);
-	m_states.back().get().Resume();
 }
 
 void RpgGame::popState()

@@ -45,6 +45,7 @@ class RpgMenuState : public RpgGameState {
 	void labelPressed(LabelItem item, RpgGame *rpgGame);
 	void muteBtnPressed();
 
+  private:
 	static SDL_Event m_event;
 
 	MenuItem m_volumeButton;
