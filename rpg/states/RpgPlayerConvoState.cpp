@@ -1,15 +1,23 @@
 #include "RpgPlayerConvoState.hpp"
+#include "rpg/RpgTimer.hpp"
 
 RpgPlayerConvoState::RpgPlayerConvoState()
 {
-	m_dialogueBox.x = 25;
-	m_dialogueBox.y = RpgGame::SCREEN_HEIGHT - 200;
-	m_dialogueBox.w = RpgGame::SCREEN_WIDTH - 50;
-	m_dialogueBox.h = 150;
+	m_dialogueBox1.x = 25;
+	m_dialogueBox1.y = RpgGame::SCREEN_HEIGHT - 200;
+	m_dialogueBox1.w = RpgGame::SCREEN_WIDTH - 50;
+	m_dialogueBox1.h = 150;
+
+	m_dialogueBox2.x = 30;
+	m_dialogueBox2.y = RpgGame::SCREEN_HEIGHT - 190;
+	m_dialogueBox2.w = RpgGame::SCREEN_WIDTH - 60;
+	m_dialogueBox2.h = 130;
 
 	SDL_Color white = {255, 255, 255};
-	auto playerDialogueLabel =
-	    std::make_shared<RpgLabel>(30, m_dialogueBox.y + 10, "What's up?", "Converstation", white);
+	auto playerDialogueLabel = std::make_shared<RpgLabel>(
+	    40, m_dialogueBox2.y + 10,
+	    "Do you want to have a conversation? Press C to continue or press SPACE and run away in under 5 seconds.",
+	    "Converstation", white);
 
 	m_labels.push_back(playerDialogueLabel);
 }
@@ -19,6 +27,8 @@ RpgPlayerConvoState::~RpgPlayerConvoState() {}
 void RpgPlayerConvoState::Pause() {}
 
 void RpgPlayerConvoState::Resume() {}
+
+bool isSpacePressed = false;
 
 void RpgPlayerConvoState::HandleEvents(RpgGame *rpgGame)
 {
@@ -30,8 +40,22 @@ void RpgPlayerConvoState::HandleEvents(RpgGame *rpgGame)
 	case SDL_KEYDOWN:
 		switch (m_event.key.keysym.sym) {
 		case SDLK_SPACE:
-			rpgGame->popState();
+			if (!isSpacePressed) {
+				isSpacePressed = true;
+				rpgGame->popState();
+				RpgTimer t;
+				t.setTimeout([this]() mutable { this->setPlayerReadyToTalk(true); }, 5000);
+			}
 		}
+		break;
+	case SDL_KEYUP:
+		switch (m_event.key.keysym.sym) {
+		case SDLK_SPACE:
+			isSpacePressed = false;
+			break;
+		}
+	default:
+		break;
 	}
 }
 
@@ -39,10 +63,23 @@ void RpgPlayerConvoState::Update(RpgGame *rpgGame) {}
 
 void RpgPlayerConvoState::Render(RpgGame *rpgGame)
 {
-	SDL_RenderFillRect(RpgGame::renderer, &m_dialogueBox);
+	SDL_SetRenderDrawColor(RpgGame::renderer, 255, 255, 255, 255);
+	SDL_RenderFillRect(RpgGame::renderer, &m_dialogueBox1);
+	SDL_SetRenderDrawColor(RpgGame::renderer, 0, 0, 0, 255);
+	SDL_RenderFillRect(RpgGame::renderer, &m_dialogueBox2);
 
 	for (auto &l : m_labels) {
 		l->Draw();
 	}
 	SDL_RenderPresent(RpgGame::renderer);
+}
+
+bool RpgPlayerConvoState::isPlayerReadyToTalk()
+{
+	return m_readyToTalk;
+}
+
+void RpgPlayerConvoState::setPlayerReadyToTalk(bool talkOrNot)
+{
+	m_readyToTalk = talkOrNot;
 }

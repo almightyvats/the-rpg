@@ -1,6 +1,7 @@
 #include "RpgPlayState.hpp"
 #include "RpgCombatState.hpp"
 #include "RpgMenuState.hpp"
+#include "RpgPlayerConvoState.hpp"
 #include "rpg/AssetManager.hpp"
 #include "rpg/Collision.hpp"
 #include "rpg/Map.hpp"
@@ -88,6 +89,7 @@ void RpgPlayState::Pause()
 
 void RpgPlayState::Resume()
 {
+	RpgPlayerConvoState::setPlayerReadyToTalk(false);
 	RpgSoundManager::resumeMusic("PLAY");
 
 	if (enemy_encountered != NULL) {
@@ -214,7 +216,9 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 
 			if (Collision::AABB(cCol, playerCol)) {
 				player.getComponent<TransformComponent>().position = playerPos;
-				std::cout << "NPC encountered" << std::endl;
+				if (RpgPlayerConvoState::isPlayerReadyToTalk()) {
+					rpgGame->pushState(RpgPlayerConvoState::Instance());
+				}
 			}
 		}
 	}
