@@ -34,11 +34,16 @@ class RpgPlayerConvoState : public RpgGameState {
 	void Update(RpgGame *rpgGame) override;
 	void Render(RpgGame *rpgGame) override;
 
+	static bool isPlayerReadyToTalk();
+	static void setPlayerReadyToTalk(bool talkOrNot);
+
   private:
 	inline static SDL_Event m_event;
+	inline static bool m_readyToTalk = true;
 
 	LabelItemList m_labels;
-	SDL_Rect m_dialogueBox;
+	SDL_Rect m_dialogueBox1;
+	SDL_Rect m_dialogueBox2;
 };
 
 #endif

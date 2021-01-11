@@ -114,7 +114,6 @@ void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 			rpgGame->changeState(RpgPlayState::Instance());
 			break;
 		case SDLK_d:
-			rpgGame->pushState(RpgPlayerConvoState::Instance());
 
 			// const SDL_MessageBoxButtonData buttons[] = {
 			//     {/* .flags, .buttonid, .text */ 0, 0, "no"},
