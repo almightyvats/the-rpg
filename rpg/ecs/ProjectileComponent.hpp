@@ -23,10 +23,10 @@ class ProjectileComponent : public Component {
 	{
 		distance += speed;
 
-		if (distance > range) {
-			std::cout << "Out of range" << std::endl;
-			entity->destroy();
-		} 
+		// if (distance > range) {
+		// 	std::cout << "Out of range" << std::endl;
+		// 	entity->destroy();
+		// } 
 		// else if ((transform->position.x > RpgGame::camera.x + RpgGame::camera.w)
 		//            || (transform->position.y > RpgGame::camera.y + RpgGame::camera.h)
 		//            || (transform->position.x < RpgGame::camera.x) || (transform->position.y < RpgGame::camera.y)) {

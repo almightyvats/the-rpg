@@ -6,11 +6,11 @@ AssetManager::AssetManager(Manager *man) : manager(man) {}
 
 AssetManager::~AssetManager() {}
 
-void AssetManager::CreateNpc(Vector2D position, int tileSize, int mapScale, std::string id)
+void AssetManager::CreateNpc(Vector2D position, int tileSize, int mapScale, std::string id, State state)
 {
 	RpgGame::assets->AddTexture(id, "../rpg/assets/" + id + ".png");
 
-	auto &npc(manager->addEntity());
+	auto &npc(manager->addEntity(state));
 	npc.addComponent<TransformComponent>(position.x * tileSize * mapScale, position.y * tileSize * mapScale, 115, 115,
 	                                     1);
 
@@ -24,13 +24,13 @@ void AssetManager::CreateNpc(Vector2D position, int tileSize, int mapScale, std:
 	npc.addGroup(RpgPlayState::groupNpcs);
 }
 
-void AssetManager::CreateEnemy(Vector2D position, int tileSize, int mapScale, std::string id)
+void AssetManager::CreateEnemy(Vector2D position, int tileSize, int mapScale, std::string id, State state)
 {
 	RpgGame::assets->AddTexture(id, "../rpg/assets/enemies/" + id + ".png");
 
-	auto &enemy(manager->addEntity());
+	auto &enemy(manager->addEntity(state));
 	enemy.addComponent<TransformComponent>(position.x * tileSize * mapScale, position.y * tileSize * mapScale, 115, 115,
-	                                     1);
+	                                       1);
 
 	SpriteSheet spriteSheet(12, 124, 100, 0, 0);
 	auto &enemySprite = enemy.addComponent<SpriteComponent>(id, spriteSheet);
@@ -42,9 +42,9 @@ void AssetManager::CreateEnemy(Vector2D position, int tileSize, int mapScale, st
 	enemy.addGroup(RpgPlayState::groupEnemies);
 }
 
-void AssetManager::CreateProjectile(Vector2D position, Vector2D velocity, int range, int speed, std::string id)
+void AssetManager::CreateProjectile(Vector2D position, Vector2D velocity, int range, int speed, std::string id, State state)
 {
-	auto &projectile(manager->addEntity());
+	auto &projectile(manager->addEntity(state));
 	projectile.addComponent<TransformComponent>(position.x, position.y, 32, 32, 5);
 
 	SpriteSheet spriteSheet(6, 512, 512, 0, 0);
@@ -60,9 +60,9 @@ void AssetManager::CreateProjectile(Vector2D position, Vector2D velocity, int ra
 }
 
 void AssetManager::CreateMapTile(int srcX, int srcY, int destX, int destY, int tsize, int tscale, bool withCollision,
-                                 std::string id, SpriteSheet spriteSheet, std::string map, Vector2D pStart)
+                                 std::string id, SpriteSheet spriteSheet, std::string map, Vector2D pStart, State state)
 {
-	auto &tile(manager->addEntity());
+	auto &tile(manager->addEntity(state));
 	tile.addComponent<TransformComponent>(destX, destY, tsize, tsize, tscale);
 	tile.addComponent<SpriteComponent>(id, srcX, srcY, spriteSheet);
 
@@ -73,6 +73,15 @@ void AssetManager::CreateMapTile(int srcX, int srcY, int destX, int destY, int t
 		tile.addComponent<DoorComponent>(map, pStart);
 	}
 	tile.addGroup(RpgPlayState::groupMap);
+}
+
+void AssetManager::CreateItem(int srcX, int srcY, int destX, int destY, std::string id, State state)
+{
+	auto &item(manager->addEntity(state));
+
+	item.addComponent<TransformComponent>(destX, destY, 32, 32, 1);	
+	item.addComponent<SpriteComponent>(id, srcX, srcY, SpriteSheet(15, 32, 32, 0, 0));	
+	item.addGroup(RpgPlayState::groupItems);
 }
 
 void AssetManager::AddTexture(std::string id, std::string path)

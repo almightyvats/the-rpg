@@ -1,12 +1,12 @@
 
-#include "RpgMenuState.hpp"
-#include "RpgPlayState.hpp"
+#include "RpgStates.hpp"
 #include "rpg/AssetManager.hpp"
 #include "rpg/RpgSoundManager.hpp"
 
 SDL_Event RpgMenuState::m_event;
 
 extern Manager manager;
+const State m_state = stateMenu;
 
 RpgMenuState::RpgMenuState()
 {
@@ -189,12 +189,10 @@ void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 	}
 }
 
-auto &menuProjectiles(manager.getGroup(RpgPlayState::groupProjectiles));
-
 void RpgMenuState::Update(RpgGame *rpgGame)
 {
-	manager.refresh();
-	manager.update();
+	manager.refresh(m_state);
+	manager.update(m_state);
 }
 
 void RpgMenuState::Render(RpgGame *rpgGame)
@@ -203,9 +201,6 @@ void RpgMenuState::Render(RpgGame *rpgGame)
 
 	m_menuBackgroundPtr->Draw();
 
-	for (auto &p : menuProjectiles) {
-		p->draw(SDL_ALPHA_OPAQUE);
-	}
 	for (auto &l : m_Labels) {
 		l->Draw();
 	}

@@ -12,6 +12,7 @@ class Manager;
 
 using ComponentID = std::size_t;
 using Group = std::size_t;
+using State = std::size_t;
 
 inline ComponentID getNewComponentTypeID()
 {
@@ -48,6 +49,7 @@ class Component {
 class Entity {
   private:
 	Manager &manager;
+	const State m_state;
 	bool active = true;
 	std::vector<std::unique_ptr<Component>> components;
 
@@ -56,19 +58,24 @@ class Entity {
 	GroupBitset groupBitset;
 
   public:
-	Entity(Manager &mManager) : manager(mManager) {}
+	Entity(Manager &mManager, State state) : manager(mManager), m_state(state) {}
 
-	void update()
+	void update(State state)
 	{
-		for (auto &c : components)
-			c->update();
+		if (m_state == state) {
+			for (auto &c : components)
+				c->update();
+		}
 	}
-	void draw(int alpha)
+	void draw(int alpha, State state)
 	{
-		for (auto &c : components)
-			c->draw(alpha);
+		if (m_state == state) {
+			for (auto &c : components)
+				c->draw(alpha);
+		}
 	}
 
+	State getState() { return m_state; };
 	bool isActive() const { return active; }
 	void destroy() { active = false; }
 
@@ -112,27 +119,32 @@ class Manager {
 	std::array<std::vector<Entity *>, maxGroups> groupedEntities;
 
   public:
-	void update()
+	void update(State state)
 	{
 		for (auto &e : entities)
-			e->update();
+			e->update(state);
 	}
-	void draw(int alpha)
+	void draw(int alpha, State state)
 	{
 		for (auto &e : entities)
-			e->draw(alpha);
+			e->draw(alpha, state);
 	}
-	void refresh()
+	void refresh(State state)
 	{
 		for (auto i(0u); i < maxGroups; i++) {
 			auto &v(groupedEntities[i]);
 			v.erase(std::remove_if(std::begin(v), std::end(v),
-			                       [i](Entity *mEntity) { return !mEntity->isActive() || !mEntity->hasGroup(i); }),
+			                       [i, state](Entity *mEntity) {
+				                       return ((!mEntity->isActive() || !mEntity->hasGroup(i))
+				                               && (mEntity->getState() == state));
+			                       }),
 			        std::end(v));
 		}
 
 		entities.erase(std::remove_if(std::begin(entities), std::end(entities),
-		                              [](const std::unique_ptr<Entity> &mEntity) { return !mEntity->isActive(); }),
+		                              [state](const std::unique_ptr<Entity> &mEntity) {
+			                              return (!mEntity->isActive() && (mEntity->getState() == state));
+		                              }),
 		               std::end(entities));
 	}
 
@@ -140,9 +152,9 @@ class Manager {
 
 	std::vector<Entity *> &getGroup(Group mGroup) { return groupedEntities[mGroup]; }
 
-	Entity &addEntity()
+	Entity &addEntity(State state)
 	{
-		Entity *e = new Entity(*this);
+		Entity *e = new Entity(*this, state);
 		std::unique_ptr<Entity> uPtr{e};
 		entities.emplace_back(std::move(uPtr));
 		return *e;

@@ -6,10 +6,13 @@
 #include "TextureManager.hpp"
 #include "ecs/Components.hpp"
 #include "ecs/ecs.hpp"
+#include "states/RpgStates.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
+
+const State m_state = statePlay;
 
 Map::Map(std::string path, int mapScale)
 {
@@ -128,7 +131,7 @@ void Map::LoadMap()
 					    xpos, ypos, x * setting.ScaledWidth(), y * setting.ScaledHeight(), setting.tileSize,
 					    setting.mapScale, setting.layers[layerNumber].collision, tileset.spriteId,
 					    SpriteSheet(tileset.columns, setting.tileWidth, setting.tileHeight, 0, 0),
-					    setting.layers[layerNumber].targetMap, setting.layers[layerNumber].playerStart);
+					    setting.layers[layerNumber].targetMap, setting.layers[layerNumber].playerStart, m_state);
 					counter++;
 				}
 
@@ -137,17 +140,18 @@ void Map::LoadMap()
 		}
 	}
 	for (auto npc : setting.npcs) {
-		RpgGame::assets->CreateNpc(Vector2D(npc.xPos, npc.yPos), setting.tileSize, scale, npc.spriteId);
+		RpgGame::assets->CreateNpc(Vector2D(npc.xPos, npc.yPos), setting.tileSize, scale, npc.spriteId, m_state);
 	}
 
 	for (auto enemy : setting.enemies) {
-		RpgGame::assets->CreateEnemy(Vector2D(enemy.xPos, enemy.yPos), setting.tileSize, scale, enemy.spriteId);
+		RpgGame::assets->CreateEnemy(Vector2D(enemy.xPos, enemy.yPos), setting.tileSize, scale, enemy.spriteId,
+		                             m_state);
 	}
 
 	for (auto projectile : setting.projectiles) {
 		RpgGame::assets->CreateProjectile(Vector2D(projectile.xPos * setting.tileSize * setting.mapScale,
 		                                           projectile.yPos * setting.tileSize * setting.mapScale),
 		                                  Vector2D(projectile.xVel, projectile.yVel), projectile.range,
-		                                  projectile.speed, projectile.spriteId);
+		                                  projectile.speed, projectile.spriteId, m_state);
 	}
 }
