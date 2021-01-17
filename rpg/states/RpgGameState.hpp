@@ -21,7 +21,8 @@ class RpgGameState {
 		groupProjectiles,
 		groupNpcs,
 		groupEnemies,
-		groupItems
+		groupItems,
+		groupGui,
 	};	
 };
 

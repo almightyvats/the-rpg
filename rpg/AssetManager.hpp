@@ -20,6 +20,7 @@ class AssetManager {
 	void CreateMapTile(int srcX, int srcY, int destX, int destY, int tsize, int tscale, bool withCollision,
 	                   std::string id, SpriteSheet spriteSheet, std::string map, Vector2D pStart, State state);
 	void CreateItem(int srcX, int srcY, int destX, int destY, std::string id, State state);
+	void CreateInventoryItem(int srcX, int srcY, int pocketNumber, std::string id, State state);
 
 	// texture management
 	void AddTexture(std::string id, std::string path);

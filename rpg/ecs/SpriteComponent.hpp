@@ -87,4 +87,6 @@ class SpriteComponent : public Component {
 		animationIndex = animations[tag].index;
 		speed = animations[tag].speed;
 	}
+
+	SDL_Rect *getDestRect() { return &destRect; }
 };
