@@ -1,0 +1,4 @@
+add_library(lua INTERFACE )
+
+target_link_libraries(lua INTERFACE .)
+target_include_directories(lua INTERFACE .)

@@ -2,9 +2,11 @@
 #ifndef RPG_RPGPLAYERCONVOSTATE_HPP
 #define RPG_RPGPLAYERCONVOSTATE_HPP
 
+#include "../../vendor/lua/sol.hpp"
 #include "RpgGameState.hpp"
 #include "rpg/RpgGame.hpp"
 #include "rpg/RpgLabel.hpp"
+#include "rpg/RpgTimer.hpp"
 #include <memory>
 
 class RpgLabel;
@@ -44,6 +46,8 @@ class RpgPlayerConvoState : public RpgGameState {
 	LabelItemList m_labels;
 	SDL_Rect m_dialogueBox1;
 	SDL_Rect m_dialogueBox2;
+	std::unique_ptr<RpgTimer> m_timer;
+	sol::state m_lua;
 };
 
 #endif
