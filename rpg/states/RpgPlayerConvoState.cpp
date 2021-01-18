@@ -1,5 +1,4 @@
 #include "RpgPlayerConvoState.hpp"
-#include "rpg/RpgTimer.hpp"
 
 RpgPlayerConvoState::RpgPlayerConvoState()
 {
@@ -20,6 +19,10 @@ RpgPlayerConvoState::RpgPlayerConvoState()
 	    "Converstation", white);
 
 	m_labels.push_back(playerDialogueLabel);
+
+	m_timer = std::make_unique<RpgTimer>();
+	m_lua.open_libraries(sol::lib::base, sol::lib::coroutine, sol::lib::string, sol::lib::io);
+	m_lua.script_file("../rpg/assets/scripts/dialogue.lua");
 }
 
 RpgPlayerConvoState::~RpgPlayerConvoState() {}
@@ -29,6 +32,7 @@ void RpgPlayerConvoState::Pause() {}
 void RpgPlayerConvoState::Resume() {}
 
 bool isSpacePressed = false;
+bool isKey_cPressed = false;
 
 void RpgPlayerConvoState::HandleEvents(RpgGame *rpgGame)
 {
@@ -43,15 +47,22 @@ void RpgPlayerConvoState::HandleEvents(RpgGame *rpgGame)
 			if (!isSpacePressed) {
 				isSpacePressed = true;
 				rpgGame->popState();
-				RpgTimer t;
-				t.setTimeout([this]() mutable { this->setPlayerReadyToTalk(true); }, 5000);
+				m_timer->setTimeout([this]() mutable { this->setPlayerReadyToTalk(true); }, 5000);
 			}
+			break;
+		case SDLK_c:
+			if (!isKey_cPressed) {
+				isKey_cPressed = true;
+			}
+			break;
 		}
-		break;
 	case SDL_KEYUP:
 		switch (m_event.key.keysym.sym) {
 		case SDLK_SPACE:
 			isSpacePressed = false;
+			break;
+		case SDLK_c:
+			isKey_cPressed = false;
 			break;
 		}
 	default:
@@ -59,7 +70,23 @@ void RpgPlayerConvoState::HandleEvents(RpgGame *rpgGame)
 	}
 }
 
-void RpgPlayerConvoState::Update(RpgGame *rpgGame) {}
+void RpgPlayerConvoState::Update(RpgGame *rpgGame)
+{
+
+	sol::table dialogues = m_lua["dialogues"];
+
+	unsigned int dialogueIndex = 0;
+	while (true) {
+		sol::optional<sol::table> existsDialogueIndexNode = dialogues[dialogueIndex];
+		if (existsDialogueIndexNode == sol::nullopt) {
+			break;
+		} else {
+			std::string dialogue = dialogues[dialogueIndex];
+			std::cout << dialogue << "\n";
+		}
+		dialogueIndex++;
+	}
+}
 
 void RpgPlayerConvoState::Render(RpgGame *rpgGame)
 {

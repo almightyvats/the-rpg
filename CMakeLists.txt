@@ -14,10 +14,12 @@ find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 find_package(cereal REQUIRED)
 find_package(Threads REQUIRED)
+find_package(Lua REQUIRED)
 
 file(GLOB_RECURSE rpg_srcs rpg/*.cpp rpg/*.hpp)
 
 add_subdirectory(vendor/rapidjson)
+add_subdirectory(vendor/lua)
 
 add_library( rpg_engine ${rpg_srcs})
 
@@ -27,6 +29,7 @@ target_link_libraries (
         ${SDL2_IMAGE_LIBRARIES}
         ${SDL2_MIXER_LIBRARIES}
         ${SDL2_TTF_LIBRARIES}
+        ${LUA_LIBRARIES}
         Threads::Threads)
 
 target_include_directories(
