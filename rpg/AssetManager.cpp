@@ -87,7 +87,7 @@ void AssetManager::CreateItem(int srcX, int srcY, int destX, int destY, std::str
 void AssetManager::CreateInventoryItem(int srcX, int srcY, int pocketNumber, std::string id, State state)
 {
 	auto &item(manager->addEntity(state));
-	item.addComponent<InventoryComponent>(pocketNumber, true);
+	item.addComponent<InventoryComponent>(pocketNumber);
 	item.addComponent<SpriteComponent>("icons", srcX * 32, srcY * 32, SpriteSheet(15, 32, 32, 0, 0));
 	item.addGroup(RpgPlayState::groupItems);
 }	
