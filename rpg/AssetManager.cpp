@@ -43,16 +43,17 @@ void AssetManager::CreateEnemy(Vector2D position, int tileSize, int mapScale, st
 	enemy.addGroup(RpgPlayState::groupEnemies);
 }
 
-void AssetManager::CreateCombatant(Vector2D position, std::string sprite_name, bool player_team) {
+void AssetManager::CreateCombatant(Vector2D position, std::string sprite_name, bool player_team)
+{
     RpgGame::assets->AddTexture(sprite_name, "../rpg/assets/combatants/" + sprite_name + ".png");
 
 	auto &combatant(manager->addEntity());
-	combatant.addComponent<TransformComponent>(position.x, position.y, 75, 100, 1);
+	combatant.addComponent<TransformComponent>(position.x, position.y, 100, 75, 1);
 
 	SpriteSheet spriteSheet(1, 75, 100, 0, 0);
 	auto &combatantSprite = combatant.addComponent<SpriteComponent>(sprite_name, spriteSheet);
 	{
-		combatantSprite.addAnimation("idle_down", Animation(0, 1, 100));
+		combatantSprite.addAnimation("idle_down", Animation(0, 1, 1));
 		combatantSprite.defaultAnimation("idle_down");
 	}
 	if (player_team) {

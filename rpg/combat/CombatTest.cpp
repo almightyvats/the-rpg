@@ -60,8 +60,8 @@ Equipment GenerateSimpleHealItem(std::string name, int item_level)
     return heal_item;
 }
 
-PlayerCombatant pc_hiei = PlayerCombatant("Hiei", "c_player", 10, 80, 15, 13, 8, 12, 2, 9);
-PlayerCombatant pc_pokkle = PlayerCombatant("Pokkle", "c_player", 7, 60, 10, 4, 11, 4, 17, 4);
+static PlayerCombatant pc_hiei = PlayerCombatant("Hiei", "c_player", 10, 80, 15, 13, 8, 12, 2, 9);
+static PlayerCombatant pc_pokkle = PlayerCombatant("Pokkle", "c_player", 7, 60, 10, 4, 11, 4, 17, 4);
 
 void InitGlobalTestPCs()
 {

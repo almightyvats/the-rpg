@@ -13,6 +13,7 @@
 PlayerCombatant::PlayerCombatant(const std::string &name, const std::string& sprite_name, int level)
 {
 	name_ = name;
+	sprite_name_ = sprite_name;
 
 	level_ = 1;
 	exp_ = 0;
@@ -47,6 +48,7 @@ PlayerCombatant::PlayerCombatant(const std::string &name, const std::string& spr
                                  int dexterity, int perception, int luck)
 {
 	name_ = name;
+	sprite_name_ = sprite_name;
 
 	level_ = level;
 	exp_ = 0;

@@ -15,13 +15,18 @@ Vector2D GetCombatantPosition(bool player_team, int number)
 {
     if (player_team) {
         switch(number) {
-            case 1: return Vector2D(400, 200);
-            case 2: return Vector2D(350, 200);
-            case 3: return Vector2D(300, 200);
-            default: return Vector2D(500, 500);
+            case 0: return Vector2D(275, 250);
+            case 1: return Vector2D(200, 150);
+            case 2: return Vector2D(125, 250);
+            default: return Vector2D(50, 150);
         }
     } else {
-        return Vector2D(100, 100);
+        switch(number) {
+            case 0: return Vector2D(125, 250);
+            case 1: return Vector2D(200, 150);
+            case 2: return Vector2D(275, 250);
+            default: return Vector2D(50, 150);
+        }
     }
 }
 
@@ -48,10 +53,14 @@ RpgCombatState::RpgCombatState(std::vector<Combatant*> player_combatants, Combat
 
     int c = 0;
     for (Combatant* player_combatant : combat.player_combatants_) {
-        Vector2D pos = GetCombatantPosition(false, c++);
+        Vector2D pos = GetCombatantPosition(true, c++);
         RpgGame::assets->CreateCombatant(pos, player_combatant->sprite_name(), true);
     }
-    std::cout << c << " combatant sprites generated\n";
+    c = 0;
+    for (Combatant* enemy_combatant : combat.enemy_combatants_) {
+        Vector2D pos = GetCombatantPosition(false, c++);
+        RpgGame::assets->CreateCombatant(pos, enemy_combatant->sprite_name(), false);
+    }
 }
 
 RpgCombatState::~RpgCombatState() = default;
