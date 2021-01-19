@@ -44,13 +44,12 @@ RpgCombatState::RpgCombatState(std::vector<Combatant*> player_combatants, Combat
             combat_arena = TextureManager::LoadTexture("../rpg/assets/arenas/grass_arena_1.png");
     }
 
-    RpgGame::assets->AddTexture("c_playesssr", "../rpg/assets/combatants/c_player.png");
     RpgGame::assets->AddTexture("c_wraith1", "../rpg/assets/combatants/c_wraith1.png");
 
     int c = 0;
     for (Combatant* player_combatant : combat.player_combatants_) {
         Vector2D pos = GetCombatantPosition(false, c++);
-        RpgGame::assets->CreateCombatant(pos, "player_combatant->sprite_name()", true);
+        RpgGame::assets->CreateCombatant(pos, player_combatant->sprite_name(), true);
     }
     std::cout << c << " combatant sprites generated\n";
 }
@@ -92,7 +91,7 @@ void RpgCombatState::Update(RpgGame *rpgGame) {
 void RpgCombatState::Render(RpgGame *rpgGame) {
     SDL_RenderClear(rpgGame->renderer);
 
-	//TextureManager::Draw(combat_arena, NULL, NULL, SDL_FLIP_NONE, SDL_ALPHA_OPAQUE);
+	TextureManager::Draw(combat_arena, NULL, NULL, SDL_FLIP_NONE, SDL_ALPHA_OPAQUE);
 
 	for (auto &p : player_c) {
 		p->draw(SDL_ALPHA_OPAQUE);
