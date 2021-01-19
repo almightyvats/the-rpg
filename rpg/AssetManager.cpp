@@ -1,6 +1,7 @@
 #include "AssetManager.hpp"
 #include "ecs/Components.hpp"
 #include "rpg/states/RpgPlayState.hpp"
+#include "rpg/states/RpgCombatState.hpp"
 
 AssetManager::AssetManager(Manager *man) : manager(man) {}
 
@@ -40,6 +41,25 @@ void AssetManager::CreateEnemy(Vector2D position, int tileSize, int mapScale, st
 	}
 	enemy.addComponent<ColliderComponent>("ENEMY");
 	enemy.addGroup(RpgPlayState::groupEnemies);
+}
+
+void AssetManager::CreateCombatant(Vector2D position, std::string sprite_name, bool player_team) {
+    RpgGame::assets->AddTexture(sprite_name, "../rpg/assets/combatants/" + sprite_name + ".png");
+
+	auto &combatant(manager->addEntity());
+	combatant.addComponent<TransformComponent>(position.x, position.y, 75, 100, 1);
+
+	SpriteSheet spriteSheet(1, 75, 100, 0, 0);
+	auto &combatantSprite = combatant.addComponent<SpriteComponent>(sprite_name, spriteSheet);
+	{
+		combatantSprite.addAnimation("idle_down", Animation(0, 1, 100));
+		combatantSprite.defaultAnimation("idle_down");
+	}
+	if (player_team) {
+		combatant.addGroup(RpgCombatState::groupPlayerCombatants);
+	} else {
+		combatant.addGroup(RpgCombatState::groupEnemyCombatants);
+	}
 }
 
 void AssetManager::CreateProjectile(Vector2D position, Vector2D velocity, int range, int speed, std::string id)

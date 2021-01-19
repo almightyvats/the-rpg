@@ -7,7 +7,6 @@ class SpriteSheet {
 	{
 		this->columns = columns;
 		this->spriteWidth = spriteWidth;
-		this->spriteWidth = spriteWidth;
 		this->spriteHeight = spriteHeight;
 		this->spriteGapX = spriteGapX;
 		this->spriteGapY = spriteGapY;

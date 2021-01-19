@@ -94,6 +94,7 @@ class Combatant {
         void TakeBurnDamage();
 
         std::string name() const {return name_;}
+        std::string sprite_name() const {return sprite_name_;}
         int level() const {return level_;}
         int max_hp() const {return max_hp_;}
         int hp() const {return hp_;}
@@ -109,6 +110,7 @@ class Combatant {
 
     protected:
         std::string name_;
+        std::string sprite_name_;
         int level_;
         int max_hp_;
 

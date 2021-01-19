@@ -12,6 +12,11 @@ Combat::Combat(std::vector<Combatant *> player_combatants, std::vector<Combatant
 	enemy_combatants_ = enemy_combatants;
 }
 
+Combat::Combat()
+{
+    //auto-init empty vectors
+}
+
 Combatant *GetSmallestCooldownCombatant(std::vector<Combatant *> combatants)
 {
 	auto min_cd_combatant =
@@ -82,6 +87,7 @@ void Combat::PrintStatus() {
 
     std::cout << "Enemy Team:\n";
     for (Combatant* combatant : enemy_combatants_) {
+        std::cout << combatant->level() << std::endl;
         std::cout << "   " << combatant->name() << "  Lvl: " << combatant->level() << "  State: " << combatant->state_string() << " " << (combatant->state_reset_countdown_ < 0 ? 0 : combatant->state_reset_countdown_) << "  HP: " << combatant->hp() << "/" << combatant->max_hp() << "  CD: " << combatant->cooldown_ << "\n";
     }
 }

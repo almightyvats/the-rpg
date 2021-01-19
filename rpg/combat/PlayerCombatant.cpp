@@ -10,7 +10,7 @@
 #define ATTACK_SUCKER_PUNCH {"Sucker Punch", AttackType::melee, AttackTargetType::single, 5, 0, 0.8, 0.0, 1.0, 5, AttackEffect::none}
 #define ABILITY_BLOCK {"Block", AbilityTargetType::self, 0, 0, 1.0, 5, AbilityEffect::block}
 
-PlayerCombatant::PlayerCombatant(const std::string &name, int level)
+PlayerCombatant::PlayerCombatant(const std::string &name, const std::string& sprite_name, int level)
 {
 	name_ = name;
 
@@ -43,7 +43,7 @@ PlayerCombatant::PlayerCombatant(const std::string &name, int level)
 	}
 }
 
-PlayerCombatant::PlayerCombatant(const std::string &name, int level, int max_hp, int agility, int strength, int defense,
+PlayerCombatant::PlayerCombatant(const std::string &name, const std::string& sprite_name, int level, int max_hp, int agility, int strength, int defense,
                                  int dexterity, int perception, int luck)
 {
 	name_ = name;

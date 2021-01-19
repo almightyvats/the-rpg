@@ -43,7 +43,7 @@ void RpgGame::init(std::string title, bool fullScreen)
 		renderer = SDL_CreateRenderer(window, -1, 0);
 		if (renderer) {
 			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-			std::cout << "Renderer craeted" << std::endl;
+			std::cout << "Renderer created" << std::endl;
 		}
 
 		isRunning = true;

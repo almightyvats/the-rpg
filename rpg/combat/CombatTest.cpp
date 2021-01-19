@@ -1,3 +1,5 @@
+#include "CombatTest.hpp"
+
 #include <iostream>
 #include <string>
 
@@ -6,6 +8,7 @@
 #include "PlayerCombatant.hpp"
 #include "EnemyCombatant.hpp"
 #include "Equipment.hpp"
+#include "EnemyGenerator.hpp"
 
 #define RAT_STATS {(int)(1.5*lvl), 2*lvl, (int)(0.5*lvl + 1), 2*lvl, (int)(0.5*lvl + 1), lvl}
 #define RAT_MAX_HP 20 + 5*lvl
@@ -19,10 +22,10 @@
 
 #define EQ_HEAL_ABILITY_HEAL {"Heal", AbilityTargetType::team_single, 3*item_level, 0, 1, 8, AbilityEffect::none}
 
-EnemyCombatant GenerateEnemyRat(int lvl, int number)
+EnemyCombatant GenerateEnemyRatTest(int lvl, int number)
 {
     std::string name = std::string("Rat ") + std::to_string(number);
-    EnemyCombatant rat = EnemyCombatant(name, lvl, RAT_MAX_HP, RAT_STATS, 0);
+    EnemyCombatant rat = EnemyCombatant(name, "c_wraith1", lvl, RAT_MAX_HP, RAT_STATS, 0);
     rat.AddAttack(RAT_ATTACK_TACKLE);
     rat.AddAttack(RAT_ATTACK_BITE);
     return rat;
@@ -57,31 +60,44 @@ Equipment GenerateSimpleHealItem(std::string name, int item_level)
     return heal_item;
 }
 
-int main(int argc, char* argv[])
-{
+PlayerCombatant pc_hiei = PlayerCombatant("Hiei", "c_player", 10, 80, 15, 13, 8, 12, 2, 9);
+PlayerCombatant pc_pokkle = PlayerCombatant("Pokkle", "c_player", 7, 60, 10, 4, 11, 4, 17, 4);
 
-    PlayerCombatant pc_hiei = PlayerCombatant("Hiei", 10, 80, 15, 13, 8, 12, 2, 9);
+void InitGlobalTestPCs()
+{
     pc_hiei.AddEquipment(GenerateSimpleSword("Metal Sword", 7));
     pc_hiei.AddEquipment(GenerateSimpleArmor("Plot Armor", 5));
-    PlayerCombatant pc_pokkle = PlayerCombatant("Pokkle", 7, 60, 10, 4, 11, 4, 17, 4);
     pc_pokkle.AddEquipment(GenerateSimpleBow("Wooden Bow", 7));
     pc_pokkle.AddEquipment(GenerateSimpleArmor("Ten", 7));
     pc_pokkle.AddEquipment(GenerateSimpleHealItem("Reusable Potion", 5));
+}
 
-    EnemyCombatant rat1 = EnemyCombatant(GenerateEnemyRat(5, 1));
-    EnemyCombatant rat2 = EnemyCombatant(GenerateEnemyRat(10, 2));
-    EnemyCombatant rat3 = EnemyCombatant(GenerateEnemyRat(7, 3));
+std::vector<Combatant*> GetTestCombatants()
+{   
+    std::vector<Combatant*> player_combatants;
+    player_combatants.push_back(&pc_hiei);
+    player_combatants.push_back(&pc_pokkle);
+    return player_combatants;
+}
+
+/*int main(int argc, char* argv[])
+{
+    pc_hiei = PlayerCombatant("Hiei", 10, 80, 15, 13, 8, 12, 2, 9);
+    pc_pokkle = PlayerCombatant("Pokkle", 7, 60, 10, 4, 11, 4, 17, 4);
+    InitGlobalTestPCs();
 
     std::vector<Combatant*> player_combatants;
     player_combatants.push_back(&pc_hiei);
     player_combatants.push_back(&pc_pokkle);
 
     std::vector<Combatant*> enemy_combatants;
-    enemy_combatants.push_back(&rat1);
-    enemy_combatants.push_back(&rat2);
-    enemy_combatants.push_back(&rat3);
+
+    std::vector<EnemyCombatant> generated_enemies = GenerateSimpleEnemies(player_combatants);
+    for (auto &enemy : generated_enemies) {
+        enemy_combatants.push_back(&enemy);
+    }
 
     Combat combat = Combat(player_combatants, enemy_combatants);
 
     combat.Initiate();
-}
+}*/

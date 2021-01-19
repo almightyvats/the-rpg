@@ -19,6 +19,7 @@ class AssetManager {
 	void CreateProjectile(Vector2D position, Vector2D velocity, int range, int speed, std::string id);
 	void CreateMapTile(int srcX, int srcY, int destX, int destY, int tsize, int tscale, bool withCollision,
 	                   std::string id, SpriteSheet spriteSheet, std::string map, Vector2D pStart);
+	void CreateCombatant(Vector2D position, std::string sprite_name, bool player_team);
 
 	// texture management
 	void AddTexture(std::string id, std::string path);

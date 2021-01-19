@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <ctime>
 
-EnemyCombatant::EnemyCombatant(const std::string& name, int level, int max_hp, CombatantStats stats, int armor)
+EnemyCombatant::EnemyCombatant(const std::string& name, const std::string& sprite_name, int level, int max_hp, CombatantStats stats, int armor)
 {
     name_ = name;
     level_ = level;

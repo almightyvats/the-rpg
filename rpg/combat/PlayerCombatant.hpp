@@ -14,8 +14,8 @@ enum class AddEquipmentError {
 
 class PlayerCombatant : public Combatant {
     public:
-        PlayerCombatant(const std::string& name, int level);
-        PlayerCombatant(const std::string &name, int level, int max_hp, int agility, int strength, int defense,
+        PlayerCombatant(const std::string& name, const std::string& sprite_name, int level);
+        PlayerCombatant(const std::string &name, const std::string& sprite_name, int level, int max_hp, int agility, int strength, int defense,
                                  int dexterity, int perception, int luck);
         ~PlayerCombatant();
         

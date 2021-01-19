@@ -8,8 +8,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "AssetManager.hpp"
 
-class AssetManager;
 class ColliderComponent;
 class RpgGameState;
 

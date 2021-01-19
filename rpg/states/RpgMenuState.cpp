@@ -3,6 +3,9 @@
 #include "RpgPlayState.hpp"
 #include "rpg/AssetManager.hpp"
 #include "rpg/RpgSoundManager.hpp"
+#include "RpgCombatState.hpp"
+#include "../combat/Combatant.hpp"
+#include "../combat/CombatTest.hpp"
 
 SDL_Event RpgMenuState::m_event;
 
@@ -34,7 +37,14 @@ RpgMenuState::RpgMenuState()
 	m_Labels.push_back(loadGameLabel);
 	m_Labels.push_back(exitLabel);
 
-	m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) { rpgGame->changeState(RpgPlayState::Instance()); }});
+	//m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) { rpgGame->changeState(RpgPlayState::Instance()); }});
+	
+	m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) { 
+		InitGlobalTestPCs();
+		rpgGame->changeState(RpgCombatState::Instance(GetTestCombatants(), CombatArena::grass)); }});
+
+
+
 	m_buttonFucntions.insert({loadGameLabel, [](RpgGame *rpgGame) { std::cout << "Load game item clicked! \n"; }});
 	m_buttonFucntions.insert({exitLabel, [](RpgGame *rpgGame) { rpgGame->quitGame(); }});
 

@@ -9,6 +9,7 @@
 class Combat {
     public:
         Combat(std::vector<Combatant*> player_combatants, std::vector<Combatant*> enemy_combatants);
+        Combat();
 
         std::vector<Combatant*> player_combatants_;
         std::vector<Combatant*> enemy_combatants_;

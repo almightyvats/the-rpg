@@ -6,7 +6,7 @@
 
 class EnemyCombatant : public Combatant {
     public:
-        EnemyCombatant(const std::string& name, int level, int max_hp, CombatantStats stats, int armor);
+        EnemyCombatant(const std::string& name, const std::string& sprite_name, int level, int max_hp, CombatantStats stats, int armor);
         ~EnemyCombatant();
 
         void AddAttack(Attack attack);
