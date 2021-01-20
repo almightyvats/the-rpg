@@ -8,6 +8,7 @@ EnemyCombatant::EnemyCombatant(const std::string& name, const std::string& sprit
 {
     name_ = name;
     level_ = level;
+    sprite_name_ = sprite_name;
     
     max_hp_ = max_hp;
     hp_ = max_hp_;

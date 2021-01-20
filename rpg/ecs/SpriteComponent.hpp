@@ -39,6 +39,16 @@ class SpriteComponent : public Component {
 		srcRect.w = spriteSheet.spriteWidth;
 		srcRect.h = spriteSheet.spriteHeight;
 	}
+	SpriteComponent(const std::string id, SpriteSheet spriteSheet, SDL_RendererFlip spriteFlip)
+	{
+		this->id = id;
+		this->spriteSheet = spriteSheet;
+		setTex(id);
+		srcRect.x = srcRect.y = 0;
+		srcRect.w = spriteSheet.spriteWidth;
+		srcRect.h = spriteSheet.spriteHeight;
+		this->spriteFlip = spriteFlip;
+	}
 	SpriteComponent(const std::string id, int srcX, int srcY, SpriteSheet spriteSheet)
 	{
 		this->id = id;

@@ -35,7 +35,7 @@ std::vector<EnemyCombatant> GenerateSimpleEnemies(const std::vector<Combatant*>&
     int level_deviation_factor = total_player_level / ENEMY_TOTAL_LEVEL_DEVIATION_FACTOR;
     int total_enemy_level = total_player_level + (rand() % (2 * level_deviation_factor)) - 0.5 * level_deviation_factor;
 
-    int enemy_team_size = (rand() % (MAX_ENEMY_TEAM_SIZE - MIN_ENEMY_TEAM_SIZE)) + MIN_ENEMY_TEAM_SIZE;
+    int enemy_team_size = (rand() % (MAX_ENEMY_TEAM_SIZE - MIN_ENEMY_TEAM_SIZE + 1)) + MIN_ENEMY_TEAM_SIZE;
 
     std::vector<EnemyCombatant> enemy_combatants;
     

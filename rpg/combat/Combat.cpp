@@ -5,11 +5,14 @@
 #include <iostream>
 
 #define MAX_INIT_CD 10
+#define VIS_COMBAT_PLAYER_C_LIMIT 3
+#define VIS_COMBAT_ENEMY_C_LIMIT 4
 
 Combat::Combat(std::vector<Combatant *> player_combatants, std::vector<Combatant *> enemy_combatants)
 {
 	player_combatants_ = player_combatants;
 	enemy_combatants_ = enemy_combatants;
+    state_ = CombatState::start;
 }
 
 Combat::Combat()
@@ -43,7 +46,17 @@ std::vector<Combatant*> Combat::LivingEnemyCombatants()
 	return living_enemy_combatants;
 }
 
-Combatant* ProgressToNextAction(std::vector<Combatant*> living_player_combatants, std::vector<Combatant*> living_enemy_combatants)
+std::vector<Combatant*> Combat::AllLivingCombatants()
+{
+    std::vector<Combatant*> living_combatants;
+    std::vector<Combatant*> player_combatants = LivingPlayerCombatants();
+    std::vector<Combatant*> enemy_combatants = LivingEnemyCombatants();
+    living_combatants.insert(living_combatants.end(), player_combatants.begin(), player_combatants.end());
+    living_combatants.insert(living_combatants.end(), enemy_combatants.begin(), enemy_combatants.end());
+    return living_combatants;
+}
+
+Combatant* ProgressToNextAction_old(std::vector<Combatant*> living_player_combatants, std::vector<Combatant*> living_enemy_combatants)
 {
 
 	Combatant *min_cd_player = GetSmallestCooldownCombatant(living_player_combatants);
@@ -139,7 +152,7 @@ void Combat::Initiate()
 
     while (living_player_combatants.size() > 0 && living_enemy_combatants.size() > 0) {
         PrintStatus();
-        Combatant *next_attacker = ProgressToNextAction(living_player_combatants, living_enemy_combatants);
+        Combatant *next_attacker = ProgressToNextAction_old(living_player_combatants, living_enemy_combatants);
         if (next_attacker->state_reset_countdown_ < 0 || next_attacker->state_reset_countdown_ > next_attacker->cooldown_) {
             std::cout << "It's the turn of " << next_attacker->name() << "\n";
             next_attacker->ChooseAndPerformAction(living_player_combatants, living_enemy_combatants);
@@ -156,4 +169,91 @@ void Combat::Initiate()
     } else {
         std::cout << "You win!\n";
     }   
+}
+
+void Combat::ProgressToNextAction()
+{
+
+    std::vector<Combatant*> living_player_combatants = LivingPlayerCombatants();
+    std::vector<Combatant*> living_enemy_combatants = LivingEnemyCombatants();
+
+	Combatant *min_cd_player = GetSmallestCooldownCombatant(living_player_combatants);
+    int cd_player = std::min(min_cd_player->cooldown_, (min_cd_player->state_reset_countdown_ < 0 ? min_cd_player->cooldown_ +1 : min_cd_player->state_reset_countdown_));
+
+	Combatant *min_cd_enemy = GetSmallestCooldownCombatant(living_enemy_combatants);
+    int cd_enemy = std::min(min_cd_enemy->cooldown_, (min_cd_enemy->state_reset_countdown_ < 0 ? min_cd_enemy->cooldown_ +1 : min_cd_enemy->state_reset_countdown_));
+
+	int cooldown_progression = std::min(cd_player, cd_enemy);
+
+    Combatant *min_cd_combatant;
+    if (cd_player == cd_enemy && cd_player == min_cd_player->cooldown_ && cd_enemy == min_cd_enemy->state_reset_countdown_) {
+        min_cd_combatant = min_cd_enemy;
+    } else {
+	    min_cd_combatant = (cd_player <= cd_enemy) ? min_cd_player : min_cd_enemy;
+    }
+
+	for (Combatant *player_combatant : living_player_combatants) {
+		player_combatant->cooldown_ -= cooldown_progression;
+        if (player_combatant->state_reset_countdown_ > 0) {
+            player_combatant->state_reset_countdown_ -= cooldown_progression;
+        }
+	}
+
+	for (Combatant *enemy_combatant : living_enemy_combatants) {
+		enemy_combatant->cooldown_ -= cooldown_progression;
+        if (enemy_combatant->state_reset_countdown_ > 0) {
+            enemy_combatant->state_reset_countdown_ -= cooldown_progression;
+        }
+	}
+
+	this->active_combatant_ = min_cd_combatant;
+    this->active_turn_attacks_ = min_cd_combatant->GetAttackList();
+    this->active_turn_abilities_ = min_cd_combatant->GetAbilityList();
+}
+
+void Combat::SetActionAndProgress(Attack* attack, Ability* ability)
+{
+    if (attack != NULL) {
+        this->active_turn_chosen_attack_ = attack;
+        this->active_turn_targets_ = LivingEnemyCombatants();
+
+        if (attack->target_type == AttackTargetType::single) {
+            this->state_ = CombatState::attack_target_selection;
+        } else {
+            //Perform attack
+        }
+
+    } else if (ability != NULL) {
+        this->active_turn_chosen_ability_ = ability;
+
+        switch (ability->target_type)
+        {
+        case AbilityTargetType::self: /*PerformAbility*/ break;
+        case AbilityTargetType::enemy_single: this->active_turn_targets_ = LivingEnemyCombatants();
+                                                this->state_ = CombatState::ability_target_selection;
+                                                break;
+        case AbilityTargetType::enemy_multi: this->active_turn_targets_ = LivingEnemyCombatants();
+                                                /*PerformAbility*/ break;
+        case AbilityTargetType::team_single: this->active_turn_targets_ = LivingPlayerCombatants();
+                                                this->state_ = CombatState::ability_target_selection;
+                                                break;
+        case AbilityTargetType::team_multi: this->active_turn_targets_ = LivingPlayerCombatants();
+                                                /*PerformAbility*/ break;
+        case AbilityTargetType::all: this->active_turn_targets_ = AllLivingCombatants();
+                                        /*PerformAbility*/ break;
+        }
+    } else {
+        std::cout << "No attack or ability chosen.\n";
+    }
+}
+
+void Combat::Progress(Attack* attack, Ability* ability, Combatant* target)
+{
+    switch (state_)
+    {
+    case CombatState::start: SetInitialCooldowns(); ProgressToNextAction(); break;
+    case CombatState::action_selection: SetActionAndProgress(attack, ability); break;
+    default:
+        break;
+    }
 }

@@ -15,17 +15,18 @@ Vector2D GetCombatantPosition(bool player_team, int number)
 {
     if (player_team) {
         switch(number) {
-            case 0: return Vector2D(275, 250);
-            case 1: return Vector2D(200, 150);
+            case 0: return Vector2D(325, 250);
+            case 1: return Vector2D(225, 150);
             case 2: return Vector2D(125, 250);
-            default: return Vector2D(50, 150);
+            default: return Vector2D(25, 150);
         }
     } else {
         switch(number) {
-            case 0: return Vector2D(125, 250);
-            case 1: return Vector2D(200, 150);
-            case 2: return Vector2D(275, 250);
-            default: return Vector2D(50, 150);
+            case 0: return Vector2D(624, 250);
+            case 1: return Vector2D(724, 150);
+            case 2: return Vector2D(824, 250);
+            case 3: return Vector2D(924, 150);
+            default: return Vector2D(924, 350);
         }
     }
 }
@@ -48,8 +49,6 @@ RpgCombatState::RpgCombatState(std::vector<Combatant*> player_combatants, Combat
         default:
             combat_arena = TextureManager::LoadTexture("../rpg/assets/arenas/grass_arena_1.png");
     }
-
-    RpgGame::assets->AddTexture("c_wraith1", "../rpg/assets/combatants/c_wraith1.png");
 
     int c = 0;
     for (Combatant* player_combatant : combat.player_combatants_) {

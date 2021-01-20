@@ -51,7 +51,7 @@ void AssetManager::CreateCombatant(Vector2D position, std::string sprite_name, b
 	combatant.addComponent<TransformComponent>(position.x, position.y, 100, 75, 1);
 
 	SpriteSheet spriteSheet(1, 75, 100, 0, 0);
-	auto &combatantSprite = combatant.addComponent<SpriteComponent>(sprite_name, spriteSheet);
+	auto &combatantSprite = combatant.addComponent<SpriteComponent>(sprite_name, spriteSheet, player_team ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
 	{
 		combatantSprite.addAnimation("idle_down", Animation(0, 1, 1));
 		combatantSprite.defaultAnimation("idle_down");
