@@ -35,6 +35,7 @@ class Combat {
 
         CombatState state() const {return state_;}
         std::string display_text() const {return display_text_;}
+        bool player_turn() const {return player_turn_;}
         Combatant* active_combatant() const {return active_combatant_;}
         Attack* active_turn_chosen_attack() const {return active_turn_chosen_attack_;}
         Ability* active_turn_chosen_ability() const {return active_turn_chosen_ability_;}
@@ -46,6 +47,7 @@ class Combat {
         CombatState state_;
         std::string display_text_ = "";
         
+        bool player_turn_;
         Combatant* active_combatant_;
         Attack* active_turn_chosen_attack_;
         Ability* active_turn_chosen_ability_;
@@ -59,6 +61,8 @@ class Combat {
         std::vector<Combatant*> AllLivingCombatants();
         void SetInitialCooldowns();
         void ProgressToNextAction();
+        void StartTurn();
+        void PerformEnemyTurn();
         void SetActionAndProgress(Attack* attack, Ability* ability);
 
 };
