@@ -114,6 +114,45 @@ void createSwordItemSlot()
 	item.addGroup(RpgPlayState::groupGui);
 }
 
+void createBowItemSlot()
+{
+	auto spriteInfo = guiHelper->getSpriteInfo("glassPanel_cornerTL.png");
+	auto coords = getPocketCoords(9);
+	coords.x += 3 * (32 + border) * scale;
+	auto &item(manager.addEntity(m_state));
+	item.addComponent<TransformComponent>(coords.x, coords.y, resolution, resolution, scale + 1);
+	item.addComponent<InventoryComponent>(200);
+	item.addComponent<SpriteComponent>("gui", spriteInfo.x, spriteInfo.y,
+	                                   SpriteSheet(1, spriteInfo.w, spriteInfo.h, 0, 0));
+	item.addGroup(RpgPlayState::groupGui);
+}
+
+void createShieldItemSlot()
+{
+	auto spriteInfo = guiHelper->getSpriteInfo("glassPanel_cornerTL.png");
+	auto coords = getPocketCoords(29);
+	coords.x += (32 + border) * scale;
+	auto &item(manager.addEntity(m_state));
+	item.addComponent<TransformComponent>(coords.x, coords.y, resolution, resolution, scale + 1);
+	item.addComponent<InventoryComponent>(300);
+	item.addComponent<SpriteComponent>("gui", spriteInfo.x, spriteInfo.y,
+	                                   SpriteSheet(1, spriteInfo.w, spriteInfo.h, 0, 0));
+	item.addGroup(RpgPlayState::groupGui);
+}
+
+void createHealItemSlot()
+{
+	auto spriteInfo = guiHelper->getSpriteInfo("glassPanel_cornerTL.png");
+	auto coords = getPocketCoords(29);
+	coords.x += 3 * (32 + border) * scale;
+	auto &item(manager.addEntity(m_state));
+	item.addComponent<TransformComponent>(coords.x, coords.y, resolution, resolution, scale + 1);
+	item.addComponent<InventoryComponent>(400);
+	item.addComponent<SpriteComponent>("gui", spriteInfo.x, spriteInfo.y,
+	                                   SpriteSheet(1, spriteInfo.w, spriteInfo.h, 0, 0));
+	item.addGroup(RpgPlayState::groupGui);
+}
+
 RpgInventoryState::RpgInventoryState()
 {
 	RpgGame::assets->AddTexture("gui", "../rpg/assets/gui/uipackSpace_sheet.png");
@@ -124,6 +163,12 @@ RpgInventoryState::RpgInventoryState()
 	createDeleteItemSlot();
 	// Sword
 	createSwordItemSlot();
+	// Bow
+	createBowItemSlot();
+	// Shield
+	createShieldItemSlot();
+	// Shield
+	createHealItemSlot();
 
 	RpgGame::assets->AddTexture("icons", "../rpg/assets/icons/Icon Pack_3.png");
 	RpgGame::assets->CreateInventoryItem(0, 0, 0, "icons", m_state);
