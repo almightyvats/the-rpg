@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../combat/Equipment.hpp"
 #include "Components.hpp"
 #include "rpg/Vector2D.hpp"
 
@@ -11,16 +12,15 @@ struct InventoryComponent : public Component {
 	TransformComponent *transform;
 
   public:
-	int pocketNumber;
-	bool isInDragAndDrop;
+	int pocketNumber = -1;
+	bool isInDragAndDrop = actionNone;
 	InventoryAction action;
+	Equipment equip;
 
-	InventoryComponent() { this->action = actionNone; };
-	InventoryComponent(int pocketNumber)
-	{
-		this->pocketNumber = pocketNumber;
-		this->action = actionNone;
-	};
+	InventoryComponent() = default;
+	// InventoryComponent(int pocketNumber) { this->pocketNumber = pocketNumber; }
+	InventoryComponent(int pocketNumber) { this->pocketNumber = pocketNumber; }
+	~InventoryComponent() {}
 
 	void init() override
 	{
@@ -30,5 +30,5 @@ struct InventoryComponent : public Component {
 		}
 		transform = &entity->getComponent<TransformComponent>();
 	}
-	void update() override {};
+	void update() override{};
 };

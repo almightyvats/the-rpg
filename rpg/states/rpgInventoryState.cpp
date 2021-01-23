@@ -5,6 +5,7 @@
 #include "rpg/RpgSoundManager.hpp"
 #include "rpg/ecs/Components.hpp"
 #include "rpg/inventory/GuiHelper.hpp"
+#include <set>
 
 SDL_Event RpgInventoryState::m_event;
 GuiHelper *guiHelper = new GuiHelper("../rpg/assets/gui/uipackSpace_sheet.json");
@@ -170,11 +171,18 @@ RpgInventoryState::RpgInventoryState()
 	// Shield
 	createHealItemSlot();
 
+	// TODO: testdata
+	int item_level = 1;
+	Equipment sword = Equipment("testsword", EquipmentType::sword, item_level, -(int)(0.5 * item_level),
+	                            (int)(0.5 * item_level), 0, 0, 0, 0);
+
 	RpgGame::assets->AddTexture("icons", "../rpg/assets/icons/Icon Pack_3.png");
-	RpgGame::assets->CreateInventoryItem(0, 0, 0, "icons", m_state);
-	RpgGame::assets->CreateInventoryItem(0, 4, 1, "icons", m_state);
-	RpgGame::assets->CreateInventoryItem(5, 0, 2, "icons", m_state);
-	RpgGame::assets->CreateInventoryItem(7, 7, 3, "icons", m_state);
+	RpgGame::assets->CreateInventoryItem(0, 0, "icons", sword, m_state);
+	RpgGame::assets->CreateInventoryItem(0, 4, "icons", sword, m_state);
+	RpgGame::assets->CreateInventoryItem(5, 0, "icons", sword, m_state);
+	RpgGame::assets->CreateInventoryItem(7, 7, "icons", sword, m_state);
+	RpgGame::assets->CreateInventoryItem(9, 4, "icons", sword, m_state);
+	RpgGame::assets->CreateInventoryItem(9, 8, "icons", sword, m_state);
 
 	background = TextureManager::LoadTexture("../rpg/assets/game_background_4.png");
 }
@@ -325,10 +333,44 @@ void AlignWithPocket(Entity *const entity)
 	}
 }
 
+int getNextEmptyPocket(std::set<int> &pockets)
+{
+	int maxPockets = xPockets * yPockets;
+	int i = 0;
+	while (pockets.find(i) != pockets.end()) {
+		i++;
+	}
+	return i;
+}
+
+void validatePockets()
+{
+	std::vector<InventoryComponent *> components;
+	for (auto &i : invItems) {
+		if (i->hasComponent<InventoryComponent>()) {
+			components.emplace_back(&i->getComponent<InventoryComponent>());
+		}
+	}
+	std::set<int> pockets;
+	for (auto c : components) {
+		// no pocket assigned yet
+		if (c->pocketNumber < 0) {
+			c->pocketNumber = getNextEmptyPocket(pockets);
+		}
+		// double assignment
+		else if (pockets.find(c->pocketNumber) != pockets.end()) {
+			c->pocketNumber = getNextEmptyPocket(pockets);
+		}
+		pockets.emplace(c->pocketNumber);
+	}
+}
+
 void RpgInventoryState::Update(RpgGame *rpgGame)
 {
 	manager.refresh(m_state);
 	manager.update(m_state);
+
+	validatePockets();
 
 	for (auto &i : invItems) {
 		AlignWithPocket(i);

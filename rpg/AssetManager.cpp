@@ -75,19 +75,11 @@ void AssetManager::CreateMapTile(int srcX, int srcY, int destX, int destY, int t
 	tile.addGroup(RpgPlayState::groupMap);
 }
 
-void AssetManager::CreateItem(int srcX, int srcY, int destX, int destY, std::string id, State state)
+void AssetManager::CreateInventoryItem(int srcX, int srcY, std::string id, Equipment equip, State state)
 {
 	auto &item(manager->addEntity(state));
-
-	item.addComponent<TransformComponent>(destX, destY, 32, 32, 1);	
-	item.addComponent<SpriteComponent>(id, srcX, srcY, SpriteSheet(15, 32, 32, 0, 0));	
-	item.addGroup(RpgPlayState::groupItems);
-}
-
-void AssetManager::CreateInventoryItem(int srcX, int srcY, int pocketNumber, std::string id, State state)
-{
-	auto &item(manager->addEntity(state));
-	item.addComponent<InventoryComponent>(pocketNumber);
+	auto &inv = item.addComponent<InventoryComponent>();
+	inv.equip = equip;
 	item.addComponent<SpriteComponent>("icons", srcX * 32, srcY * 32, SpriteSheet(15, 32, 32, 0, 0));
 	item.addGroup(RpgPlayState::groupItems);
 }	
