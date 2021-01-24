@@ -4,10 +4,12 @@
 #include "../Map.hpp"
 #include "../ecs/ecs.hpp"
 #include "../Vector2D.hpp"
+#include "../RpgLabel.hpp"
 #include "RpgPlayState.hpp"
 
 SDL_Texture* combat_arena;
 SDL_Event RpgCombatState::event;
+SDL_Color color_white = {255, 255, 255};
 
 extern Manager manager;
 
@@ -32,6 +34,9 @@ Vector2D GetCombatantPosition(bool player_team, int number)
 }
 
 RpgCombatState::RpgCombatState(std::vector<Combatant*> player_combatants, CombatArena arena)
+: label_msg(RpgLabel(50, 550, "", "Ancient", color_white)), 
+    label_combatant(RpgLabel(80, 600, "", "Ancient", color_white)), 
+    label_action(RpgLabel(80, 650, "", "Ancient", color_white))
 {
     this->enemies = GenerateSimpleEnemies(player_combatants);
 
@@ -76,7 +81,7 @@ void RpgCombatState::Resume() {
 
 }
 
-static bool combat_state_changed;
+static bool combat_state_changed = true;
 Attack attack_copy;
 Ability ability_copy;
 
@@ -144,45 +149,45 @@ void RpgCombatState::Update(RpgGame *rpgGame) {
     switch (combat.state())
     {
     case CombatState::start:
-        std::cout << "Combat has started\n";
+        label_msg.setLabelText("Ancient", "Enemies appear!");
         break;
     case CombatState::turn_start_display:
-        std::cout << "It's the turn of " << combat.active_combatant()->name() << "\n";
+        label_msg.setLabelText("Ancient", "It's the turn of " + combat.active_combatant()->name());
         break;
     case CombatState::action_selection:
-        std::cout << "Choose action for " << combat.active_combatant()->name() << "\n";
+        label_msg.setLabelText("Ancient", "Select action:");
+        label_combatant.setLabelText("Ancient", combat.active_combatant()->name());
         break;
     case CombatState::attack_target_selection:
-        /*if (combat.active_turn_chosen_attack() != NULL)
-            std::cout << "Choose target for " << combat.active_turn_chosen_attack()->name << "\n";*/
-        for (auto target : combat.active_turn_targets()) {
-            std::cout << target->name() << "\n";
-        }
-        std::cout << attack_copy.name << "\n";
+        label_msg.setLabelText("Ancient", "Select target:");
+        label_action.setLabelText("Ancient", combat.active_turn_chosen_attack()->name);
         break;
     case CombatState::ability_target_selection:
-        std::cout << "Choose target for " << combat.active_turn_chosen_ability()->name << "\n";
+        label_msg.setLabelText("Ancient", "Select target:");
+        label_action.setLabelText("Ancient", combat.active_turn_chosen_ability()->name);
         break;
     case CombatState::action_display:
-        /*if (combat.active_turn_chosen_attack() != NULL) {
-            std::cout << combat.active_combatant()->name() << " uses " << combat.active_turn_chosen_attack()->name << "\n";
-        } else if (combat.active_turn_chosen_attack() != NULL) {
-            std::cout << combat.active_combatant()->name() << " uses " << combat.active_turn_chosen_ability()->name << "\n";
+        label_combatant.setLabelText("Ancient", "");
+        label_action.setLabelText("Ancient", "");
+        if (combat.active_turn_chosen_attack() != NULL) {
+            label_msg.setLabelText("Ancient", combat.active_combatant()->name() + " uses " + combat.active_turn_chosen_attack()->name);
+        } else if (combat.active_turn_chosen_ability() != NULL) {
+            label_msg.setLabelText("Ancient", combat.active_combatant()->name() + " uses " + combat.active_turn_chosen_ability()->name);
         } else {
             std::cout << "no action chosen for some reason\n";
-        }*/
+        }
         break;
     case CombatState::state_reset_display:
-        std::cout << "a state is reset\n";
+        label_msg.setLabelText("Ancient", "A state is reset");
         break;
     case CombatState::winning_screen:
-        std::cout << "You won\n";
+        label_msg.setLabelText("Ancient", "You win");
         break;
     case CombatState::losing_screen:
-        std::cout << "You lose\n";
+        label_msg.setLabelText("Ancient", "You lose");
         break;
     case CombatState::loot_display:
-        std::cout << "You loot\n";
+        label_msg.setLabelText("Ancient", "Looooooot :)");
         break;
     default:
         break;
@@ -202,6 +207,10 @@ void RpgCombatState::Render(RpgGame *rpgGame) {
     for (auto &e : enemy_c) {
         e->draw(SDL_ALPHA_OPAQUE);
     }
+
+    this->label_msg.Draw();
+    this->label_combatant.Draw();
+    this->label_action.Draw();
 
 	SDL_RenderPresent(rpgGame->renderer);
 }

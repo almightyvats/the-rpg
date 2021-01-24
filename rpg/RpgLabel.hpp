@@ -15,7 +15,6 @@ class RpgLabel {
 
   public:
 	RpgLabel(int xPosition, int yPosition, std::string labelText, std::string font, SDL_Color &color);
-
 	RpgLabel(LabelType type, std::string labelText, std::string font, SDL_Color &color);
 	~RpgLabel();
 

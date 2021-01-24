@@ -3,6 +3,7 @@
 #include "../combat/Combat.hpp"
 #include "../combat/EnemyCombatant.hpp"
 #include "../TextureManager.hpp"
+#include "../RpgLabel.hpp"
 
 enum class CombatArena {
     grass,
@@ -13,6 +14,11 @@ class RpgCombatState : public RpgGameState {
   private:
     Combat combat;
     std::vector<EnemyCombatant> enemies;
+
+    RpgLabel label_msg;
+    RpgLabel label_combatant;
+    RpgLabel label_action;
+    std::vector<RpgLabel> labels_selection;
 
   public:
     RpgCombatState(std::vector<Combatant*> player_combatants, CombatArena arena);
