@@ -15,6 +15,12 @@ const State m_state = stateInventory;
 
 SDL_Texture *background;
 
+SDL_Color orange = {255, 165, 0};
+SDL_Color black = {255, 255, 255};
+bool drawInfo = false;
+LabelItem labelItemName;
+LabelItem labelItemInfo;
+
 int yStart = 5;
 int xPockets = 10;
 int yPockets = 4;
@@ -156,6 +162,7 @@ void createHealItemSlot()
 
 RpgInventoryState::RpgInventoryState()
 {
+	RpgGame::assets->AddFont("Ancient", "../rpg/assets/font/ancient.ttf", 20);
 	RpgGame::assets->AddTexture("gui", "../rpg/assets/gui/uipackSpace_sheet.png");
 
 	// Inventory slots
@@ -174,7 +181,7 @@ RpgInventoryState::RpgInventoryState()
 	// TODO: testdata
 	int item_level = 1;
 	Equipment sword = Equipment("testsword", EquipmentType::sword, item_level, -(int)(0.5 * item_level),
-	                            (int)(0.5 * item_level), 0, 0, 0, 0);
+	                            (int)(0.5 * item_level), 1, 0, 5, 0);
 
 	RpgGame::assets->AddTexture("icons", "../rpg/assets/icons/Icon Pack_3.png");
 	RpgGame::assets->CreateInventoryItem(0, 0, "icons", sword, m_state);
@@ -185,6 +192,9 @@ RpgInventoryState::RpgInventoryState()
 	RpgGame::assets->CreateInventoryItem(9, 8, "icons", sword, m_state);
 
 	background = TextureManager::LoadTexture("../rpg/assets/game_background_4.png");
+
+	labelItemName = std::make_shared<RpgLabel>(50, 10, "ItemName", "Ancient", orange);
+	labelItemInfo = std::make_shared<RpgLabel>(50, 10, "ItemInfo", "Ancient", black);
 }
 
 RpgInventoryState::~RpgInventoryState() {}
@@ -231,6 +241,23 @@ void TrySwapPocket(int sourcePocket, int targetPocket)
 	}
 }
 
+bool tryShowHint(SDL_Point &mousePos)
+{
+	for (auto &i : invItems) {
+		if (i->hasComponent<SpriteComponent>()) {
+			auto rect = i->getComponent<SpriteComponent>().getDestRect();
+			if (SDL_PointInRect(&mousePos, rect) && i->hasComponent<InventoryComponent>()) {
+				labelItemName->setLabelPos(Vector2D(rect->x + 2 * resolution, rect->y));
+				labelItemName->setLabelText("Ancient", i->getComponent<InventoryComponent>().equip.name());
+				labelItemInfo->setLabelPos(Vector2D(rect->x + 2 * resolution, rect->y + resolution));
+				labelItemInfo->setLabelText("Ancient", i->getComponent<InventoryComponent>().equip.item_info());
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 Entity *dragAndDropItem = NULL;
 bool buttonClicked = false;
 bool leftMouseButtonDown = false;
@@ -257,6 +284,7 @@ void RpgInventoryState::HandleEvents(RpgGame *rpgGame)
 	case SDL_MOUSEMOTION:
 		mousePos = {m_event.motion.x, m_event.motion.y};
 
+		drawInfo = tryShowHint(mousePos);
 		if (leftMouseButtonDown && dragAndDropItem != NULL) {
 			dragAndDropItem->getComponent<TransformComponent>().position.x = mousePos.x - clickOffset.x;
 			dragAndDropItem->getComponent<TransformComponent>().position.y = mousePos.y - clickOffset.y;
@@ -389,6 +417,11 @@ void RpgInventoryState::Render(RpgGame *rpgGame)
 
 	for (auto &i : invItems) {
 		i->draw(SDL_ALPHA_OPAQUE, m_state);
+	}
+
+	if (drawInfo) {
+		labelItemName->Draw();
+		labelItemInfo->Draw();
 	}
 
 	SDL_RenderPresent(rpgGame->renderer);

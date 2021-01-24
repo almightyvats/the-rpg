@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <string>
+#include "Vector2D.hpp"
 
 enum class LabelType { NONE = -1, NEWGAME = 0, LOADGAME = 1, EXIT = 2 };
 class RpgLabel {
@@ -14,6 +15,7 @@ class RpgLabel {
 	SDL_Texture *m_labelTexture;
 
   public:
+	RpgLabel() = default;
 	RpgLabel(int xPosition, int yPosition, std::string labelText, std::string font, SDL_Color &color);
 
 	RpgLabel(LabelType type, std::string labelText, std::string font, SDL_Color &color);
@@ -23,6 +25,7 @@ class RpgLabel {
 	void setLabelText(std::string font, std::string labelText);
 	void setLabelColor(const SDL_Color &color);
 	void getLabelDims(SDL_Rect &dims);
+	void setLabelPos(Vector2D pos);
 };
 
 #endif

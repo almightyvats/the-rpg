@@ -1,5 +1,8 @@
 #pragma once
+#include "../RpgLabel.hpp"
+#include "../combat/Equipment.hpp"
 #include "RpgGameState.hpp"
+#include <memory>
 
 class RpgInventoryState : public RpgGameState {
 
@@ -16,15 +19,14 @@ class RpgInventoryState : public RpgGameState {
 		return m_is;
 	}
 
-    void Pause() override;
+	void Pause() override;
 	void Resume() override;
 
 	void HandleEvents(RpgGame *rpgGame) override;
 	void Update(RpgGame *rpgGame) override;
-	void Render(RpgGame *rpgGame) override;	
+	void Render(RpgGame *rpgGame) override;
 
 	static SDL_Event m_event;
-
 
 	// MenuItem m_volumeButton;
 	// std::map<MenuItem, MUTE_BUTTON_STATE> m_muteBtnWithStates;
