@@ -82,10 +82,10 @@ int CalculateAttackDamage(int attacker_force, int defender_defense, int damage, 
 
 void Combatant::PerformAttack(Attack attack, std::vector<Combatant*> targets)
 {
-
     CombatantStats attacker_stats = CalculateStats();
 
     for (Combatant* target : targets) {
+
         CombatantStats target_stats = target->CalculateStats();
 
         bool attack_hit;

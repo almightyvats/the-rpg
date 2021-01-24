@@ -76,12 +76,54 @@ void RpgCombatState::Resume() {
 
 }
 
+static bool combat_state_changed;
+Attack attack_copy;
+Ability ability_copy;
+
 void RpgCombatState::HandleEvents(RpgGame *rpgGame) {
     if (SDL_PollEvent(&event) == 1) {
 		switch (event.type) {
 		case SDL_QUIT:
 			rpgGame->quitGame();
 			break;
+        case SDL_KEYUP:
+            if (combat.state() == CombatState::action_selection) {
+                switch (event.key.keysym.sym)
+                {
+                case SDLK_1: 
+                    attack_copy = combat.active_turn_attacks().at(0);
+                    combat.Progress(&attack_copy,NULL,NULL);
+                    combat_state_changed = true;
+                    break;
+                case SDLK_2: 
+                    ability_copy = combat.active_turn_abilities().at(0);
+                    combat.Progress(NULL,&ability_copy,NULL);
+                    combat_state_changed = true;
+                    break;
+                }
+            } else if (combat.state() == CombatState::attack_target_selection || combat.state() == CombatState::ability_target_selection) {
+                switch (event.key.keysym.sym)
+                {
+                case SDLK_1:
+                    combat.Progress(NULL,NULL,combat.active_turn_targets().at(0));
+                    combat_state_changed = true;
+                    break;
+                }
+            } else {
+                switch (event.key.keysym.sym)
+                {
+                case SDLK_SPACE:
+                    combat.Progress(NULL,NULL,NULL);
+                    combat_state_changed = true;
+                    break;
+                case SDLK_RETURN:
+                    combat.Progress(NULL,NULL,NULL);
+                    combat_state_changed = true;
+                    break;
+                default:
+                    break;
+                }
+            }
 		default:
 			break;
 		}
@@ -94,6 +136,58 @@ void RpgCombatState::Update(RpgGame *rpgGame) {
 
     rpgGame->camera.x = 0;
     rpgGame->camera.y = 0;
+
+    if (!combat_state_changed) {
+        return;
+    }
+
+    switch (combat.state())
+    {
+    case CombatState::start:
+        std::cout << "Combat has started\n";
+        break;
+    case CombatState::turn_start_display:
+        std::cout << "It's the turn of " << combat.active_combatant()->name() << "\n";
+        break;
+    case CombatState::action_selection:
+        std::cout << "Choose action for " << combat.active_combatant()->name() << "\n";
+        break;
+    case CombatState::attack_target_selection:
+        /*if (combat.active_turn_chosen_attack() != NULL)
+            std::cout << "Choose target for " << combat.active_turn_chosen_attack()->name << "\n";*/
+        for (auto target : combat.active_turn_targets()) {
+            std::cout << target->name() << "\n";
+        }
+        std::cout << attack_copy.name << "\n";
+        break;
+    case CombatState::ability_target_selection:
+        std::cout << "Choose target for " << combat.active_turn_chosen_ability()->name << "\n";
+        break;
+    case CombatState::action_display:
+        /*if (combat.active_turn_chosen_attack() != NULL) {
+            std::cout << combat.active_combatant()->name() << " uses " << combat.active_turn_chosen_attack()->name << "\n";
+        } else if (combat.active_turn_chosen_attack() != NULL) {
+            std::cout << combat.active_combatant()->name() << " uses " << combat.active_turn_chosen_ability()->name << "\n";
+        } else {
+            std::cout << "no action chosen for some reason\n";
+        }*/
+        break;
+    case CombatState::state_reset_display:
+        std::cout << "a state is reset\n";
+        break;
+    case CombatState::winning_screen:
+        std::cout << "You won\n";
+        break;
+    case CombatState::losing_screen:
+        std::cout << "You lose\n";
+        break;
+    case CombatState::loot_display:
+        std::cout << "You loot\n";
+        break;
+    default:
+        break;
+    }
+    combat_state_changed = false;
 }
 
 void RpgCombatState::Render(RpgGame *rpgGame) {

@@ -105,7 +105,6 @@ void Combat::PrintStatus() {
 
     std::cout << "Enemy Team:\n";
     for (Combatant* combatant : enemy_combatants_) {
-        std::cout << combatant->level() << std::endl;
         std::cout << "   " << combatant->name() << "  Lvl: " << combatant->level() << "  State: " << combatant->state_string() << " " << (combatant->state_reset_countdown_ < 0 ? 0 : combatant->state_reset_countdown_) << "  HP: " << combatant->hp() << "/" << combatant->max_hp() << "  CD: " << combatant->cooldown_ << "\n";
     }
 }
@@ -180,6 +179,7 @@ void Combat::ProgressToNextAction()
 {
     active_turn_chosen_attack_ = NULL;
     active_turn_chosen_ability_ = NULL;
+    active_combatant_ = NULL;
 
     std::vector<Combatant*> living_player_combatants = LivingPlayerCombatants();
     std::vector<Combatant*> living_enemy_combatants = LivingEnemyCombatants();
@@ -283,7 +283,7 @@ void Combat::PerformEnemyTurn()
         active_combatant_->UseAbility(*active_turn_chosen_ability_, targets);
     }
 
-    CombatState::action_display;
+    state_ = CombatState::action_display;
 }
 
 void Combat::SetActionAndProgress(Attack* attack, Ability* ability)
@@ -330,15 +330,17 @@ void Combat::SetActionAndProgress(Attack* attack, Ability* ability)
 
 void Combat::Progress(Attack* attack, Ability* ability, Combatant* target)
 {
+    PrintStatus();
     switch (state_)
     {
     case CombatState::start: SetInitialCooldowns(); ProgressToNextAction(); break;
     case CombatState::state_reset_display: ProgressToNextAction(); break;
     case CombatState::turn_start_display: StartTurn(); break;
     case CombatState::action_selection: SetActionAndProgress(attack, ability); break;
-    case CombatState::attack_target_selection: active_combatant_->PerformAttack(*attack, {target});
+    case CombatState::attack_target_selection: std::cout << this->active_turn_chosen_attack_->name << "\n";
+                                                active_combatant_->PerformAttack(*active_turn_chosen_attack_, {target});
                                                 this->state_ = CombatState::action_display; break;
-    case CombatState::ability_target_selection: active_combatant_->UseAbility(*ability, {target});
+    case CombatState::ability_target_selection: active_combatant_->UseAbility(*active_turn_chosen_ability_, {target});
                                                 this->state_ = CombatState::action_display; break;
     case CombatState::action_display: ProgressToNextAction(); break;
     case CombatState::losing_screen: /*Cleanup;*/ break;

@@ -37,11 +37,11 @@ class Combat {
         std::string display_text() const {return display_text_;}
         bool player_turn() const {return player_turn_;}
         Combatant* active_combatant() const {return active_combatant_;}
-        Attack* active_turn_chosen_attack() const {return active_turn_chosen_attack_;}
-        Ability* active_turn_chosen_ability() const {return active_turn_chosen_ability_;}
+        Attack* active_turn_chosen_attack() {return active_turn_chosen_attack_;}
+        Ability* active_turn_chosen_ability() {return active_turn_chosen_ability_;}
         std::vector<Attack> active_turn_attacks() const {return active_turn_attacks_;}
         std::vector<Ability> active_turn_abilities() const {return active_turn_abilities_;}
-        std::vector<Combatant*> active_turn_targets() const {return active_turn_targets_;}
+        std::vector<Combatant*> active_turn_targets() {return active_turn_targets_;}
 
     protected:
         CombatState state_;
