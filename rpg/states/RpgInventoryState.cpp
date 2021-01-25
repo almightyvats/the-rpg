@@ -15,11 +15,13 @@ const State m_state = stateInventory;
 
 SDL_Texture *background;
 
-SDL_Color orange = {255, 165, 0};
-SDL_Color black = {255, 255, 255};
+SDL_Color orange = {188, 21, 21};
+SDL_Color white = {63, 63, 63};
 bool drawInfo = false;
 LabelItem labelItemName;
 LabelItem labelItemInfo;
+SDL_Rect itemInfoBgSource;
+SDL_Rect itemInfoBgTarget;
 
 int yStart = 5;
 int xPockets = 10;
@@ -165,6 +167,12 @@ RpgInventoryState::RpgInventoryState()
 	RpgGame::assets->AddFont("Ancient", "../rpg/assets/font/ancient.ttf", 20);
 	RpgGame::assets->AddTexture("gui", "../rpg/assets/gui/uipackSpace_sheet.png");
 
+	auto spriteInfo = guiHelper->getSpriteInfo("metalPanel.png");
+	itemInfoBgSource.x = spriteInfo.x;
+	itemInfoBgSource.y = spriteInfo.y;
+	itemInfoBgSource.w = spriteInfo.w;
+	itemInfoBgSource.h = spriteInfo.h;
+
 	// Inventory slots
 	createInventorySlots();
 	// Delete item
@@ -194,7 +202,7 @@ RpgInventoryState::RpgInventoryState()
 	background = TextureManager::LoadTexture("../rpg/assets/game_background_4.png");
 
 	labelItemName = std::make_shared<RpgLabel>(50, 10, "ItemName", "Ancient", orange);
-	labelItemInfo = std::make_shared<RpgLabel>(50, 10, "ItemInfo", "Ancient", black);
+	labelItemInfo = std::make_shared<RpgLabel>(50, 10, "ItemInfo", "Ancient", white);
 }
 
 RpgInventoryState::~RpgInventoryState() {}
@@ -249,8 +257,20 @@ bool tryShowHint(SDL_Point &mousePos)
 			if (SDL_PointInRect(&mousePos, rect) && i->hasComponent<InventoryComponent>()) {
 				labelItemName->setLabelPos(Vector2D(rect->x + 2 * resolution, rect->y));
 				labelItemName->setLabelText("Ancient", i->getComponent<InventoryComponent>().equip.name());
-				labelItemInfo->setLabelPos(Vector2D(rect->x + 2 * resolution, rect->y + resolution));
+				SDL_Rect dimsName;
+				labelItemName->getLabelDims(dimsName);
+
+				labelItemInfo->setLabelPos(
+				    Vector2D(rect->x + 2 * resolution, dimsName.y + dimsName.h + border * scale));
 				labelItemInfo->setLabelText("Ancient", i->getComponent<InventoryComponent>().equip.item_info());
+				SDL_Rect dimsInfo;
+				labelItemInfo->getLabelDims(dimsInfo);
+
+				itemInfoBgTarget.x = (rect->x + 2 * resolution) - 20;
+				itemInfoBgTarget.y = rect->y - 20;
+				itemInfoBgTarget.w = 3 * resolution * scale;
+				itemInfoBgTarget.h = dimsName.h + dimsInfo.h + (border * scale) + 40;
+
 				return true;
 			}
 		}
@@ -420,6 +440,8 @@ void RpgInventoryState::Render(RpgGame *rpgGame)
 	}
 
 	if (drawInfo) {
+
+		TextureManager::Draw(RpgGame::assets->GetTexture("gui"), &itemInfoBgSource, &itemInfoBgTarget, SDL_FLIP_NONE);
 		labelItemName->Draw();
 		labelItemInfo->Draw();
 	}
