@@ -9,16 +9,27 @@ enum class CombatArena {
     grass,
 };
 
+struct CombatantLabels {
+    RpgLabel name;
+    RpgLabel lvl;
+    RpgLabel state;
+    RpgLabel cooldown;
+    RpgLabel hp;
+};
+
 class RpgCombatState : public RpgGameState {
 
   private:
     Combat combat;
     std::vector<EnemyCombatant> enemies;
 
+    std::vector<CombatantLabels> labels_combatants;
     RpgLabel label_msg;
     RpgLabel label_combatant;
     RpgLabel label_action;
     std::vector<RpgLabel> labels_selection;
+
+    void UpdateCombatantLabels();
 
   public:
     RpgCombatState(std::vector<Combatant*> player_combatants, CombatArena arena);

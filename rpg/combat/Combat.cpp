@@ -330,7 +330,6 @@ void Combat::SetActionAndProgress(Attack* attack, Ability* ability)
 
 void Combat::Progress(Attack* attack, Ability* ability, Combatant* target)
 {
-    PrintStatus();
     switch (state_)
     {
     case CombatState::start: SetInitialCooldowns(); ProgressToNextAction(); break;

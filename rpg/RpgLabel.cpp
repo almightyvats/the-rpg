@@ -69,3 +69,11 @@ void RpgLabel::getLabelDims(SDL_Rect &dims)
 	    m_position.h,
 	};
 }
+
+void RpgLabel::CenterLabelHorizontally() {
+	m_position.x -= m_position.w / 2;
+}
+
+void RpgLabel::RealignLabelHorizontally() {
+	m_position.x += m_position.w / 2;
+}

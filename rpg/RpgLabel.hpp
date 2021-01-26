@@ -22,6 +22,8 @@ class RpgLabel {
 	void setLabelText(std::string font, std::string labelText);
 	void setLabelColor(const SDL_Color &color);
 	void getLabelDims(SDL_Rect &dims);
+	void CenterLabelHorizontally();
+	void RealignLabelHorizontally();
 };
 
 #endif
