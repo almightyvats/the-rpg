@@ -218,9 +218,9 @@ void TrySwapPocket(int sourcePocket, int targetPocket)
 	}
 }
 
-bool tryShowHint(SDL_Point &mousePos)
+bool tryShowHint(SDL_Point &mousePos, std::vector<Entity *> &items)
 {
-	for (auto &i : invItems) {
+	for (auto &i : items) {
 		if (i->hasComponent<SpriteComponent>()) {
 			auto rect = i->getComponent<SpriteComponent>().getDestRect();
 			if (SDL_PointInRect(&mousePos, rect) && i->hasComponent<InventoryComponent>()) {
@@ -247,6 +247,16 @@ bool tryShowHint(SDL_Point &mousePos)
 	return false;
 }
 
+bool tryShowHint(SDL_Point &mousePos)
+{
+	auto result = tryShowHint(mousePos, invItems);
+	result |= tryShowHint(mousePos, equipItemsC1);
+	result |= tryShowHint(mousePos, equipItemsC2);
+	result |= tryShowHint(mousePos, equipItemsC3);
+
+	return result;
+}
+
 Entity *dragAndDropItem = NULL;
 bool buttonClicked = false;
 bool leftMouseButtonDown = false;
@@ -254,6 +264,27 @@ bool leftMouseButtonDown = false;
 SDL_Point clickOffset;
 
 SDL_Point mousePos;
+
+void tryAssignDragDropItem(std::vector<Entity *> &items)
+{
+	if (dragAndDropItem == NULL) {
+		for (auto &i : items) {
+			if (i->hasComponent<SpriteComponent>()) {
+				auto rect = i->getComponent<SpriteComponent>().getDestRect();
+				if (SDL_PointInRect(&mousePos, rect) && i->hasComponent<InventoryComponent>()) {
+					dragAndDropItem = i;
+
+					clickOffset.x = mousePos.x - rect->x;
+					clickOffset.y = mousePos.y - rect->y;
+
+					i->getComponent<InventoryComponent>().isInDragAndDrop = true;
+
+					break;
+				}
+			}
+		}
+	}
+}
 void RpgInventoryState::HandleEvents(RpgGame *rpgGame)
 {
 
@@ -304,21 +335,10 @@ void RpgInventoryState::HandleEvents(RpgGame *rpgGame)
 		if (!leftMouseButtonDown && m_event.button.button == SDL_BUTTON_LEFT) {
 			leftMouseButtonDown = true;
 
-			for (auto &i : invItems) {
-				if (i->hasComponent<SpriteComponent>()) {
-					auto rect = i->getComponent<SpriteComponent>().getDestRect();
-					if (SDL_PointInRect(&mousePos, rect) && i->hasComponent<InventoryComponent>()) {
-						dragAndDropItem = i;
-
-						clickOffset.x = mousePos.x - rect->x;
-						clickOffset.y = mousePos.y - rect->y;
-
-						i->getComponent<InventoryComponent>().isInDragAndDrop = true;
-
-						break;
-					}
-				}
-			}
+			tryAssignDragDropItem(invItems);
+			tryAssignDragDropItem(equipItemsC1);
+			tryAssignDragDropItem(equipItemsC2);
+			tryAssignDragDropItem(equipItemsC3);
 		}
 		break;
 	default:
