@@ -110,61 +110,31 @@ void createDeleteItemSlot()
 	}
 }
 
-void createSwordItemSlot()
+void createCombatantItemSlots(int combatantNumber)
 {
 	auto spriteInfo = guiHelper->getSpriteInfo("glassPanel_cornerTL.png");
 	auto coords = getPocketCoords(9);
-	coords.x += (32 + border) * scale;
-	auto &item(manager.addEntity(m_state));
-	item.addComponent<TransformComponent>(coords.x, coords.y, resolution, resolution, scale + 1);
-	item.addComponent<InventoryComponent>(100);
-	item.addComponent<SpriteComponent>("gui", spriteInfo.x, spriteInfo.y,
-	                                   SpriteSheet(1, spriteInfo.w, spriteInfo.h, 0, 0));
-	item.addGroup(RpgPlayState::groupGui);
-}
+	int xDistance = 100;
+	int yDistance = 100;
+	int baseX = coords.x + (resolution + border) * (scale + 1);
+	int baseY = 50 + (combatantNumber - 1) * (2 * yDistance + 32);
 
-void createBowItemSlot()
-{
-	auto spriteInfo = guiHelper->getSpriteInfo("glassPanel_cornerTL.png");
-	auto coords = getPocketCoords(9);
-	coords.x += 3 * (32 + border) * scale;
-	auto &item(manager.addEntity(m_state));
-	item.addComponent<TransformComponent>(coords.x, coords.y, resolution, resolution, scale + 1);
-	item.addComponent<InventoryComponent>(200);
-	item.addComponent<SpriteComponent>("gui", spriteInfo.x, spriteInfo.y,
-	                                   SpriteSheet(1, spriteInfo.w, spriteInfo.h, 0, 0));
-	item.addGroup(RpgPlayState::groupGui);
-}
+	for (int itemSlot = 0; itemSlot < 4; itemSlot++) {
+		int x = baseX + (itemSlot % 2) * xDistance;
+		int y = baseY + floor(itemSlot / 2) * yDistance;
 
-void createShieldItemSlot()
-{
-	auto spriteInfo = guiHelper->getSpriteInfo("glassPanel_cornerTL.png");
-	auto coords = getPocketCoords(29);
-	coords.x += (32 + border) * scale;
-	auto &item(manager.addEntity(m_state));
-	item.addComponent<TransformComponent>(coords.x, coords.y, resolution, resolution, scale + 1);
-	item.addComponent<InventoryComponent>(300);
-	item.addComponent<SpriteComponent>("gui", spriteInfo.x, spriteInfo.y,
-	                                   SpriteSheet(1, spriteInfo.w, spriteInfo.h, 0, 0));
-	item.addGroup(RpgPlayState::groupGui);
-}
-
-void createHealItemSlot()
-{
-	auto spriteInfo = guiHelper->getSpriteInfo("glassPanel_cornerTL.png");
-	auto coords = getPocketCoords(29);
-	coords.x += 3 * (32 + border) * scale;
-	auto &item(manager.addEntity(m_state));
-	item.addComponent<TransformComponent>(coords.x, coords.y, resolution, resolution, scale + 1);
-	item.addComponent<InventoryComponent>(400);
-	item.addComponent<SpriteComponent>("gui", spriteInfo.x, spriteInfo.y,
-	                                   SpriteSheet(1, spriteInfo.w, spriteInfo.h, 0, 0));
-	item.addGroup(RpgPlayState::groupGui);
+		auto &item(manager.addEntity(m_state));
+		item.addComponent<TransformComponent>(x, y, resolution, resolution, scale + 1);
+		item.addComponent<InventoryComponent>((100 * combatantNumber) + itemSlot);
+		item.addComponent<SpriteComponent>("gui", spriteInfo.x, spriteInfo.y,
+		                                   SpriteSheet(1, spriteInfo.w, spriteInfo.h, 0, 0));
+		item.addGroup(RpgPlayState::groupGui);
+	}
 }
 
 RpgInventoryState::RpgInventoryState()
 {
-	RpgGame::assets->AddFont("Ancient", "../rpg/assets/font/ancient.ttf", 20);
+	RpgGame::assets->AddFont("Ancient.20", "../rpg/assets/font/ancient.ttf", 20);
 	RpgGame::assets->AddTexture("gui", "../rpg/assets/gui/uipackSpace_sheet.png");
 
 	auto spriteInfo = guiHelper->getSpriteInfo("metalPanel.png");
@@ -177,14 +147,10 @@ RpgInventoryState::RpgInventoryState()
 	createInventorySlots();
 	// Delete item
 	createDeleteItemSlot();
-	// Sword
-	createSwordItemSlot();
-	// Bow
-	createBowItemSlot();
-	// Shield
-	createShieldItemSlot();
-	// Shield
-	createHealItemSlot();
+	// Combatant items
+	createCombatantItemSlots(1);
+	createCombatantItemSlots(2);
+	createCombatantItemSlots(3);
 
 	// TODO: testdata
 	int item_level = 1;
@@ -201,14 +167,17 @@ RpgInventoryState::RpgInventoryState()
 
 	background = TextureManager::LoadTexture("../rpg/assets/game_background_4.png");
 
-	labelItemName = std::make_shared<RpgLabel>(50, 10, "ItemName", "Ancient", orange);
-	labelItemInfo = std::make_shared<RpgLabel>(50, 10, "ItemInfo", "Ancient", white);
+	labelItemName = std::make_shared<RpgLabel>(50, 10, "ItemName", "Ancient.20", orange);
+	labelItemInfo = std::make_shared<RpgLabel>(50, 10, "ItemInfo", "Ancient.20", white);
 }
 
 RpgInventoryState::~RpgInventoryState() {}
 
 auto &guiElements(manager.getGroup(RpgPlayState::groupGui));
 auto &invItems(manager.getGroup(RpgPlayState::groupItems));
+auto &equipItemsC1(manager.getGroup(RpgPlayState::groupEquipmentCombatant1));
+auto &equipItemsC2(manager.getGroup(RpgPlayState::groupEquipmentCombatant2));
+auto &equipItemsC3(manager.getGroup(RpgPlayState::groupEquipmentCombatant3));
 
 void RpgInventoryState::Pause()
 {
@@ -256,13 +225,13 @@ bool tryShowHint(SDL_Point &mousePos)
 			auto rect = i->getComponent<SpriteComponent>().getDestRect();
 			if (SDL_PointInRect(&mousePos, rect) && i->hasComponent<InventoryComponent>()) {
 				labelItemName->setLabelPos(Vector2D(rect->x + 2 * resolution, rect->y));
-				labelItemName->setLabelText("Ancient", i->getComponent<InventoryComponent>().equip.name());
+				labelItemName->setLabelText("Ancient.20", i->getComponent<InventoryComponent>().equip.name());
 				SDL_Rect dimsName;
 				labelItemName->getLabelDims(dimsName);
 
 				labelItemInfo->setLabelPos(
 				    Vector2D(rect->x + 2 * resolution, dimsName.y + dimsName.h + border * scale));
-				labelItemInfo->setLabelText("Ancient", i->getComponent<InventoryComponent>().equip.item_info());
+				labelItemInfo->setLabelText("Ancient.20", i->getComponent<InventoryComponent>().equip.item_info());
 				SDL_Rect dimsInfo;
 				labelItemInfo->getLabelDims(dimsInfo);
 
@@ -358,7 +327,7 @@ void RpgInventoryState::HandleEvents(RpgGame *rpgGame)
 }
 
 // Align sprite with underlying pocket sprite
-void AlignWithPocket(Entity *const entity)
+void alignWithPocket(Entity *const entity)
 {
 	if (entity->hasComponent<InventoryComponent>()) {
 		auto &entityInvC = entity->getComponent<InventoryComponent>();
@@ -381,6 +350,85 @@ void AlignWithPocket(Entity *const entity)
 	}
 }
 
+void alignWithPocket(std::vector<Entity *> &items)
+{
+	for (auto &i : items) {
+		alignWithPocket(i);
+	}
+}
+
+bool inRange(int low, int high, int x)
+{
+	return ((x - high) * (x - low) <= 0);
+}
+
+void assignInventoryGroup(Entity *entity, Group currentGroup, int pocketNumber)
+{
+	// Inventory - not equipped
+	if (inRange(0, 99, pocketNumber) && currentGroup != RpgPlayState::groupItems) {
+		entity->addGroup(RpgPlayState::groupItems);
+		entity->delGroup(RpgPlayState::groupEquipmentCombatant1);
+		entity->delGroup(RpgPlayState::groupEquipmentCombatant2);
+		entity->delGroup(RpgPlayState::groupEquipmentCombatant3);
+	}
+	// 100 - 199 - items combatant 1
+	else if (inRange(100, 199, pocketNumber) && currentGroup != RpgPlayState::groupEquipmentCombatant1) {
+		entity->delGroup(RpgPlayState::groupItems);
+		entity->addGroup(RpgPlayState::groupEquipmentCombatant1);
+		entity->delGroup(RpgPlayState::groupEquipmentCombatant2);
+		entity->delGroup(RpgPlayState::groupEquipmentCombatant3);
+	}
+	// 200 - 299 - items combatant 2
+	else if (inRange(200, 299, pocketNumber) && currentGroup != RpgPlayState::groupEquipmentCombatant2) {
+		entity->delGroup(RpgPlayState::groupItems);
+		entity->delGroup(RpgPlayState::groupEquipmentCombatant1);
+		entity->addGroup(RpgPlayState::groupEquipmentCombatant2);
+		entity->delGroup(RpgPlayState::groupEquipmentCombatant3);
+	}
+	// 300 - 399 - items combatant 3
+	else if (inRange(300, 399, pocketNumber) && currentGroup != RpgPlayState::groupEquipmentCombatant3) {
+		entity->delGroup(RpgPlayState::groupItems);
+		entity->delGroup(RpgPlayState::groupEquipmentCombatant1);
+		entity->delGroup(RpgPlayState::groupEquipmentCombatant2);
+		entity->addGroup(RpgPlayState::groupEquipmentCombatant3);
+	}
+}
+
+void assignInventoryGroup()
+{
+	for (auto &i : invItems) {
+		if (i->hasComponent<InventoryComponent>()) {
+			assignInventoryGroup(i, RpgPlayState::groupItems, i->getComponent<InventoryComponent>().pocketNumber);
+		}
+	}
+	for (auto &i : equipItemsC1) {
+		if (i->hasComponent<InventoryComponent>()) {
+			assignInventoryGroup(i, RpgPlayState::groupEquipmentCombatant1,
+			                     i->getComponent<InventoryComponent>().pocketNumber);
+		}
+	}
+	for (auto &i : equipItemsC2) {
+		if (i->hasComponent<InventoryComponent>()) {
+			assignInventoryGroup(i, RpgPlayState::groupEquipmentCombatant2,
+			                     i->getComponent<InventoryComponent>().pocketNumber);
+		}
+	}
+	for (auto &i : equipItemsC3) {
+		if (i->hasComponent<InventoryComponent>()) {
+			assignInventoryGroup(i, RpgPlayState::groupEquipmentCombatant3,
+			                     i->getComponent<InventoryComponent>().pocketNumber);
+		}
+	}
+}
+
+void alignWithPocket()
+{
+	alignWithPocket(invItems);
+	alignWithPocket(equipItemsC2);
+	alignWithPocket(equipItemsC1);
+	alignWithPocket(equipItemsC3);
+}
+
 int getNextEmptyPocket(std::set<int> &pockets)
 {
 	int maxPockets = xPockets * yPockets;
@@ -391,14 +439,22 @@ int getNextEmptyPocket(std::set<int> &pockets)
 	return i;
 }
 
-void validatePockets()
+void retrieveComponents(std::vector<Entity *> &items, std::vector<InventoryComponent *> &components)
 {
-	std::vector<InventoryComponent *> components;
-	for (auto &i : invItems) {
+	for (auto &i : items) {
 		if (i->hasComponent<InventoryComponent>()) {
 			components.emplace_back(&i->getComponent<InventoryComponent>());
 		}
 	}
+}
+void validatePockets()
+{
+	std::vector<InventoryComponent *> components;
+	retrieveComponents(invItems, components);
+	retrieveComponents(equipItemsC1, components);
+	retrieveComponents(equipItemsC2, components);
+	retrieveComponents(equipItemsC3, components);
+
 	std::set<int> pockets;
 	for (auto c : components) {
 		// no pocket assigned yet
@@ -419,10 +475,8 @@ void RpgInventoryState::Update(RpgGame *rpgGame)
 	manager.update(m_state);
 
 	validatePockets();
-
-	for (auto &i : invItems) {
-		AlignWithPocket(i);
-	}
+	assignInventoryGroup();
+	alignWithPocket();
 }
 
 void RpgInventoryState::Render(RpgGame *rpgGame)
@@ -437,6 +491,18 @@ void RpgInventoryState::Render(RpgGame *rpgGame)
 
 	for (auto &i : invItems) {
 		i->draw(SDL_ALPHA_OPAQUE, m_state);
+	}
+
+	for (auto &c1 : equipItemsC1) {
+		c1->draw(SDL_ALPHA_OPAQUE, m_state);
+	}
+
+	for (auto &c2 : equipItemsC2) {
+		c2->draw(SDL_ALPHA_OPAQUE, m_state);
+	}
+
+	for (auto &c3 : equipItemsC3) {
+		c3->draw(SDL_ALPHA_OPAQUE, m_state);
 	}
 
 	if (drawInfo) {

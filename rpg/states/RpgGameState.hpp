@@ -23,6 +23,9 @@ class RpgGameState {
 		groupEnemies,
 		groupItems,
 		groupGui,
+		groupEquipmentCombatant1,
+		groupEquipmentCombatant2,
+		groupEquipmentCombatant3
 	};	
 };
 
