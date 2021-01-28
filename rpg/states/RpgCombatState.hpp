@@ -27,9 +27,12 @@ class RpgCombatState : public RpgGameState {
     RpgLabel label_msg;
     RpgLabel label_combatant;
     RpgLabel label_action;
+    RpgLabel label_action_display;
     std::vector<RpgLabel> labels_selection;
 
     void UpdateCombatantLabels();
+    void ConstructSelectionMenu(std::vector<std::string> element_labels);
+    void ProcessLabelClick(int index);
 
   public:
     RpgCombatState(std::vector<Combatant*> player_combatants, CombatArena arena);

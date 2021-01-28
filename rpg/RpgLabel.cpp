@@ -39,7 +39,7 @@ void RpgLabel::setLabelText(std::string fontId, std::string labelText)
 	if (fontPtr == nullptr) {
 		std::cout << "Rpglabel not getting font\n";
 	} else {
-		SDL_Surface *labelSurface = TTF_RenderText_Solid(fontPtr, labelText.c_str(), m_color);
+		SDL_Surface *labelSurface = TTF_RenderText_Blended_Wrapped(fontPtr, labelText.c_str(), m_color, 2000);
 		m_labelTexture = SDL_CreateTextureFromSurface(RpgGame::renderer, labelSurface);
 
 		SDL_FreeSurface(labelSurface);

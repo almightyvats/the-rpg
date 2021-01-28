@@ -1,6 +1,7 @@
 #include "Combatant.hpp"
 
 #include <iostream>
+#include <sstream>
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
@@ -80,8 +81,9 @@ int CalculateAttackDamage(int attacker_force, int defender_defense, int damage, 
     return (int) (force_defense_factor * damage);
 }
 
-void Combatant::PerformAttack(Attack attack, std::vector<Combatant*> targets)
+std::string Combatant::PerformAttack(Attack attack, std::vector<Combatant*> targets)
 {
+    std::ostringstream os;
     CombatantStats attacker_stats = CalculateStats();
 
     for (Combatant* target : targets) {
@@ -97,7 +99,7 @@ void Combatant::PerformAttack(Attack attack, std::vector<Combatant*> targets)
         }
 
         if (!attack_hit) {
-            std::cout << "Missed" << std::endl;
+            os << "Missed attack on " << target->name() << "\n";
             continue;
         }
 
@@ -120,27 +122,31 @@ void Combatant::PerformAttack(Attack attack, std::vector<Combatant*> targets)
 
         if (target->state_ == CombatantState::blocking) {
             target->state_ = CombatantState::normal;
-            std::cout << "Block broken\n";
+            os << "Block of " << target->name() << " broken\n";
         } else {
-            std::cout << (crit_hit ? "Critical " : "") << "Hit " << target->name() << " for " << attack_damage << " damage\n";
+            os << (crit_hit ? "Critical " : "") << "Hit " << target->name() << " for " << attack_damage << " damage\n";
             target->TakeDamage(attack_damage);
 
-            if (attack.effect == AttackEffect::ignite) {
-                target->state_ = CombatantState::burning;
-                target->state_reset_countdown_ = BURN_RESET_COOLDOWN;
-                std::cout << target->name() << " is now burning\n";
-            } else if (attack.effect == AttackEffect::slow) {
-                target->cooldown_ += SLOW_COOLDOWN_HIT_INCREASE;
-                std::cout << target->name() << " is slowed\n";
+            if (target->state_ != CombatantState::dead){
+                if (attack.effect == AttackEffect::ignite) {
+                    target->state_ = CombatantState::burning;
+                    target->state_reset_countdown_ = BURN_RESET_COOLDOWN;
+                    os << target->name() << " is now burning\n";
+                } else if (attack.effect == AttackEffect::slow) {
+                    target->cooldown_ += SLOW_COOLDOWN_HIT_INCREASE;
+                    os << target->name() << " is slowed\n";
+                }
             }
         }
     }
 
     cooldown_ = attack.cooldown;
+    return os.str();
 }
 
-void Combatant::UseAbility(Ability ability, std::vector<Combatant*> targets)
+std::string Combatant::UseAbility(Ability ability, std::vector<Combatant*> targets)
 {
+    std::ostringstream os;
     std::srand(std::time(nullptr));
 
     for (Combatant* target : targets) {
@@ -160,15 +166,17 @@ void Combatant::UseAbility(Ability ability, std::vector<Combatant*> targets)
                 PerformStateReset();
                 target->state_ = CombatantState::blocking;
                 target->state_reset_countdown_ = BLOCK_RESET_COOLDOWN;
+                os << target->name() << " started blocking\n";
             } else if (ability.effect == AbilityEffect::ignite) {
                 target->state_ = CombatantState::burning;
                 target->state_reset_countdown_ = BURN_RESET_COOLDOWN;
-                std::cout << target->name() << " is now burning\n";
+                os << target->name() << " is now burning\n";
             }
         }
     }
 
     cooldown_ = ability.cooldown;
+    return os.str();
 }
 
 bool Combatant::TakeDamage(int damage)
@@ -195,22 +203,26 @@ void Combatant::TakeBurnDamage()
     std::cout << name() << " took " << BURN_DAMAGE << " burn damage\n";
 }
 
-void Combatant::PerformStateReset()
+std::string Combatant::PerformStateReset()
 {
+    std::string display_text = "";
     switch (state_)
     {
     case CombatantState::blocking:
         state_ = CombatantState::normal;
-        std::cout << name() << " has stopped blocking\n";
+        display_text = name() + " has stopped blocking";
         break;
     
     case CombatantState::burning:
         TakeDamage(0);
-        state_ = CombatantState::normal;
-        std::cout << name() << " has stopped burning\n";
+        if (state_ != CombatantState::dead) {
+            state_ = CombatantState::normal;
+        }
+        display_text = name() + " has stopped burning";
     
     default:
         break;
     }
     state_reset_countdown_ = -1;
+    return display_text;
 }

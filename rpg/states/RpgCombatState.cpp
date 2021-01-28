@@ -8,15 +8,22 @@
 #include "RpgPlayState.hpp"
 
 #define FONT_MSG "Ancient"
+#define FONT_SCOMB "Ancient"
+#define FONT_SACTION "Ancient"
 #define FONT_CNAME "Ancient_s"
 #define FONT_CLVL "Ancient_s"
 #define FONT_CSTATE "Ancient_s"
 #define FONT_CHP "Ancient_s"
 #define FONT_CCD "Ancient_s"
+#define FONT_SELECTION "Ancient_s"
+#define FONT_DISPLAY "Ancient_s"
+
+#define SELECTION_MENU_MAX_ROWS 3
 
 SDL_Texture* combat_arena;
 SDL_Event RpgCombatState::event;
 SDL_Color color_white = {255, 255, 255};
+SDL_Color color_red = {255, 0, 0};
 
 extern Manager manager;
 
@@ -40,10 +47,32 @@ Vector2D GetCombatantPosition(bool player_team, int number)
     }
 }
 
+std::vector<std::string> GetTargetNames(std::vector<Combatant*> targets)
+{
+    std::vector<std::string> names;
+    for (Combatant* target : targets) {
+        names.push_back(target->name());
+    }
+    return names;
+}
+
+std::vector<std::string> GetActionNames(const std::vector<Attack>& attacks, const std::vector<Ability>& abilities)
+{
+    std::vector<std::string> names;
+    for (Attack attack : attacks) {
+        names.push_back(attack.name);
+    }
+    for (Ability ability : abilities) {
+        names.push_back(ability.name);
+    }
+    return names;
+}
+
 RpgCombatState::RpgCombatState(std::vector<Combatant*> player_combatants, CombatArena arena)
 : label_msg(RpgLabel(50, 550, "", FONT_MSG, color_white)), 
     label_combatant(RpgLabel(80, 600, "", FONT_MSG, color_white)), 
-    label_action(RpgLabel(80, 650, "", FONT_MSG, color_white))
+    label_action(RpgLabel(80, 650, "", FONT_MSG, color_white)),
+    label_action_display(RpgLabel(512, 550, "", FONT_MSG, color_white))
 {
     this->enemies = GenerateSimpleEnemies(player_combatants);
 
@@ -158,10 +187,55 @@ void RpgCombatState::HandleEvents(RpgGame *rpgGame) {
                     break;
                 }
             }
+            break;
+        case SDL_MOUSEMOTION:
+        case SDL_MOUSEBUTTONDOWN:
+            if (combat.state() == CombatState::action_selection || combat.state() == CombatState::attack_target_selection || combat.state() == CombatState::ability_target_selection) {
+                int mousePosX, mousePosY;
+		        SDL_GetMouseState(&mousePosX, &mousePosY);
+                int index = 0;
+                
+                for (RpgLabel & label : labels_selection) {
+                    SDL_Rect label_dims;
+                    label.getLabelDims(label_dims);
+
+                    if (mousePosX >= label_dims.x && mousePosX <= (label_dims.x + label_dims.w)
+                        && mousePosY >= label_dims.y && mousePosY <= (label_dims.y + label_dims.h)) {
+                        label.setLabelColor(color_red);
+                        if (event.type == SDL_MOUSEBUTTONDOWN) {
+                            ProcessLabelClick(index);
+                            combat_state_changed = true;
+                            break;
+                        }
+                    } else {
+                        label.setLabelColor(color_white);
+                    }
+                    index++;
+                }
+            } else if (event.type == SDL_MOUSEBUTTONDOWN) {
+                combat.Progress(NULL,NULL,NULL);
+                combat_state_changed = true;
+            }
+            break;
 		default:
 			break;
 		}
 	}
+}
+
+void RpgCombatState::ProcessLabelClick(int index) {
+    if (combat.state() == CombatState::attack_target_selection || combat.state() == CombatState::ability_target_selection) {
+        combat.Progress(NULL, NULL, combat.active_turn_targets().at(index));
+    } else {
+        int attack_labels = combat.active_turn_attacks().size();
+        if (index < attack_labels) {
+            attack_copy = combat.active_turn_attacks().at(index);
+            combat.Progress(&attack_copy, NULL, NULL);
+        } else if (index <  attack_labels + combat.active_turn_abilities().size()) {
+            ability_copy = combat.active_turn_abilities().at(index - attack_labels);
+            combat.Progress(NULL, &ability_copy, NULL);
+        }
+    }
 }
 
 void RpgCombatState::Update(RpgGame *rpgGame)
@@ -179,6 +253,8 @@ void RpgCombatState::Update(RpgGame *rpgGame)
     if (combat.state() != CombatState::start) {
         UpdateCombatantLabels();
     }
+    
+    label_action_display.setLabelText(FONT_DISPLAY, "");
 
     switch (combat.state())
     {
@@ -190,19 +266,26 @@ void RpgCombatState::Update(RpgGame *rpgGame)
         break;
     case CombatState::action_selection:
         label_msg.setLabelText(FONT_MSG, "Select action:");
-        label_combatant.setLabelText(FONT_MSG, combat.active_combatant()->name());
+        label_combatant.setLabelText(FONT_SCOMB, combat.active_combatant()->name());
+        ConstructSelectionMenu(GetActionNames(combat.active_turn_attacks(), combat.active_turn_abilities()));
         break;
     case CombatState::attack_target_selection:
+        labels_selection.clear();
         label_msg.setLabelText(FONT_MSG, "Select target:");
-        label_action.setLabelText(FONT_MSG, combat.active_turn_chosen_attack()->name);
+        label_action.setLabelText(FONT_SACTION, combat.active_turn_chosen_attack()->name);
+        ConstructSelectionMenu(GetTargetNames(combat.active_turn_targets()));
         break;
     case CombatState::ability_target_selection:
+        labels_selection.clear();
         label_msg.setLabelText(FONT_MSG, "Select target:");
-        label_action.setLabelText(FONT_MSG, combat.active_turn_chosen_ability()->name);
+        label_action.setLabelText(FONT_SACTION, combat.active_turn_chosen_ability()->name);
+        ConstructSelectionMenu(GetTargetNames(combat.active_turn_targets()));
         break;
     case CombatState::action_display:
-        label_combatant.setLabelText(FONT_MSG, "");
-        label_action.setLabelText(FONT_MSG, "");
+        labels_selection.clear();
+        label_combatant.setLabelText(FONT_SCOMB, "");
+        label_action.setLabelText(FONT_SACTION, "");
+        label_action_display.setLabelText(FONT_DISPLAY, combat.display_text());
         if (combat.active_turn_chosen_attack() != NULL) {
             label_msg.setLabelText(FONT_MSG, combat.active_combatant()->name() + " uses " + combat.active_turn_chosen_attack()->name);
         } else if (combat.active_turn_chosen_ability() != NULL) {
@@ -212,7 +295,7 @@ void RpgCombatState::Update(RpgGame *rpgGame)
         }
         break;
     case CombatState::state_reset_display:
-        label_msg.setLabelText(FONT_MSG, "A state is reset");
+        label_msg.setLabelText(FONT_MSG, combat.display_text());
         break;
     case CombatState::winning_screen:
         label_msg.setLabelText(FONT_MSG, "You win");
@@ -258,6 +341,22 @@ void RpgCombatState::UpdateCombatantLabels()
     }
 }
 
+void RpgCombatState::ConstructSelectionMenu(std::vector<std::string> element_labels)
+{
+    this->labels_selection.clear();
+
+    int row = 0;
+    int column = 0;
+
+    for (std::string label : element_labels) {
+        this->labels_selection.push_back(RpgLabel(400 + (200*column), 550 + (50*row++), label, FONT_SELECTION, color_white));
+        if (row >= SELECTION_MENU_MAX_ROWS) {
+            row = 0;
+            column++;
+        }
+    }
+}
+
 void RpgCombatState::Render(RpgGame *rpgGame)
 {
     SDL_RenderClear(rpgGame->renderer);
@@ -280,9 +379,14 @@ void RpgCombatState::Render(RpgGame *rpgGame)
         l_combatant.hp.Draw();
     }
 
+    for (auto l_selection : labels_selection) {
+        l_selection.Draw();
+    }
+
     this->label_msg.Draw();
     this->label_combatant.Draw();
     this->label_action.Draw();
+    this->label_action_display.Draw();
 
 	SDL_RenderPresent(rpgGame->renderer);
 }
