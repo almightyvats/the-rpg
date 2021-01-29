@@ -37,11 +37,11 @@ RpgMenuState::RpgMenuState()
 	m_Labels.push_back(loadGameLabel);
 	m_Labels.push_back(exitLabel);
 
-	//m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) { rpgGame->changeState(RpgPlayState::Instance()); }});
+	m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) { rpgGame->changeState(RpgPlayState::Instance()); }});
 	
-	m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) { 
+	/*m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) { 
 		InitGlobalTestPCs();
-		rpgGame->changeState(RpgCombatState::Instance(GetTestCombatants(), CombatArena::grass)); }});
+		rpgGame->changeState(RpgCombatState::Instance(GetTestCombatants(), CombatArena::grass)); }});*/
 
 
 
@@ -148,7 +148,7 @@ void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 					m_Labels[i]->setLabelColor(m_colors[1]);
 					isLabelClicked = false;
 					break;
-				case SDL_MOUSEBUTTONDOWN:
+				case SDL_MOUSEBUTTONDOWN:	
 					m_Labels[i]->setLabelColor(m_colors[1]);
 					if (!isLabelClicked) {
 						labelPressed(m_Labels[i], rpgGame);

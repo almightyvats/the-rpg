@@ -23,7 +23,7 @@ void RpgGame::init(std::string title, bool fullScreen)
 		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH,
 		                          SCREEN_HEIGHT, flags);
 		if (window) {
-			std::cout << "Window craeted" << std::endl;
+			std::cout << "Window created" << std::endl;
 		}
 		RpgSoundManager::init();
 		RpgSoundManager::addMusic("../rpg/assets/music/menu.wav", "MENU");
@@ -66,6 +66,7 @@ void RpgGame::render()
 {
 	m_states.back().get().Render(this);
 };
+
 void RpgGame::clean()
 {
 	SDL_DestroyWindow(window);

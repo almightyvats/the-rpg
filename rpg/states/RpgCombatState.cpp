@@ -150,26 +150,18 @@ void RpgCombatState::HandleEvents(RpgGame *rpgGame) {
 			rpgGame->quitGame();
 			break;
         case SDL_KEYUP:
-            if (combat.state() == CombatState::action_selection) {
+            if (combat.state() == CombatState::winning_screen) {
                 switch (event.key.keysym.sym)
                 {
-                case SDLK_1: 
-                    attack_copy = combat.active_turn_attacks().at(0);
-                    combat.Progress(&attack_copy,NULL,NULL);
-                    combat_state_changed = true;
+                case SDLK_SPACE:
+                    //rpgGame->popState();
+                    std::cout << "end combat lul\n";
                     break;
-                case SDLK_2: 
-                    ability_copy = combat.active_turn_abilities().at(0);
-                    combat.Progress(NULL,&ability_copy,NULL);
-                    combat_state_changed = true;
+                case SDLK_RETURN:
+                    //rpgGame->popState();
+                    std::cout << "end combat lul\n";
                     break;
-                }
-            } else if (combat.state() == CombatState::attack_target_selection || combat.state() == CombatState::ability_target_selection) {
-                switch (event.key.keysym.sym)
-                {
-                case SDLK_1:
-                    combat.Progress(NULL,NULL,combat.active_turn_targets().at(0));
-                    combat_state_changed = true;
+                default:
                     break;
                 }
             } else {

@@ -1,10 +1,12 @@
 #include "RpgPlayState.hpp"
 #include "RpgMenuState.hpp"
+#include "RpgCombatState.hpp"
 #include "rpg/AssetManager.hpp"
 #include "rpg/Collision.hpp"
 #include "rpg/Map.hpp"
 #include "rpg/RpgSoundManager.hpp"
 #include "rpg/Vector2D.hpp"
+#include "rpg/combat/CombatTest.hpp"
 #include "rpg/ecs/Components.hpp"
 
 Map *map;
@@ -198,6 +200,8 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 				// player.getComponent<TransformComponent>().position = playerPos;
 				std::cout << "ENEMY encountered" << std::endl;
 				// TODO: start combat (for colliding enemy + enemies in certain range?)
+				InitGlobalTestPCs();
+				rpgGame->changeState(RpgCombatState::Instance(GetTestCombatants(), CombatArena::grass));
 				e->destroy();
 			}
 		}
