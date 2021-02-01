@@ -1,11 +1,13 @@
 #include "PlayerCombatant.hpp"
 
+#include <sstream>
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
 
-#define TOKENS_PER_LEVEL_UP 2
-#define MAX_EQUIPMENT 5
+#define TOKENS_PER_LEVEL_UP 3
+#define EXP_FOR_LEVEL_UP (exp_*10)
+#define MAX_EQUIPMENT 4
 
 #define ATTACK_SUCKER_PUNCH {"Sucker Punch", AttackType::melee, AttackTargetType::single, 5, 0, 0.8, 0.0, 1.0, 5, AttackEffect::none}
 #define ABILITY_BLOCK {"Block", AbilityTargetType::self, 0, 0, 1.0, 5, AbilityEffect::block}
@@ -78,9 +80,23 @@ PlayerCombatant::~PlayerCombatant()
 	// for image in frontend
 }
 
-void PlayerCombatant::LevelUp(int tokens, int new_exp)
+std::string PlayerCombatant::GainExp(int exp_gain)
 {
+	std::ostringstream os;
+	exp_ += exp_gain;
+	int exp_for_level_up = EXP_FOR_LEVEL_UP;
+	os << name() << " gained " << exp_gain << " Exp.";
+	while (exp_ > EXP_FOR_LEVEL_UP) {
+		os << "\n";
+		os << LevelUp(TOKENS_PER_LEVEL_UP, exp_ - EXP_FOR_LEVEL_UP);
+	}
+	os << "   . . .  "  << exp_ << "/" << EXP_FOR_LEVEL_UP << " Exp. until next Level Up\n";
+	return os.str();
+}
 
+std::string PlayerCombatant::LevelUp(int tokens, int new_exp)
+{
+	std::ostringstream os;
 	std::srand(std::time(nullptr));
 
 	level_++;
@@ -90,31 +106,41 @@ void PlayerCombatant::LevelUp(int tokens, int new_exp)
 	max_hp_ += hp_increase;
 	hp_ += hp_increase;
 
+	os << "Level Up! " << name() << "is now Lvl. " << level_ << " (+" << hp_increase << " HP";
+
 	int tokens_left = tokens;
 
 	while (tokens_left > 0) {
 		switch (rand() % 6) {
 		case 0:
 			agility_++;
+			os << ",+1 AGI";
 			break;
 		case 1:
 			strength_++;
+			os << ",+1 STR";
 			break;
 		case 2:
 			defense_++;
+			os << ",+1 DEF";
 			break;
 		case 3:
 			dexterity_++;
+			os << ",+1 DEX";
 			break;
 		case 4:
 			perception_++;
+			os << ",+1 PER";
 			break;
 		case 5:
 			luck_++;
+			os << ",+1 LCK";
 			break;
 		}
 		tokens_left--;
 	}
+	os << ")";
+	return os.str();
 }
 
 AddEquipmentError PlayerCombatant::AddEquipment(Equipment equipment)

@@ -8,7 +8,7 @@
 
 #define MIN_HIT_EVADE_FACTOR 0.5f
 #define MAX_HIT_EVADE_FACTOR 1.5f
-#define MIN_LUCK_FACTOR 0.2f
+#define MIN_LUCK_FACTOR 0.5f
 #define MAX_LUCK_FACTOR 2.0f
 
 #define BLOCK_RESET_COOLDOWN 4
@@ -47,8 +47,6 @@ bool CheckAttackHit(int hit_stat, int evade_stat, float accuracy, AttackEffect e
         hit_evade_factor = std::max(hit_evade_factor, MIN_HIT_EVADE_FACTOR);
     }
 
-    std::srand(std::time(nullptr));
-
     float roll_needed = hit_evade_factor * accuracy * 1000;
     int roll = (std::rand() % 1000);
     return roll < roll_needed;
@@ -67,8 +65,6 @@ bool CheckCritHit(int attacker_luck, int defender_luck, float crit_chance, Attac
         luck_factor = std::min(luck_factor, MAX_LUCK_FACTOR);
         luck_factor = std::max(luck_factor, MIN_LUCK_FACTOR);
     }
-
-    std::srand(std::time(nullptr));
 
     float roll_needed = luck_factor * crit_chance * 1000;
     int roll = (std::rand() % 1000);

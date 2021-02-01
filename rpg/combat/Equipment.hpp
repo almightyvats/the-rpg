@@ -7,15 +7,26 @@
 
 enum class EquipmentType {
     sword,
+    axe,
     bow,
-    armor,
+    shield,
     heal_item,
+};
+
+enum class EquipmentMaterial {
+    wood,
+    metal,
+    gold,
+    fire,
+    ice,
+    special,
 };
 
 class Equipment {
     public:
-        Equipment(const std::string &name, EquipmentType eq_type, int min_level, int agi, int str, int def, int dex,
+        Equipment(const std::string &name, EquipmentType eq_type, EquipmentMaterial eq_mat, int min_level, int agi, int str, int def, int dex,
                      int perc, int luck);
+        Equipment() = default;
         ~Equipment();
 
         void AddAttack(Attack attack);
@@ -23,6 +34,7 @@ class Equipment {
 
         std::string name() const {return name_;}
         EquipmentType type() const {return type_;}
+        EquipmentMaterial material() const {return material_;}
         int min_level() const {return min_level_;}
 
         std::vector<Attack> attacks() const {return attacks_;}
@@ -37,6 +49,7 @@ class Equipment {
     protected:
         std::string name_;
         EquipmentType type_;
+        EquipmentMaterial material_;
 
         int min_level_;
 

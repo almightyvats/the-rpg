@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <string>
+#include <cstdlib>
+#include <ctime>
 
 #include "Combat.hpp"
 #include "Combatant.hpp"
@@ -9,6 +11,7 @@
 #include "EnemyCombatant.hpp"
 #include "Equipment.hpp"
 #include "EnemyGenerator.hpp"
+#include "LootGenerator.hpp"
 
 #define RAT_STATS {(int)(1.5*lvl), 2*lvl, (int)(0.5*lvl + 1), 2*lvl, (int)(0.5*lvl + 1), lvl}
 #define RAT_MAX_HP 20 + 5*lvl
@@ -33,7 +36,7 @@ EnemyCombatant GenerateEnemyRatTest(int lvl, int number)
 
 Equipment GenerateSimpleSword(std::string name, int item_level)
 {
-    Equipment sword = Equipment(name, EquipmentType::sword, item_level,-(int)(0.5*item_level), (int)(0.5*item_level), 0,0,0,0);
+    Equipment sword = Equipment(name, EquipmentType::sword, EquipmentMaterial::wood, item_level,-(int)(0.5*item_level), (int)(0.5*item_level), 0,0,0,0);
     sword.AddAttack(EQ_SWORD_ATTACK_SWORD_SWING);
     sword.AddAttack(EQ_SWORD_ATTACK_IGNITE);
     return sword;
@@ -41,13 +44,13 @@ Equipment GenerateSimpleSword(std::string name, int item_level)
 
 Equipment GenerateSimpleArmor(std::string name, int item_level)
 {
-    Equipment armor = Equipment(name, EquipmentType::armor, item_level,-(int)(0.5*item_level),0,item_level,0,0,0);
+    Equipment armor = Equipment(name, EquipmentType::shield, EquipmentMaterial::wood, item_level,-(int)(0.5*item_level),0,item_level,0,0,0);
     return armor;
 }
 
 Equipment GenerateSimpleBow(std::string name, int item_level)
 {
-    Equipment bow = Equipment(name, EquipmentType::bow, item_level,(int)(0.5*item_level),0,0,0,0,0);
+    Equipment bow = Equipment(name, EquipmentType::bow, EquipmentMaterial::wood, item_level,(int)(0.5*item_level),0,0,0,0,0);
     bow.AddAttack(EQ_BOW_ATTACK_PRECISION_SHOT);
     bow.AddAttack(EQ_BOW_ATTACK_HAIL_OF_ARROWS);
     return bow;
@@ -55,7 +58,7 @@ Equipment GenerateSimpleBow(std::string name, int item_level)
 
 Equipment GenerateSimpleHealItem(std::string name, int item_level)
 {
-    Equipment heal_item = Equipment(name, EquipmentType::heal_item, item_level,0,0,0,0,0,0);
+    Equipment heal_item = Equipment(name, EquipmentType::heal_item, EquipmentMaterial::wood, item_level,0,0,0,0,0,0);
     heal_item.AddAbility(EQ_HEAL_ABILITY_HEAL);
     return heal_item;
 }
@@ -65,11 +68,20 @@ static PlayerCombatant pc_pokkle = PlayerCombatant("Pokkle", "c_player", 7, 60, 
 
 void InitGlobalTestPCs()
 {
-    pc_hiei.AddEquipment(GenerateSimpleSword("Metal Sword", 7));
+    /*pc_hiei.AddEquipment(GenerateSimpleSword("Metal Sword", 7));
     pc_hiei.AddEquipment(GenerateSimpleArmor("Plot Armor", 5));
     pc_pokkle.AddEquipment(GenerateSimpleBow("Wooden Bow", 7));
     pc_pokkle.AddEquipment(GenerateSimpleArmor("Ten", 7));
-    pc_pokkle.AddEquipment(GenerateSimpleHealItem("Reusable Potion", 5));
+    pc_pokkle.AddEquipment(GenerateSimpleHealItem("Reusable Potion", 5));*/
+    std::srand(std::time(nullptr));
+    pc_hiei.AddEquipment(GenerateLoot(8,10));
+    pc_hiei.AddEquipment(GenerateLoot(8,10));
+    pc_hiei.AddEquipment(GenerateLoot(8,10));
+    pc_hiei.AddEquipment(GenerateLoot(8,10));
+    pc_pokkle.AddEquipment(GenerateLoot(5,7));
+    pc_pokkle.AddEquipment(GenerateLoot(5,7));
+    pc_pokkle.AddEquipment(GenerateLoot(5,7));
+    pc_pokkle.AddEquipment(GenerateLoot(5,7));
 }
 
 std::vector<Combatant*> GetTestCombatants()

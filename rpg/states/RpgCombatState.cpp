@@ -18,7 +18,7 @@
 #define FONT_SELECTION "Ancient_s"
 #define FONT_DISPLAY "Ancient_s"
 
-#define SELECTION_MENU_MAX_ROWS 3
+#define SELECTION_MENU_MAX_ROWS 4
 
 SDL_Texture* combat_arena;
 SDL_Event RpgCombatState::event;
@@ -69,10 +69,11 @@ std::vector<std::string> GetActionNames(const std::vector<Attack>& attacks, cons
 }
 
 RpgCombatState::RpgCombatState(std::vector<Combatant*> player_combatants, CombatArena arena)
-: label_msg(RpgLabel(50, 550, "", FONT_MSG, color_white)), 
-    label_combatant(RpgLabel(80, 600, "", FONT_MSG, color_white)), 
-    label_action(RpgLabel(80, 650, "", FONT_MSG, color_white)),
-    label_action_display(RpgLabel(512, 550, "", FONT_MSG, color_white))
+: label_msg(RpgLabel(50, 500, "", FONT_MSG, color_white)), 
+    label_combatant(RpgLabel(80, 570, "", FONT_MSG, color_white)), 
+    label_action(RpgLabel(80, 620, "", FONT_MSG, color_white)),
+    label_action_display(RpgLabel(512, 500, "", FONT_MSG, color_white)),
+    label_exp_display(RpgLabel(300, 500, "", FONT_MSG, color_white))
 {
     this->enemies = GenerateSimpleEnemies(player_combatants);
 
@@ -247,6 +248,7 @@ void RpgCombatState::Update(RpgGame *rpgGame)
     }
     
     label_action_display.setLabelText(FONT_DISPLAY, "");
+    label_exp_display.setLabelText(FONT_DISPLAY, "");
 
     switch (combat.state())
     {
@@ -295,8 +297,12 @@ void RpgCombatState::Update(RpgGame *rpgGame)
     case CombatState::losing_screen:
         label_msg.setLabelText(FONT_MSG, "You lose");
         break;
+    case CombatState::exp_gain_display:
+        label_msg.setLabelText(FONT_MSG, "You win");
+        label_exp_display.setLabelText(FONT_DISPLAY, combat.display_text());
+        break;
     case CombatState::loot_display:
-        label_msg.setLabelText(FONT_MSG, "Looooooot :)");
+        label_msg.setLabelText(FONT_MSG, "You found a " + combat.loot().name() + " (Lvl. " + std::to_string(combat.loot().min_level()) + ")");
         break;
     default:
         break;
@@ -341,7 +347,7 @@ void RpgCombatState::ConstructSelectionMenu(std::vector<std::string> element_lab
     int column = 0;
 
     for (std::string label : element_labels) {
-        this->labels_selection.push_back(RpgLabel(400 + (200*column), 550 + (50*row++), label, FONT_SELECTION, color_white));
+        this->labels_selection.push_back(RpgLabel(400 + (200*column), 500 + (50*row++), label, FONT_SELECTION, color_white));
         if (row >= SELECTION_MENU_MAX_ROWS) {
             row = 0;
             column++;
@@ -379,6 +385,7 @@ void RpgCombatState::Render(RpgGame *rpgGame)
     this->label_combatant.Draw();
     this->label_action.Draw();
     this->label_action_display.Draw();
+    this->label_exp_display.Draw();
 
 	SDL_RenderPresent(rpgGame->renderer);
 }

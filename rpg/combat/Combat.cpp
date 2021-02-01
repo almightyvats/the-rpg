@@ -1,8 +1,10 @@
 #include "Combat.hpp"
+#include "LootGenerator.hpp"
 
 #include <algorithm>
 #include <utility>
 #include <iostream>
+#include <sstream>
 #include <cstdlib>
 #include <ctime>
 
@@ -16,6 +18,18 @@ Combat::Combat(std::vector<Combatant *> player_combatants, std::vector<Combatant
 	enemy_combatants_ = enemy_combatants;
     state_ = CombatState::start;
     player_turn_ = false;
+    min_pc_lvl_ = 99999;
+    max_pc_lvl_ = 0;
+    sum_ec_lvl_ = 0;
+
+    for (auto player_combatant : player_combatants_) {
+        min_pc_lvl_ = std::min(min_pc_lvl_, player_combatant->level());
+        max_pc_lvl_ = std::max(min_pc_lvl_, player_combatant->level());
+    }
+
+    for (auto enemy_combatant : enemy_combatants_) {
+        sum_ec_lvl_ += enemy_combatant->level();
+    }
 }
 
 Combat::Combat()
@@ -330,21 +344,55 @@ void Combat::SetActionAndProgress(Attack* attack, Ability* ability)
     }
 }
 
+void Combat::DistributeCombatExp()
+{
+    std::ostringstream os;
+
+    for (auto combatant : LivingPlayerCombatants()) {
+        os << ((PlayerCombatant*)combatant)->GainExp(sum_ec_lvl_);
+    }
+
+    this->display_text_ = os.str();
+    this->state_ = CombatState::exp_gain_display;
+}
+
 void Combat::Progress(Attack* attack, Ability* ability, Combatant* target)
 {
     switch (state_)
     {
-    case CombatState::start: SetInitialCooldowns(); ProgressToNextAction(); break;
-    case CombatState::state_reset_display: ProgressToNextAction(); break;
-    case CombatState::turn_start_display: StartTurn(); break;
-    case CombatState::action_selection: SetActionAndProgress(attack, ability); break;
-    case CombatState::attack_target_selection: display_text_ = active_combatant_->PerformAttack(*active_turn_chosen_attack_, {target});
-                                                this->state_ = CombatState::action_display; break;
-    case CombatState::ability_target_selection: display_text_ = active_combatant_->UseAbility(*active_turn_chosen_ability_, {target});
-                                                this->state_ = CombatState::action_display; break;
-    case CombatState::action_display: ProgressToNextAction(); break;
+    case CombatState::start:
+        SetInitialCooldowns();
+        ProgressToNextAction();
+        break;
+    case CombatState::state_reset_display:
+        ProgressToNextAction();
+        break;
+    case CombatState::turn_start_display:
+        StartTurn();
+        break;
+    case CombatState::action_selection:
+        SetActionAndProgress(attack, ability);
+        break;
+    case CombatState::attack_target_selection:
+        display_text_ = active_combatant_->PerformAttack(*active_turn_chosen_attack_, {target});
+        this->state_ = CombatState::action_display; 
+        break;
+    case CombatState::ability_target_selection: 
+        display_text_ = active_combatant_->UseAbility(*active_turn_chosen_ability_, {target});
+        this->state_ = CombatState::action_display;
+        break;
+    case CombatState::action_display: 
+        ProgressToNextAction();
+        break;
     case CombatState::losing_screen: /*Cleanup;*/ break;
-    case CombatState::winning_screen: /*GenerateLoot;*/ break;
+    case CombatState::winning_screen:
+        DistributeCombatExp();
+        break;
+    case CombatState::exp_gain_display:
+        std::srand(std::time(nullptr));
+        this->loot_ = GenerateLoot(min_pc_lvl_, max_pc_lvl_);
+        this->state_ = CombatState::loot_display;
+        break;
     case CombatState::loot_display: /*Cleanup;*/ break;
     }
 }

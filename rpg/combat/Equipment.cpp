@@ -1,10 +1,11 @@
 #include "Equipment.hpp"
 
-Equipment::Equipment(const std::string &name, EquipmentType eq_type, int min_level, int agi, int str, int def, int dex,
+Equipment::Equipment(const std::string &name, EquipmentType eq_type, EquipmentMaterial eq_mat, int min_level, int agi, int str, int def, int dex,
                      int perc, int luck)
 {
     name_ = name;
     type_ = eq_type;
+    material_ = eq_mat;
     min_level_ = min_level;
     bonus_agility_ = agi;
     bonus_strength_ = str;

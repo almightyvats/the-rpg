@@ -28,6 +28,7 @@ class RpgCombatState : public RpgGameState {
     RpgLabel label_combatant;
     RpgLabel label_action;
     RpgLabel label_action_display;
+    RpgLabel label_exp_display;
     std::vector<RpgLabel> labels_selection;
 
     void UpdateCombatantLabels();
