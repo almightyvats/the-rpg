@@ -6,7 +6,7 @@
 #include "animation.hpp"
 #include "rpg/RpgGame.hpp"
 #include "rpg/TextureManager.hpp"
-#include "rpg/states/RpgPlayState.hpp"
+#include "rpg/states/RpgStates.hpp"
 #include <map>
 
 class SpriteComponent : public Component {
@@ -77,16 +77,17 @@ class SpriteComponent : public Component {
 			srcRect.y = (spriteSheet.spriteGapY + srcRect.h) * animationIndex;
 		}
 
-		destRect.x = static_cast<int>(transform->position.x) - RpgGame::camera.x;
-		destRect.y = static_cast<int>(transform->position.y) - RpgGame::camera.y;
+		// For drawing in playState, camera needs to be taken into account
+		// in other states, we don't have a camera
+		destRect.x =
+		    static_cast<int>(transform->position.x) - ((entity->getState() == statePlay) ? RpgGame::camera.x : 0);
+		destRect.y =
+		    static_cast<int>(transform->position.y) - ((entity->getState() == statePlay) ? RpgGame::camera.y : 0);
 		destRect.w = transform->width * transform->scale;
 		destRect.h = transform->height * transform->scale;
 	}
-	
-	void draw(int alpha) override
-	{
-		TextureManager::Draw(texture, &srcRect, &destRect, spriteFlip, alpha);
-	}
+
+	void draw(int alpha) override { TextureManager::Draw(texture, &srcRect, &destRect, spriteFlip, alpha); }
 
 	void defaultAnimation(std::string tag) { play(tag); }
 
@@ -96,4 +97,6 @@ class SpriteComponent : public Component {
 		animationIndex = animations[tag].index;
 		speed = animations[tag].speed;
 	}
+
+	SDL_Rect *getDestRect() { return &destRect; }
 };

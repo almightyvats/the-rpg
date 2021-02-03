@@ -7,4 +7,5 @@
 #include "ColliderComponent.hpp"
 #include "ProjectileComponent.hpp"
 #include "DoorComponent.hpp"
+#include "InventoryComponent.hpp"
 

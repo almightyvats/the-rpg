@@ -8,16 +8,19 @@
 #include "rpg/Vector2D.hpp"
 #include "rpg/combat/CombatTest.hpp"
 #include "rpg/ecs/Components.hpp"
+#include "rpg/states/RpgStates.hpp"
 
 Map *map;
 Manager manager;
+const State m_state = statePlay;
+
 AssetManager *RpgGame::assets = new AssetManager(&manager);
 SDL_Event RpgPlayState::event;
 
 Uint8 fade = 0;
 Uint8 alpha = SDL_ALPHA_OPAQUE;
 
-auto &player(manager.addEntity());
+auto &player(manager.addEntity(m_state));
 
 bool godMode = false;
 SDL_Keycode conamiCode[] = {SDLK_UP,    SDLK_UP,   SDLK_DOWN,  SDLK_DOWN, SDLK_LEFT,
@@ -52,6 +55,9 @@ RpgPlayState::RpgPlayState()
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("Player");
 	player.addGroup(groupPlayers);
+
+	// RpgGame::assets->AddTexture("icons", "../rpg/assets/icons/Icon Pack_3.png");
+	// RpgGame::assets->CreateItem(0, 0, 13 * 32 * 3, 88 * 32 * 3, "icons");
 }
 
 RpgPlayState::~RpgPlayState() = default;
@@ -62,6 +68,7 @@ auto &colliders(manager.getGroup(RpgPlayState::groupColliders));
 auto &projectiles(manager.getGroup(RpgPlayState::groupProjectiles));
 auto &npcs(manager.getGroup(RpgPlayState::groupNpcs));
 auto &enemies(manager.getGroup(RpgPlayState::groupEnemies));
+// auto &items(manager.getGroup(RpgPlayState::groupItems));
 
 void RpgPlayState::Pause()
 {
@@ -114,6 +121,9 @@ void RpgPlayState::HandleEvents(RpgGame *rpgGame)
 			case SDLK_SPACE:
 				rpgGame->changeState(RpgMenuState::Instance());
 				break;
+			case SDLK_i:
+				rpgGame->changeState(RpgInventoryState::Instance());
+				break;
 			}
 			break;
 		case SDL_KEYUP:
@@ -141,8 +151,8 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 	SDL_Rect playerCol = player.getComponent<ColliderComponent>().collider;
 	Vector2D playerPos = player.getComponent<TransformComponent>().position;
 
-	manager.refresh();
-	manager.update();
+	manager.refresh(m_state);
+	manager.update(m_state);
 
 	for (auto &t : tiles) {
 		if (t->hasComponent<ColliderComponent>()) {
@@ -214,16 +224,18 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 		}
 	}
 
-	for (auto &p : projectiles) {
-		SDL_Rect cCol = p->getComponent<ColliderComponent>().collider;
-		if (Collision::AABB(cCol, playerCol)) {
-			std::cout << "Player hit" << std::endl;
-			p->destroy();
-		}
-	}
+	// for (auto &p : projectiles) {
+	// 	SDL_Rect cCol = p->getComponent<ColliderComponent>().collider;
+	// 	if (Collision::AABB(cCol, playerCol)) {
+	// 		std::cout << "Player hit" << std::endl;
+	// 		p->destroy();
+	// 	}
+	// }
 
 	rpgGame->camera.x = player.getComponent<TransformComponent>().position.x - rpgGame->camera.w / 2; //-half screen
 	rpgGame->camera.y = player.getComponent<TransformComponent>().position.y - rpgGame->camera.h / 2; //-half screen
+
+	// TODO - nach camera set verschwinden dinge: return;
 
 	if (rpgGame->camera.x < 0) {
 		rpgGame->camera.x = 0;
@@ -278,7 +290,7 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 			p->destroy();
 		}
 
-		manager.refresh();
+		manager.refresh(m_state);
 		map = new Map(newMap, 3);
 		map->LoadMap();
 
@@ -292,28 +304,32 @@ void RpgPlayState::Render(RpgGame *rpgGame)
 	SDL_RenderClear(rpgGame->renderer);
 
 	for (auto &t : tiles) {
-		t->draw(alpha);
+		t->draw(alpha, m_state);
 	}
 
 	for (auto &c : colliders) {
-		c->draw(alpha);
+		c->draw(alpha, m_state);
 	}
 
 	for (auto &n : npcs) {
-		n->draw(alpha);
+		n->draw(alpha, m_state);
 	}
 
 	for (auto &p : players) {
-		p->draw(alpha);
+		p->draw(alpha, m_state);
 	}
 
 	for (auto &p : projectiles) {
-		p->draw(alpha);
+		p->draw(alpha, m_state);
 	}
 
 	for (auto &e : enemies) {
-		e->draw(alpha);
+		e->draw(alpha, m_state);
 	}
+
+	// for (auto &i : items) {
+	// 	i->draw(alpha);
+	// }
 
 	SDL_RenderPresent(rpgGame->renderer);
 }

@@ -77,3 +77,9 @@ void RpgLabel::CenterLabelHorizontally() {
 void RpgLabel::RealignLabelHorizontally() {
 	m_position.x += m_position.w / 2;
 }
+
+void RpgLabel::setLabelPos(Vector2D pos)
+{
+	m_position.x = pos.x;
+	m_position.y = pos.y;
+}

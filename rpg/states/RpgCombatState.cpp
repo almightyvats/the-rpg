@@ -6,6 +6,7 @@
 #include "../Vector2D.hpp"
 #include "../RpgLabel.hpp"
 #include "RpgPlayState.hpp"
+#include "rpg/states/RpgStates.hpp"
 
 #define FONT_MSG "Ancient"
 #define FONT_SCOMB "Ancient"
@@ -26,6 +27,7 @@ SDL_Color color_white = {255, 255, 255};
 SDL_Color color_red = {255, 0, 0};
 
 extern Manager manager;
+const State m_state = stateCombat;
 
 Vector2D GetCombatantPosition(bool player_team, int number)
 {
@@ -97,7 +99,7 @@ RpgCombatState::RpgCombatState(std::vector<Combatant*> player_combatants, Combat
     int c = 0;
     for (Combatant* player_combatant : combat.player_combatants_) {
         Vector2D pos = GetCombatantPosition(true, c++);
-        RpgGame::assets->CreateCombatant(pos, player_combatant->sprite_name(), true);
+        RpgGame::assets->CreateCombatant(pos, player_combatant->sprite_name(), true, m_state);
         auto l_name = RpgLabel(pos.x + 37,pos.y - 70, player_combatant->name(), FONT_CNAME, color_white);
         l_name.CenterLabelHorizontally();
         auto l_lvl = RpgLabel(pos.x + 37,pos.y - 35, "Lvl. " + std::to_string(player_combatant->level()), FONT_CLVL, color_white);
@@ -112,7 +114,7 @@ RpgCombatState::RpgCombatState(std::vector<Combatant*> player_combatants, Combat
     c = 0;
     for (Combatant* enemy_combatant : combat.enemy_combatants_) {
         Vector2D pos = GetCombatantPosition(false, c++);
-        RpgGame::assets->CreateCombatant(pos, enemy_combatant->sprite_name(), false);
+        RpgGame::assets->CreateCombatant(pos, enemy_combatant->sprite_name(), false, m_state);
         auto l_name = RpgLabel(pos.x + 37,pos.y - 70, enemy_combatant->name(), FONT_CNAME, color_white);
         l_name.CenterLabelHorizontally();
         auto l_lvl = RpgLabel(pos.x + 37,pos.y - 35, "Lvl. " + std::to_string(enemy_combatant->level()), FONT_CLVL, color_white);
@@ -233,8 +235,8 @@ void RpgCombatState::ProcessLabelClick(int index) {
 
 void RpgCombatState::Update(RpgGame *rpgGame)
 {
-    manager.refresh();
-	manager.update();
+    manager.refresh(m_state);
+	manager.update(m_state);
 
     rpgGame->camera.x = 0;
     rpgGame->camera.y = 0;
@@ -362,11 +364,11 @@ void RpgCombatState::Render(RpgGame *rpgGame)
 	TextureManager::Draw(combat_arena, NULL, NULL, SDL_FLIP_NONE, SDL_ALPHA_OPAQUE);
 
 	for (auto &p : player_c) {
-		p->draw(SDL_ALPHA_OPAQUE);
+		p->draw(SDL_ALPHA_OPAQUE, m_state);
 	}
 
     for (auto &e : enemy_c) {
-        e->draw(SDL_ALPHA_OPAQUE);
+        e->draw(SDL_ALPHA_OPAQUE, m_state);
     }
 
     for (auto l_combatant : labels_combatants) {

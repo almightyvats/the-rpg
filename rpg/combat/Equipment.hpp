@@ -1,16 +1,17 @@
 #pragma once
 
+#include <sstream>
 #include <string>
 #include <vector>
 
 #include "Combatant.hpp"
 
-enum class EquipmentType {
-    sword,
+enum EquipmentType : std::size_t {
+	sword,
     axe,
-    bow,
-    shield,
-    heal_item,
+	bow,
+	shield,
+	heal_item,
 };
 
 enum class EquipmentMaterial {
@@ -45,6 +46,62 @@ class Equipment {
         int bonus_dexterity() const {return bonus_dexterity_;}
         int bonus_perception() const {return bonus_perception_;}
         int bonus_luck() const {return bonus_luck_;}
+
+        std::string item_info()
+	{
+		std::stringstream result;
+		switch (type()) {
+		case sword:
+			result << "Sword"
+			       << "\n";
+			break;
+        case axe:
+			result << "Axe"
+			       << "\n";
+			break;
+		case bow:
+			result << "Bow"
+			       << "\n";
+			break;
+		case shield:
+			result << "Shield"
+			       << "\n";
+			break;
+		case heal_item:
+			result << "Potion"
+			       << "\n";
+			break;
+		default:
+			break;
+		}
+		result << "min. lvl: " << min_level() << "\n";
+		if (bonus_agility() > 0) {
+			result << "agility:"
+			       << "    " << bonus_agility() << "\n";
+		}
+		if (bonus_strength() > 0) {
+			result << "strength:"
+			       << "    " << bonus_strength() << "\n";
+		}
+		if (bonus_defense() > 0) {
+			result << "defense:"
+			       << "    " << bonus_defense() << "\n";
+		}
+		if (bonus_dexterity() > 0) {
+			result << "dexterity:"
+			       << "    " << bonus_dexterity() << "\n";
+		}
+		if (bonus_perception() > 0) {
+			result << "perception:"
+			       << "    " << bonus_perception() << "\n";
+		}
+		if (bonus_luck() > 0) {
+			result << "luck:"
+			       << "    " << bonus_luck() << "\n";
+		}
+
+		return result.str();
+	}
 
     protected:
         std::string name_;

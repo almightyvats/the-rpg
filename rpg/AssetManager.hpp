@@ -3,6 +3,7 @@
 #include "SpriteSheet.hpp"
 #include "TextureManager.hpp"
 #include "Vector2D.hpp"
+#include "combat/Equipment.hpp"
 #include "ecs/ecs.hpp"
 #include <SDL_ttf.h>
 #include <map>
@@ -14,12 +15,13 @@ class AssetManager {
 	~AssetManager();
 
 	// game objects
-	void CreateNpc(Vector2D position, int tileSize, int mapScale, std::string id);
-	void CreateEnemy(Vector2D position, int tileSize, int mapScale, std::string id);
-	void CreateProjectile(Vector2D position, Vector2D velocity, int range, int speed, std::string id);
+	void CreateNpc(Vector2D position, int tileSize, int mapScale, std::string id, State state);
+	void CreateEnemy(Vector2D position, int tileSize, int mapScale, std::string id, State state);
+	void CreateProjectile(Vector2D position, Vector2D velocity, int range, int speed, std::string id, State state);
 	void CreateMapTile(int srcX, int srcY, int destX, int destY, int tsize, int tscale, bool withCollision,
-	                   std::string id, SpriteSheet spriteSheet, std::string map, Vector2D pStart);
-	void CreateCombatant(Vector2D position, std::string sprite_name, bool player_team);
+	                   std::string id, SpriteSheet spriteSheet, std::string map, Vector2D pStart, State state);
+	void CreateCombatant(Vector2D position, std::string sprite_name, bool player_team, State state);
+	void CreateInventoryItem(int srcX, int srcY, std::string id, Equipment equip, State state);
 
 	// texture management
 	void AddTexture(std::string id, std::string path);

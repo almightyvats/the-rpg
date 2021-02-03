@@ -13,6 +13,20 @@ class RpgGameState {
 	virtual void Render(RpgGame *) = 0;
 
 	void changeState(RpgGame *game, RpgGameState &state) { game->changeState(state); }
+
+	enum groupLabels : std::size_t {
+		groupMap,
+		groupPlayers,
+		groupColliders,
+		groupProjectiles,
+		groupNpcs,
+		groupEnemies,
+		groupItems,
+		groupGui,
+		groupEquipmentCombatant1,
+		groupEquipmentCombatant2,
+		groupEquipmentCombatant3
+	};	
 };
 
 #endif // RPG_RPGGAMESTATE_HPP

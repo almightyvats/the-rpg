@@ -1,6 +1,5 @@
 #include "rpg/RpgGame.hpp"
-#include "rpg/states/RpgMenuState.hpp"
-#include "rpg/states/RpgPlayState.hpp"
+#include "rpg/states/RpgStates.hpp"
 
 RpgGame *game = nullptr;
 
