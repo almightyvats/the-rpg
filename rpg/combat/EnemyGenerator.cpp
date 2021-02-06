@@ -6,7 +6,7 @@
 
 #define ENEMY_TOTAL_LEVEL_DEVIATION_FACTOR 5
 #define MIN_ENEMY_LEVEL_FACTOR 0.7
-#define MIN_ENEMY_TEAM_SIZE 1
+#define MIN_ENEMY_TEAM_SIZE 2
 #define MAX_ENEMY_TEAM_SIZE 4
 
 #define WRAITH_STATS {(int)(1.5*lvl), 2*lvl, (int)(0.5*lvl + 1), 2*lvl, (int)(0.5*lvl + 1), lvl}

@@ -8,7 +8,7 @@
 
 #define MIN_HIT_EVADE_FACTOR 0.5f
 #define MAX_HIT_EVADE_FACTOR 1.5f
-#define MIN_LUCK_FACTOR 0.5f
+#define MIN_LUCK_FACTOR 0.8f
 #define MAX_LUCK_FACTOR 2.0f
 
 #define BLOCK_RESET_COOLDOWN 4
@@ -221,4 +221,13 @@ std::string Combatant::PerformStateReset()
     }
     state_reset_countdown_ = -1;
     return display_text;
+}
+
+
+void Combatant::ResetToIdle()
+{
+    hp_ = max_hp_;
+    state_ = CombatantState::normal;
+    cooldown_ = 0;
+    state_reset_countdown_ = -1;
 }

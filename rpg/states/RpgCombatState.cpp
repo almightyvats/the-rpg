@@ -77,6 +77,16 @@ RpgCombatState::RpgCombatState(std::vector<Combatant*> player_combatants, Combat
     label_action_display(RpgLabel(512, 500, "", FONT_MSG, color_white)),
     label_exp_display(RpgLabel(300, 500, "", FONT_MSG, color_white))
 {
+
+    RpgGame::assets->AddFont("Ancient_s", "../rpg/assets/font/ancient.ttf", 35);
+
+    GenerateCombat(player_combatants, arena);
+}
+
+RpgCombatState::~RpgCombatState() = default;
+
+void RpgCombatState::GenerateCombat(std::vector<Combatant*> player_combatants, CombatArena arena)
+{
     this->enemies = GenerateSimpleEnemies(player_combatants);
 
     std::vector<Combatant*> enemy_combatants;
@@ -93,8 +103,6 @@ RpgCombatState::RpgCombatState(std::vector<Combatant*> player_combatants, Combat
         default:
             combat_arena = TextureManager::LoadTexture("../rpg/assets/arenas/grass_arena_1.png");
     }
-
-    RpgGame::assets->AddFont("Ancient_s", "../rpg/assets/font/ancient.ttf", 35);
 
     int c = 0;
     for (Combatant* player_combatant : combat.player_combatants_) {
@@ -128,8 +136,6 @@ RpgCombatState::RpgCombatState(std::vector<Combatant*> player_combatants, Combat
     }
 }
 
-RpgCombatState::~RpgCombatState() = default;
-
 auto &player_c(manager.getGroup(RpgCombatState::groupPlayerCombatants));
 auto &enemy_c(manager.getGroup(RpgCombatState::groupEnemyCombatants));
 auto &projectiles_c(manager.getGroup(RpgCombatState::groupProjectiles));
@@ -143,8 +149,8 @@ void RpgCombatState::Resume() {
 }
 
 static bool combat_state_changed = true;
-Attack attack_copy;
-Ability ability_copy;
+static Attack attack_copy;
+static Ability ability_copy;
 
 void RpgCombatState::HandleEvents(RpgGame *rpgGame) {
     if (SDL_PollEvent(&event) == 1) {
@@ -153,16 +159,13 @@ void RpgCombatState::HandleEvents(RpgGame *rpgGame) {
 			rpgGame->quitGame();
 			break;
         case SDL_KEYUP:
-            if (combat.state() == CombatState::winning_screen) {
+            if (combat.state() == CombatState::loot_display) {
                 switch (event.key.keysym.sym)
                 {
                 case SDLK_SPACE:
-                    //rpgGame->popState();
-                    std::cout << "end combat lul\n";
-                    break;
                 case SDLK_RETURN:
-                    //rpgGame->popState();
-                    std::cout << "end combat lul\n";
+                    rpgGame->popState();
+                    std::cout << "leave combat\n";
                     break;
                 default:
                     break;
@@ -208,8 +211,13 @@ void RpgCombatState::HandleEvents(RpgGame *rpgGame) {
                     index++;
                 }
             } else if (event.type == SDL_MOUSEBUTTONDOWN) {
-                combat.Progress(NULL,NULL,NULL);
-                combat_state_changed = true;
+                if (combat.state() == CombatState::loot_display) {
+                    CleanupCombat(rpgGame);
+                    rpgGame->popState();
+                } else {
+                    combat.Progress(NULL,NULL,NULL);
+                    combat_state_changed = true;
+                }
             }
             break;
 		default:
@@ -231,6 +239,12 @@ void RpgCombatState::ProcessLabelClick(int index) {
             combat.Progress(NULL, &ability_copy, NULL);
         }
     }
+}
+
+void RpgCombatState::CleanupCombat(RpgGame *rpgGame)
+{
+    labels_combatants.clear();
+    labels_selection.clear();
 }
 
 void RpgCombatState::Update(RpgGame *rpgGame)

@@ -92,6 +92,7 @@ class Combatant {
 
         bool TakeDamage(int damage);
         void TakeBurnDamage();
+        void ResetToIdle();
 
         std::string name() const {return name_;}
         std::string sprite_name() const {return sprite_name_;}

@@ -34,14 +34,20 @@ class RpgCombatState : public RpgGameState {
     void UpdateCombatantLabels();
     void ConstructSelectionMenu(std::vector<std::string> element_labels);
     void ProcessLabelClick(int index);
+    void CleanupCombat(RpgGame *rpgGame);
 
   public:
     RpgCombatState(std::vector<Combatant*> player_combatants, CombatArena arena);
     ~RpgCombatState();
 
+    void GenerateCombat(std::vector<Combatant*> player_combatants, CombatArena arena);
+
     static RpgCombatState &Instance(std::vector<Combatant*> player_combatants, CombatArena arena)
 	{
 		static RpgCombatState m_cs(player_combatants,arena);
+        if (m_cs.combat.state() != CombatState::start) {
+            m_cs.GenerateCombat(player_combatants,arena);
+        }
 		return m_cs;
 	}
 

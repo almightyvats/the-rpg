@@ -77,7 +77,9 @@ void RpgPlayState::Pause()
 
 void RpgPlayState::Resume()
 {
+		std::cout << "resume play\n";
 	RpgSoundManager::resumeMusic("PLAY");
+		std::cout << "resume play\n";
 }
 
 bool CheckKonami(SDL_Keycode keyCode)
@@ -147,7 +149,6 @@ Vector2D playerStart;
 
 void RpgPlayState::Update(RpgGame *rpgGame)
 {
-
 	SDL_Rect playerCol = player.getComponent<ColliderComponent>().collider;
 	Vector2D playerPos = player.getComponent<TransformComponent>().position;
 
@@ -211,7 +212,7 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 				std::cout << "ENEMY encountered" << std::endl;
 				// TODO: start combat (for colliding enemy + enemies in certain range?)
 				InitGlobalTestPCs();
-				rpgGame->changeState(RpgCombatState::Instance(GetTestCombatants(), CombatArena::grass));
+				rpgGame->pushState(RpgCombatState::Instance(GetTestCombatants(), CombatArena::grass));
 				e->destroy();
 			}
 		}
