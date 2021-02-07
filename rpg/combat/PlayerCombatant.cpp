@@ -6,10 +6,10 @@
 #include <iostream>
 
 #define TOKENS_PER_LEVEL_UP 3
-#define EXP_FOR_LEVEL_UP (exp_*10)
+#define EXP_FOR_LEVEL_UP (level_*level_)
 #define MAX_EQUIPMENT 4
 
-#define ATTACK_SUCKER_PUNCH {"Sucker Punch", AttackType::melee, AttackTargetType::single, 5, 0, 0.8, 0.0, 1.0, 5, AttackEffect::none}
+#define ATTACK_SUCKER_PUNCH {"Sucker Punch", AttackType::melee, AttackTargetType::single, 5, 0, 0.95, 0.0, 1.0, 5, AttackEffect::none}
 #define ABILITY_BLOCK {"Block", AbilityTargetType::self, 0, 0, 1.0, 5, AbilityEffect::block}
 
 PlayerCombatant::PlayerCombatant(const std::string &name, const std::string& sprite_name, int level)
@@ -113,28 +113,28 @@ std::string PlayerCombatant::LevelUp(int tokens, int new_exp)
 	while (tokens_left > 0) {
 		switch (rand() % 6) {
 		case 0:
-			agility_++;
-			os << ",+1 AGI";
+			agility_ += 2;
+			os << ",+2 AGI";
 			break;
 		case 1:
-			strength_++;
-			os << ",+1 STR";
+			strength_ += 2;
+			os << ",+2 STR";
 			break;
 		case 2:
-			defense_++;
-			os << ",+1 DEF";
+			defense_ += 2;
+			os << ",+2 DEF";
 			break;
 		case 3:
-			dexterity_++;
-			os << ",+1 DEX";
+			dexterity_ += 2;
+			os << ",+2 DEX";
 			break;
 		case 4:
-			perception_++;
-			os << ",+1 PER";
+			perception_ += 2;
+			os << ",+2 PER";
 			break;
 		case 5:
-			luck_++;
-			os << ",+1 LCK";
+			luck_ += 2;
+			os << ",+2 LCK";
 			break;
 		}
 		tokens_left--;

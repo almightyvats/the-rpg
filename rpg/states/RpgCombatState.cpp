@@ -245,6 +245,10 @@ void RpgCombatState::CleanupCombat(RpgGame *rpgGame)
 {
     labels_combatants.clear();
     labels_selection.clear();
+
+    for (auto pc : combat.player_combatants_) {
+        pc->ResetToIdle();
+    }
 }
 
 void RpgCombatState::Update(RpgGame *rpgGame)

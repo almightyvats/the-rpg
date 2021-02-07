@@ -347,6 +347,7 @@ void Combat::SetActionAndProgress(Attack* attack, Ability* ability)
 void Combat::DistributeCombatExp()
 {
     std::ostringstream os;
+    std::srand(std::time(nullptr));
 
     for (auto combatant : LivingPlayerCombatants()) {
         os << ((PlayerCombatant*)combatant)->GainExp(sum_ec_lvl_);

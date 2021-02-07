@@ -5,10 +5,12 @@
 #include "RpgCombatState.hpp"
 #include "../combat/Combatant.hpp"
 #include "../combat/CombatTest.hpp"
+#include "rpg/SaveGame.hpp"
 
 SDL_Event RpgMenuState::m_event;
 
 extern Manager manager;
+extern SaveGame saveGame;
 const State m_state = stateMenu;
 
 RpgMenuState::RpgMenuState()
@@ -37,7 +39,11 @@ RpgMenuState::RpgMenuState()
 	m_Labels.push_back(loadGameLabel);
 	m_Labels.push_back(exitLabel);
 
-	m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) { rpgGame->changeState(RpgPlayState::Instance()); }});
+	m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) {
+		 saveGame = SaveGame();
+		 saveGame.NewGame();
+		 rpgGame->changeState(RpgPlayState::Instance());
+		  }});
 	
 	/*m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) { 
 		InitGlobalTestPCs();

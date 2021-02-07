@@ -8,7 +8,7 @@ SDL_Rect RpgGame::camera = {0, 0, 0, 0};
 
 bool RpgGame::isRunning = false;
 
-RpgGame::RpgGame() {}
+RpgGame::RpgGame(){};
 RpgGame::~RpgGame() {}
 
 void RpgGame::init(std::string title, bool fullScreen)

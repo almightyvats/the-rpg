@@ -9,10 +9,12 @@
 #include "rpg/combat/CombatTest.hpp"
 #include "rpg/ecs/Components.hpp"
 #include "rpg/states/RpgStates.hpp"
+#include "rpg/SaveGame.hpp"
 
 Map *map;
 Manager manager;
 const State m_state = statePlay;
+SaveGame saveGame;
 
 AssetManager *RpgGame::assets = new AssetManager(&manager);
 SDL_Event RpgPlayState::event;
@@ -77,9 +79,7 @@ void RpgPlayState::Pause()
 
 void RpgPlayState::Resume()
 {
-		std::cout << "resume play\n";
 	RpgSoundManager::resumeMusic("PLAY");
-		std::cout << "resume play\n";
 }
 
 bool CheckKonami(SDL_Keycode keyCode)
@@ -151,6 +151,7 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 {
 	SDL_Rect playerCol = player.getComponent<ColliderComponent>().collider;
 	Vector2D playerPos = player.getComponent<TransformComponent>().position;
+	saveGame.player_pos = playerPos;
 
 	manager.refresh(m_state);
 	manager.update(m_state);
@@ -212,7 +213,7 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 				std::cout << "ENEMY encountered" << std::endl;
 				// TODO: start combat (for colliding enemy + enemies in certain range?)
 				InitGlobalTestPCs();
-				rpgGame->pushState(RpgCombatState::Instance(GetTestCombatants(), CombatArena::grass));
+				rpgGame->pushState(RpgCombatState::Instance(saveGame.FetchCombatants(), CombatArena::grass));
 				e->destroy();
 			}
 		}
