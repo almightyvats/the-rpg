@@ -1,6 +1,0 @@
-build
-.vscode
-build-xcode
-include
-.idea
-cmake-build-debug
