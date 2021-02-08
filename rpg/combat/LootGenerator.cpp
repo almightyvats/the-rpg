@@ -1,6 +1,7 @@
 #include "LootGenerator.hpp"
 #include "../RpgGame.hpp"
 #include "Equipment.hpp"
+#include "../states/RpgStates.hpp"
 
 #include <algorithm>
 #include <cstdlib>
@@ -374,6 +375,6 @@ Equipment GenerateLoot(int min_level, int max_level)
 	case EquipmentType::heal_item:
 		item = GenerateHealItem(item_level, item_mat);
 	}
-	RpgGame::assets->CreateInventoryItem(item);
+	RpgGame::assets->CreateInventoryItem(item, RpgPlayState::groupItems);
 	return item;
 }

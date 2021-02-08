@@ -11,7 +11,10 @@ class SaveGame
         PlayerCombatant pc_archer;
         PlayerCombatant pc_brute;
 
-        std::vector<InventoryComponent> inventory;
+        // std::vector<InventoryComponent> inventory;
+        // std::vector<InventoryComponent> items_knight;
+        // std::vector<InventoryComponent> items_archer;
+        // std::vector<InventoryComponent> items_brute;
         Vector2D player_pos;
 
         SaveGame();
@@ -19,4 +22,12 @@ class SaveGame
 
         void NewGame();
         std::vector<Combatant*> FetchCombatants();
+        std::vector<InventoryComponent> FetchInventory();
+        void SetInventory(std::vector<InventoryComponent> items);
+        std::vector<InventoryComponent> FetchItemsKnight();
+        void SetItemsKnight(std::vector<InventoryComponent> items);
+        std::vector<InventoryComponent> FetchItemsArcher();
+        void SetItemsArcher(std::vector<InventoryComponent> items);
+        std::vector<InventoryComponent> FetchItemsBrute();
+        void SetItemsBrute(std::vector<InventoryComponent> items);
 };

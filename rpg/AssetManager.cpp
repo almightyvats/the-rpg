@@ -205,7 +205,7 @@ void getSpriteCoords(EquipmentType eqType, EquipmentMaterial eqMat, int &x, int 
 	}
 }
 
-void AssetManager::CreateInventoryItem(Equipment equip)
+void AssetManager::CreateInventoryItem(Equipment equip, Group group, int pocketNumber)
 {
 	AddTexture("icons", "../rpg/assets/icons/Icon Pack_3.png");
 
@@ -215,10 +215,10 @@ void AssetManager::CreateInventoryItem(Equipment equip)
 	getSpriteCoords(equip.type(), equip.material(), srcX, srcY);
 
 	auto &item(manager->addEntity(stateInventory));
-	auto &inv = item.addComponent<InventoryComponent>();
+	auto &inv = item.addComponent<InventoryComponent>(pocketNumber);
 	inv.equip = equip;
 	item.addComponent<SpriteComponent>("icons", srcX * 32, srcY * 32, SpriteSheet(15, 32, 32, 0, 0));
-	item.addGroup(RpgPlayState::groupItems);
+	item.addGroup(group);
 }
 
 void AssetManager::AddTexture(std::string id, std::string path)
