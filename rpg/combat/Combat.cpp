@@ -357,6 +357,13 @@ void Combat::DistributeCombatExp()
     this->state_ = CombatState::exp_gain_display;
 }
 
+void Combat::Flee()
+{
+    if (state_ == CombatState::start) {
+        state_ = CombatState::escape_screen;
+    }
+}
+
 void Combat::Progress(Attack* attack, Ability* ability, Combatant* target)
 {
     switch (state_)
@@ -395,5 +402,6 @@ void Combat::Progress(Attack* attack, Ability* ability, Combatant* target)
         this->state_ = CombatState::loot_display;
         break;
     case CombatState::loot_display: /*Cleanup;*/ break;
+    case CombatState::escape_screen: /*Cleanup;*/ break;
     }
 }

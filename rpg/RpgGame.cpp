@@ -99,11 +99,8 @@ void RpgGame::changeState(RpgGameState &state)
 
 void RpgGame::popState()
 {
-	std::cout << "test\n";
-	std::cout << m_states.size() << "\n";
 	if (!m_states.empty())
 		m_states.pop_back();
-	std::cout << m_states.size() << "\n";
 	if (!m_states.empty()) {
 		m_states.back().get().Resume(); // Implement Resume in PlayState
 	}

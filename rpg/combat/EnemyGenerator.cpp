@@ -6,6 +6,7 @@
 
 #define ENEMY_TOTAL_LEVEL_DEVIATION_FACTOR 5
 #define MIN_ENEMY_LEVEL_FACTOR 0.7
+#define MAX_ENEMY_OVERLEVEL 5
 #define MIN_ENEMY_TEAM_SIZE 2
 #define MAX_ENEMY_TEAM_SIZE 4
 
@@ -26,8 +27,10 @@ EnemyCombatant GenerateEnemyWraith(int lvl, int number)
 std::vector<EnemyCombatant> GenerateSimpleEnemies(const std::vector<Combatant*>& player_combatants)
 {    
     int total_player_level = 0;
+    int max_player_level = 0;
     for (auto combatant : player_combatants) {
         total_player_level += combatant->level();
+        max_player_level = std::max(combatant->level(), max_player_level);
     }
 
     std::srand(std::time(nullptr));
@@ -46,7 +49,7 @@ std::vector<EnemyCombatant> GenerateSimpleEnemies(const std::vector<Combatant*>&
 
         int enemy_level = (rand() % (max_enemy_level - min_enemy_level)) + min_enemy_level;
         
-        enemy_combatants.push_back(GenerateEnemyWraith(enemy_level, i+1));
+        enemy_combatants.push_back(GenerateEnemyWraith(std::min(enemy_level, max_player_level + MAX_ENEMY_OVERLEVEL), i+1));
         total_enemy_level -= enemy_level;
     }
 

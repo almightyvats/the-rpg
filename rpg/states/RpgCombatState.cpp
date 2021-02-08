@@ -29,6 +29,9 @@ SDL_Color color_red = {255, 0, 0};
 extern Manager manager;
 const State m_state = stateCombat;
 
+static bool combat_state_changed = true;
+bool enemy_destroyed = false;
+
 Vector2D GetCombatantPosition(bool player_team, int number)
 {
     if (player_team) {
@@ -134,6 +137,7 @@ void RpgCombatState::GenerateCombat(std::vector<Combatant*> player_combatants, C
         CombatantLabels l_combatant = {l_name, l_lvl, l_state, l_cooldown, l_hp};
         this->labels_combatants.push_back(l_combatant);
     }
+    combat_state_changed = true;
 }
 
 auto &player_c(manager.getGroup(RpgCombatState::groupPlayerCombatants));
@@ -148,7 +152,6 @@ void RpgCombatState::Resume() {
 
 }
 
-static bool combat_state_changed = true;
 static Attack attack_copy;
 static Ability ability_copy;
 
@@ -159,13 +162,14 @@ void RpgCombatState::HandleEvents(RpgGame *rpgGame) {
 			rpgGame->quitGame();
 			break;
         case SDL_KEYUP:
-            if (combat.state() == CombatState::loot_display) {
+            if (combat.state() == CombatState::loot_display || combat.state() == CombatState::escape_screen) {
                 switch (event.key.keysym.sym)
                 {
                 case SDLK_SPACE:
                 case SDLK_RETURN:
+                    CleanupCombat(rpgGame);
+                    enemy_destroyed = (combat.state() == CombatState::loot_display);
                     rpgGame->popState();
-                    std::cout << "leave combat\n";
                     break;
                 default:
                     break;
@@ -188,7 +192,7 @@ void RpgCombatState::HandleEvents(RpgGame *rpgGame) {
             break;
         case SDL_MOUSEMOTION:
         case SDL_MOUSEBUTTONDOWN:
-            if (combat.state() == CombatState::action_selection || combat.state() == CombatState::attack_target_selection || combat.state() == CombatState::ability_target_selection) {
+            if (combat.state() == CombatState::action_selection || combat.state() == CombatState::attack_target_selection || combat.state() == CombatState::ability_target_selection || combat.state() == CombatState::start) {
                 int mousePosX, mousePosY;
 		        SDL_GetMouseState(&mousePosX, &mousePosY);
                 int index = 0;
@@ -211,8 +215,9 @@ void RpgCombatState::HandleEvents(RpgGame *rpgGame) {
                     index++;
                 }
             } else if (event.type == SDL_MOUSEBUTTONDOWN) {
-                if (combat.state() == CombatState::loot_display) {
+                if (combat.state() == CombatState::loot_display || combat.state() == CombatState::escape_screen) {
                     CleanupCombat(rpgGame);
+                    enemy_destroyed = (combat.state() == CombatState::loot_display);
                     rpgGame->popState();
                 } else {
                     combat.Progress(NULL,NULL,NULL);
@@ -227,7 +232,13 @@ void RpgCombatState::HandleEvents(RpgGame *rpgGame) {
 }
 
 void RpgCombatState::ProcessLabelClick(int index) {
-    if (combat.state() == CombatState::attack_target_selection || combat.state() == CombatState::ability_target_selection) {
+    if (combat.state() == CombatState::start) {
+        if (index == 0) {
+            combat.Progress(NULL, NULL, NULL);
+        } else {
+            combat.Flee();
+        }
+    } else if (combat.state() == CombatState::attack_target_selection || combat.state() == CombatState::ability_target_selection) {
         combat.Progress(NULL, NULL, combat.active_turn_targets().at(index));
     } else {
         int attack_labels = combat.active_turn_attacks().size();
@@ -256,8 +267,8 @@ void RpgCombatState::Update(RpgGame *rpgGame)
     manager.refresh(m_state);
 	manager.update(m_state);
 
-    rpgGame->camera.x = 0;
-    rpgGame->camera.y = 0;
+    //rpgGame->camera.x = 0;
+    //rpgGame->camera.y = 0;
 
     if (!combat_state_changed) {
         return;
@@ -269,11 +280,13 @@ void RpgCombatState::Update(RpgGame *rpgGame)
     
     label_action_display.setLabelText(FONT_DISPLAY, "");
     label_exp_display.setLabelText(FONT_DISPLAY, "");
+    labels_selection.clear();
 
     switch (combat.state())
     {
     case CombatState::start:
         label_msg.setLabelText(FONT_MSG, "Enemies appear!");
+        ConstructSelectionMenu({"Engage combat", "Try to escape"});
         break;
     case CombatState::turn_start_display:
         label_msg.setLabelText(FONT_MSG, "It's the turn of " + combat.active_combatant()->name());
@@ -316,6 +329,9 @@ void RpgCombatState::Update(RpgGame *rpgGame)
         break;
     case CombatState::losing_screen:
         label_msg.setLabelText(FONT_MSG, "You lose");
+        break;
+    case CombatState::escape_screen:
+        label_msg.setLabelText(FONT_MSG, "You escaped");
         break;
     case CombatState::exp_gain_display:
         label_msg.setLabelText(FONT_MSG, "You win");

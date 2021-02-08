@@ -11,10 +11,16 @@
 #include "rpg/states/RpgStates.hpp"
 #include "rpg/SaveGame.hpp"
 
+#include <ctime>
+
 Map *map;
 Manager manager;
 const State m_state = statePlay;
 SaveGame saveGame;
+
+extern bool enemy_destroyed;
+static std::time_t last_encounter_escape;
+Entity* enemy_encountered;
 
 AssetManager *RpgGame::assets = new AssetManager(&manager);
 SDL_Event RpgPlayState::event;
@@ -80,6 +86,15 @@ void RpgPlayState::Pause()
 void RpgPlayState::Resume()
 {
 	RpgSoundManager::resumeMusic("PLAY");
+
+	if (enemy_encountered != NULL) {
+		if (enemy_destroyed) {
+			enemy_encountered->destroy();
+		} else {
+			last_encounter_escape = std::time(0);
+		}
+		enemy_encountered = NULL;
+	}
 }
 
 bool CheckKonami(SDL_Keycode keyCode)
@@ -208,13 +223,12 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 
 		if (e->hasComponent<ColliderComponent>()) {
 			SDL_Rect cCol = e->getComponent<ColliderComponent>().collider;
-			if (Collision::AABB(cCol, playerCol)) {
+			if (Collision::AABB(cCol, playerCol) && std::difftime(time(0), last_encounter_escape) > 1.0) {
 				// player.getComponent<TransformComponent>().position = playerPos;
 				std::cout << "ENEMY encountered" << std::endl;
 				// TODO: start combat (for colliding enemy + enemies in certain range?)
-				InitGlobalTestPCs();
 				rpgGame->pushState(RpgCombatState::Instance(saveGame.FetchCombatants(), CombatArena::grass));
-				e->destroy();
+				enemy_encountered = e;
 			}
 		}
 	}

@@ -19,6 +19,7 @@ enum class CombatState {
     exp_gain_display,
     loot_display,
     losing_screen,
+    escape_screen,
 };
 
 class Combat {
@@ -33,6 +34,7 @@ class Combat {
         void Initiate();
 
         void Progress(Attack* attack, Ability* ability, Combatant* target);
+        void Flee();
 
         CombatState state() const {return state_;}
         std::string display_text() const {return display_text_;}
