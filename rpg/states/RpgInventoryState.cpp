@@ -151,20 +151,7 @@ RpgInventoryState::RpgInventoryState()
 	createCombatantItemSlots(1);
 	createCombatantItemSlots(2);
 	createCombatantItemSlots(3);
-
-	// TODO: testdata
-	int item_level = 1;
-	Equipment sword = Equipment("testsword", EquipmentType::sword, EquipmentMaterial::wood, item_level, -(int)(0.5 * item_level),
-	                            (int)(0.5 * item_level), 1, 0, 5, 0);
-
-	RpgGame::assets->AddTexture("icons", "../rpg/assets/icons/Icon Pack_3.png");
-	RpgGame::assets->CreateInventoryItem(0, 0, "icons", sword, m_state);
-	RpgGame::assets->CreateInventoryItem(0, 4, "icons", sword, m_state);
-	RpgGame::assets->CreateInventoryItem(5, 0, "icons", sword, m_state);
-	RpgGame::assets->CreateInventoryItem(7, 7, "icons", sword, m_state);
-	RpgGame::assets->CreateInventoryItem(9, 4, "icons", sword, m_state);
-	RpgGame::assets->CreateInventoryItem(9, 8, "icons", sword, m_state);
-
+	
 	background = TextureManager::LoadTexture("../rpg/assets/game_background_4.png");
 
 	labelItemName = std::make_shared<RpgLabel>(50, 10, "ItemName", "Ancient.20", orange);
