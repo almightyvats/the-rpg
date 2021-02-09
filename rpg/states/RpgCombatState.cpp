@@ -140,9 +140,9 @@ void RpgCombatState::GenerateCombat(std::vector<Combatant*> player_combatants, C
     combat_state_changed = true;
 }
 
-auto &player_c(manager.getGroup(RpgCombatState::groupPlayerCombatants));
-auto &enemy_c(manager.getGroup(RpgCombatState::groupEnemyCombatants));
-auto &projectiles_c(manager.getGroup(RpgCombatState::groupProjectiles));
+auto &player_c(manager.getGroup(RpgCombatState::groupCombatPlayerCombatants));
+auto &enemy_c(manager.getGroup(RpgCombatState::groupCombatEnemyCombatants));
+auto &projectiles_c(manager.getGroup(RpgCombatState::groupCombatProjectiles));
 
 void RpgCombatState::Pause() {
 
@@ -259,6 +259,14 @@ void RpgCombatState::CleanupCombat(RpgGame *rpgGame)
 
     for (auto pc : combat.player_combatants_) {
         pc->ResetToIdle();
+    }
+
+    for (auto p : player_c) {
+        p->destroy();
+    }
+
+    for (auto e : enemy_c) {
+        e->destroy();
     }
 }
 

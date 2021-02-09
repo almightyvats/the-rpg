@@ -13,6 +13,8 @@
 
 #include <ctime>
 
+#define ENEMY_PHASE_TIME 1.5
+
 Map *map;
 Manager manager;
 const State m_state = statePlay;
@@ -223,7 +225,7 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 
 		if (e->hasComponent<ColliderComponent>()) {
 			SDL_Rect cCol = e->getComponent<ColliderComponent>().collider;
-			if (Collision::AABB(cCol, playerCol) && std::difftime(time(0), last_encounter_escape) > 1.0) {
+			if (Collision::AABB(cCol, playerCol) && std::difftime(time(0), last_encounter_escape) > ENEMY_PHASE_TIME) {
 				// player.getComponent<TransformComponent>().position = playerPos;
 				std::cout << "ENEMY encountered" << std::endl;
 				// TODO: start combat (for colliding enemy + enemies in certain range?)

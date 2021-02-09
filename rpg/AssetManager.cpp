@@ -58,9 +58,9 @@ void AssetManager::CreateCombatant(Vector2D position, std::string sprite_name, b
 		combatantSprite.defaultAnimation("idle_down");
 	}
 	if (player_team) {
-		combatant.addGroup(RpgCombatState::groupPlayerCombatants);
+		combatant.addGroup(RpgCombatState::groupCombatPlayerCombatants);
 	} else {
-		combatant.addGroup(RpgCombatState::groupEnemyCombatants);
+		combatant.addGroup(RpgCombatState::groupCombatEnemyCombatants);
 	}
 }
 

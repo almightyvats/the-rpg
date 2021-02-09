@@ -59,5 +59,4 @@ class RpgCombatState : public RpgGameState {
 	void Render(RpgGame *) override;
 
     static SDL_Event event;
-    enum groupLabels : std::size_t {groupPlayerCombatants, groupEnemyCombatants, groupProjectiles};
 };

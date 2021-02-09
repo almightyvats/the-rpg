@@ -25,7 +25,10 @@ class RpgGameState {
 		groupGui,
 		groupEquipmentCombatant1,
 		groupEquipmentCombatant2,
-		groupEquipmentCombatant3
+		groupEquipmentCombatant3,
+		groupCombatPlayerCombatants,
+		groupCombatEnemyCombatants,
+		groupCombatProjectiles
 	};	
 };
 
