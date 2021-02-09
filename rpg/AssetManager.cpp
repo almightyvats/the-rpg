@@ -122,7 +122,7 @@ void getSpriteCoords(EquipmentType eqType, EquipmentMaterial eqMat, int &x, int 
 	}
 	// Axes
 	else if (eqType == EquipmentType::axe && eqMat == EquipmentMaterial::wood) {
-		x = 11;
+		x = 14;
 		y = 1;
 	} else if (eqType == EquipmentType::axe && eqMat == EquipmentMaterial::metal) {
 		x = 0;
