@@ -28,6 +28,7 @@ class PlayerCombatant : public Combatant {
         std::string LevelUp(int tokens, int new_exp);
         AddEquipmentError AddEquipment(Equipment equipment);
         Equipment RemoveEquipment(int index);
+        void ClearEquipment();
 
         int exp() const {return exp_;}
     

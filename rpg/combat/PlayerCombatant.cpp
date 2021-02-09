@@ -97,7 +97,6 @@ std::string PlayerCombatant::GainExp(int exp_gain)
 std::string PlayerCombatant::LevelUp(int tokens, int new_exp)
 {
 	std::ostringstream os;
-	std::srand(std::time(nullptr));
 
 	level_++;
 	exp_ = new_exp;
@@ -164,6 +163,11 @@ Equipment PlayerCombatant::RemoveEquipment(int index)
 	} else {
 		return equipment_.at(index);
 	}
+}
+
+void PlayerCombatant::ClearEquipment()
+{
+	equipment_.clear();
 }
 
 std::vector<Attack> PlayerCombatant::GetAttackList()

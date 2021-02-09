@@ -6,6 +6,9 @@
 
 class SaveGame
 {
+    private:
+        void UpdateCombatantEquipment();
+
     public:
         PlayerCombatant pc_knight;
         PlayerCombatant pc_archer;

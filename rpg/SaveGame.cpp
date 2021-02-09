@@ -41,6 +41,7 @@ void SaveGame::NewGame()
 
 std::vector<Combatant *> SaveGame::FetchCombatants()
 {
+    UpdateCombatantEquipment();
 	std::vector<Combatant *> combatants;
 	combatants.push_back(&pc_knight);
 	combatants.push_back(&pc_archer);
@@ -120,4 +121,22 @@ void SaveGame::SetItemsBrute(std::vector<InventoryComponent> items)
 {
 	DeleteItems(RpgPlayState::groupEquipmentCombatant3);
 	SetItems(RpgPlayState::groupEquipmentCombatant3, items);
+}
+
+void SaveGame::UpdateCombatantEquipment()
+{
+    pc_knight.ClearEquipment();
+    for (auto &item : FetchItemsKnight()) {
+        pc_knight.AddEquipment(item.equip);
+    }
+
+    pc_archer.ClearEquipment();
+    for (auto &item : FetchItemsArcher()) {
+        pc_archer.AddEquipment(item.equip);
+    }
+
+    pc_brute.ClearEquipment();
+    for (auto &item : FetchItemsBrute()) {
+        pc_brute.AddEquipment(item.equip);
+    }
 }
