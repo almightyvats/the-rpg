@@ -121,3 +121,31 @@ void SaveGame::SetItemsBrute(std::vector<InventoryComponent> items)
 	DeleteItems(RpgPlayState::groupEquipmentCombatant3);
 	SetItems(RpgPlayState::groupEquipmentCombatant3, items);
 }
+
+void SaveGame::saveCurrentGame()
+{
+	std::stringstream ss;
+
+	{
+		cereal::JSONOutputArchive ar(ss);
+		inventory = FetchInventory();
+		ar(inventory);
+	}
+	std::string output_file = "../game_save/save_1.json";
+	std::ofstream outFile(output_file);
+
+	outFile << ss.rdbuf();
+}
+
+void SaveGame::loadGame(std::string saved_game_path)
+{
+	std::ifstream file("../game_save/save_1.json");
+	std::stringstream ss;
+	if (file) {
+		ss << file.rdbuf();
+	}
+	{
+		cereal::JSONInputArchive ir(ss);
+		ir(inventory);
+	}
+}

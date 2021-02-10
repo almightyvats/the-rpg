@@ -3,8 +3,8 @@
 #include "Vector2D.hpp"
 #include "combat/PlayerCombatant.hpp"
 #include "ecs/InventoryComponent.hpp"
+#include <fstream>
 
-#include <cereal/archives/binary.hpp>
 #include <cereal/archives/json.hpp>
 #include <cereal/cereal.hpp>
 #include <cereal/types/vector.hpp>
@@ -40,17 +40,6 @@ class SaveGame {
 		archive(CEREAL_NVP(inventory));
 	}
 
-	void saveCurrentGame()
-	{
-		std::stringstream ss; // any stream can be used
-
-		{
-			// cereal::BinaryOutputArchive oarchive(ss); // Create an output archive
-			cereal::JSONOutputArchive ar(ss);
-			inventory = FetchInventory();
-			// oarchive(inventory); // Write the data to the archive
-			ar(inventory);
-		}
-		std::cout << ss.str() << std::endl;
-	}
+	void saveCurrentGame();
+	void loadGame(std::string saved_game_path);
 };
