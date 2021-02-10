@@ -21,8 +21,6 @@ RpgPlayerConvoState::RpgPlayerConvoState()
 	m_labels.push_back(playerDialogueLabel);
 
 	m_timer = std::make_unique<RpgTimer>();
-	m_lua.open_libraries(sol::lib::base, sol::lib::coroutine, sol::lib::string, sol::lib::io);
-	m_lua.script_file("../rpg/assets/scripts/dialogue.lua");
 }
 
 RpgPlayerConvoState::~RpgPlayerConvoState() {}
@@ -70,23 +68,7 @@ void RpgPlayerConvoState::HandleEvents(RpgGame *rpgGame)
 	}
 }
 
-void RpgPlayerConvoState::Update(RpgGame *rpgGame)
-{
-
-	sol::table dialogues = m_lua["dialogues"];
-
-	unsigned int dialogueIndex = 0;
-	while (true) {
-		sol::optional<sol::table> existsDialogueIndexNode = dialogues[dialogueIndex];
-		if (existsDialogueIndexNode == sol::nullopt) {
-			break;
-		} else {
-			std::string dialogue = dialogues[dialogueIndex];
-			std::cout << dialogue << "\n";
-		}
-		dialogueIndex++;
-	}
-}
+void RpgPlayerConvoState::Update(RpgGame *rpgGame) {}
 
 void RpgPlayerConvoState::Render(RpgGame *rpgGame)
 {
