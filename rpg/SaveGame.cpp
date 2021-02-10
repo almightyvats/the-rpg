@@ -2,9 +2,9 @@
 #include "AssetManager.hpp"
 
 #include "combat/LootGenerator.hpp"
-#include <filesystem>
 #include <cstdlib>
 #include <ctime>
+#include <filesystem>
 
 namespace fs = std::filesystem;
 
@@ -128,21 +128,25 @@ void SaveGame::saveCurrentGame()
 {
 	std::stringstream ss;
 
-    int count = 0;
+	int count = 0;
 	if (!fs::exists("../game_save/")) {
 		fs::create_directories("../game_save/");
 	}
 
-    for(auto& p: fs::directory_iterator("../game_save/")) {
-        count++;
+	for (auto &p : fs::directory_iterator("../game_save/")) {
+		count++;
 	}
 
-    std::string output_file = "../game_save/saved_game_"+ std::to_string(++count) + ".json" ;
+	std::string output_file = "../game_save/saved_game_" + std::to_string(++count) + ".json";
 
 	{
 		cereal::JSONOutputArchive ar(ss);
 		inventory = FetchInventory();
-		ar(inventory);
+		items_knight = FetchItemsKnight();
+		items_archer = FetchItemsArcher();
+		items_brute = FetchItemsBrute();
+
+		ar(inventory, items_knight, items_archer, items_brute, pc_knight, pc_archer, pc_brute);
 	}
 	std::ofstream outFile(output_file);
 
@@ -158,6 +162,10 @@ void SaveGame::loadGame(const std::string &saved_game_path)
 	}
 	{
 		cereal::JSONInputArchive ir(ss);
-		ir(inventory);
+		ir(inventory, items_knight, items_archer, items_brute, pc_knight, pc_archer, pc_brute);
+		SetInventory(inventory);
+		SetItemsKnight(items_knight);
+		SetItemsArcher(items_archer);
+		SetItemsBrute(items_brute);
 	}
 }

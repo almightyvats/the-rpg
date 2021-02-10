@@ -16,9 +16,9 @@ class SaveGame {
 	PlayerCombatant pc_brute;
 
 	std::vector<InventoryComponent> inventory;
-	// std::vector<InventoryComponent> items_knight;
-	// std::vector<InventoryComponent> items_archer;
-	// std::vector<InventoryComponent> items_brute;
+	std::vector<InventoryComponent> items_knight;
+	std::vector<InventoryComponent> items_archer;
+	std::vector<InventoryComponent> items_brute;
 	Vector2D player_pos;
 
 	SaveGame();
@@ -37,7 +37,8 @@ class SaveGame {
 	template <class Archive>
 	void serialize(Archive &archive)
 	{
-		archive(CEREAL_NVP(inventory));
+		archive(CEREAL_NVP(inventory), CEREAL_NVP(items_knight), CEREAL_NVP(items_archer), CEREAL_NVP(items_brute),
+		        CEREAL_NVP(pc_knight), CEREAL_NVP(pc_archer), CEREAL_NVP(pc_brute));
 	}
 
 	void saveCurrentGame();
