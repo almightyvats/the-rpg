@@ -1,15 +1,15 @@
 #include "RpgPlayState.hpp"
-#include "RpgMenuState.hpp"
 #include "RpgCombatState.hpp"
+#include "RpgMenuState.hpp"
 #include "rpg/AssetManager.hpp"
 #include "rpg/Collision.hpp"
 #include "rpg/Map.hpp"
 #include "rpg/RpgSoundManager.hpp"
+#include "rpg/SaveGame.hpp"
 #include "rpg/Vector2D.hpp"
 #include "rpg/combat/CombatTest.hpp"
 #include "rpg/ecs/Components.hpp"
 #include "rpg/states/RpgStates.hpp"
-#include "rpg/SaveGame.hpp"
 
 #include <ctime>
 
@@ -20,7 +20,7 @@ SaveGame saveGame;
 
 extern bool enemy_destroyed;
 static std::time_t last_encounter_escape;
-Entity* enemy_encountered;
+Entity *enemy_encountered;
 
 AssetManager *RpgGame::assets = new AssetManager(&manager);
 SDL_Event RpgPlayState::event;
@@ -140,6 +140,9 @@ void RpgPlayState::HandleEvents(RpgGame *rpgGame)
 				break;
 			case SDLK_i:
 				rpgGame->changeState(RpgInventoryState::Instance());
+				break;
+			case SDLK_p:
+				saveGame.saveCurrentGame();
 				break;
 			}
 			break;
