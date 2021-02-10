@@ -2,9 +2,11 @@
 #include "AssetManager.hpp"
 
 #include "combat/LootGenerator.hpp"
-
+#include <filesystem>
 #include <cstdlib>
 #include <ctime>
+
+namespace fs = std::filesystem;
 
 extern Manager manager;
 
@@ -126,20 +128,30 @@ void SaveGame::saveCurrentGame()
 {
 	std::stringstream ss;
 
+    int count = 0;
+	if (!fs::exists("../game_save/")) {
+		fs::create_directories("../game_save/");
+	}
+
+    for(auto& p: fs::directory_iterator("../game_save/")) {
+        count++;
+	}
+
+    std::string output_file = "../game_save/saved_game_"+ std::to_string(++count) + ".json" ;
+
 	{
 		cereal::JSONOutputArchive ar(ss);
 		inventory = FetchInventory();
 		ar(inventory);
 	}
-	std::string output_file = "../game_save/save_1.json";
 	std::ofstream outFile(output_file);
 
 	outFile << ss.rdbuf();
 }
 
-void SaveGame::loadGame(std::string saved_game_path)
+void SaveGame::loadGame(const std::string &saved_game_path)
 {
-	std::ifstream file("../game_save/save_1.json");
+	std::ifstream file(saved_game_path);
 	std::stringstream ss;
 	if (file) {
 		ss << file.rdbuf();

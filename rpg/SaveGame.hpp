@@ -41,5 +41,5 @@ class SaveGame {
 	}
 
 	void saveCurrentGame();
-	void loadGame(std::string saved_game_path);
+	void loadGame(const std::string &saved_game_path);
 };
