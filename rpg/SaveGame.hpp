@@ -19,6 +19,7 @@ class SaveGame
         // std::vector<InventoryComponent> items_archer;
         // std::vector<InventoryComponent> items_brute;
         Vector2D player_pos;
+        std::string player_map;
 
         SaveGame();
         ~SaveGame();

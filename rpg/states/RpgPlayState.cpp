@@ -44,7 +44,7 @@ RpgPlayState::RpgPlayState()
 	RpgGame::assets->AddTexture("fireball", "../rpg/assets/fireball_sprite.png");
 
 	map = new Map("../rpg/assets/map/outdoor_01.json", 3);
-
+	saveGame.player_map = map->getMapFilePath();
 	map->LoadMap();
 
 	player.addComponent<TransformComponent>(11 * 32 * 3, 88 * 32 * 3, 115, 75, 1);
@@ -310,6 +310,7 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 
 		manager.refresh(m_state);
 		map = new Map(newMap, 3);
+		saveGame.player_map = map->getMapFilePath();
 		map->LoadMap();
 
 		// Loading new map finished -> start fading in again
