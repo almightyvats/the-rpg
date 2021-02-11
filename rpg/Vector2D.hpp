@@ -1,4 +1,5 @@
 #pragma once
+#include <cereal/types/vector.hpp>
 #include <iostream>
 
 class Vector2D {
@@ -33,4 +34,10 @@ class Vector2D {
 	static Vector2D Normalize(const Vector2D &vec);
 
 	friend std::ostream &operator<<(std::ostream &stream, const Vector2D &vec);
+
+	template <class Archive>
+	void serialize(Archive &archive)
+	{
+		archive(CEREAL_NVP(x), CEREAL_NVP(y));
+	}
 };

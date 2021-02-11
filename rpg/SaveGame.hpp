@@ -42,7 +42,8 @@ class SaveGame {
 	void serialize(Archive &archive)
 	{
 		archive(CEREAL_NVP(inventory), CEREAL_NVP(items_knight), CEREAL_NVP(items_archer), CEREAL_NVP(items_brute),
-		        CEREAL_NVP(pc_knight), CEREAL_NVP(pc_archer), CEREAL_NVP(pc_brute));
+		        CEREAL_NVP(pc_knight), CEREAL_NVP(pc_archer), CEREAL_NVP(pc_brute), CEREAL_NVP(player_pos),
+		        CEREAL_NVP(player_map));
 	}
 
 	void saveCurrentGame();

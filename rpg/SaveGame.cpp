@@ -165,7 +165,7 @@ void SaveGame::saveCurrentGame()
 		items_archer = FetchItemsArcher();
 		items_brute = FetchItemsBrute();
 
-		ar(inventory, items_knight, items_archer, items_brute, pc_knight, pc_archer, pc_brute);
+		ar(inventory, items_knight, items_archer, items_brute, pc_knight, pc_archer, pc_brute, player_pos, player_map);
 	}
 	std::ofstream outFile(output_file);
 
@@ -181,7 +181,7 @@ void SaveGame::loadGame(const std::string &saved_game_path)
 	}
 	{
 		cereal::JSONInputArchive ir(ss);
-		ir(inventory, items_knight, items_archer, items_brute, pc_knight, pc_archer, pc_brute);
+		ir(inventory, items_knight, items_archer, items_brute, pc_knight, pc_archer, pc_brute, player_pos, player_map);
 		SetInventory(inventory);
 		SetItemsKnight(items_knight);
 		SetItemsArcher(items_archer);
