@@ -184,8 +184,6 @@ void RpgPlayState::HandleEvents(RpgGame *rpgGame)
 std::string newMap;
 Vector2D playerStart;
 
-bool c = true;
-
 void RpgPlayState::Update(RpgGame *rpgGame)
 {
 	SDL_Rect playerCol = player.getComponent<ColliderComponent>().collider;
