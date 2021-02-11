@@ -2,9 +2,11 @@
 #include "AssetManager.hpp"
 
 #include "combat/LootGenerator.hpp"
-
 #include <cstdlib>
 #include <ctime>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 extern Manager manager;
 
@@ -41,7 +43,7 @@ void SaveGame::NewGame()
 
 std::vector<Combatant *> SaveGame::FetchCombatants()
 {
-    UpdateCombatantEquipment();
+	UpdateCombatantEquipment();
 	std::vector<Combatant *> combatants;
 	combatants.push_back(&pc_knight);
 	combatants.push_back(&pc_archer);
@@ -125,18 +127,64 @@ void SaveGame::SetItemsBrute(std::vector<InventoryComponent> items)
 
 void SaveGame::UpdateCombatantEquipment()
 {
-    pc_knight.ClearEquipment();
-    for (auto &item : FetchItemsKnight()) {
-        pc_knight.AddEquipment(item.equip);
-    }
+	pc_knight.ClearEquipment();
+	for (auto &item : FetchItemsKnight()) {
+		pc_knight.AddEquipment(item.equip);
+	}
 
-    pc_archer.ClearEquipment();
-    for (auto &item : FetchItemsArcher()) {
-        pc_archer.AddEquipment(item.equip);
-    }
+	pc_archer.ClearEquipment();
+	for (auto &item : FetchItemsArcher()) {
+		pc_archer.AddEquipment(item.equip);
+	}
 
-    pc_brute.ClearEquipment();
-    for (auto &item : FetchItemsBrute()) {
-        pc_brute.AddEquipment(item.equip);
-    }
+	pc_brute.ClearEquipment();
+	for (auto &item : FetchItemsBrute()) {
+		pc_brute.AddEquipment(item.equip);
+	}
+}
+
+void SaveGame::saveCurrentGame()
+{
+	std::stringstream ss;
+
+	int count = 0;
+	if (!fs::exists("../game_save/")) {
+		fs::create_directories("../game_save/");
+	}
+
+	for (auto &p : fs::directory_iterator("../game_save/")) {
+		count++;
+	}
+
+	std::string output_file = "../game_save/saved_game_" + std::to_string(++count) + ".json";
+
+	{
+		cereal::JSONOutputArchive ar(ss);
+		inventory = FetchInventory();
+		items_knight = FetchItemsKnight();
+		items_archer = FetchItemsArcher();
+		items_brute = FetchItemsBrute();
+
+		ar(inventory, items_knight, items_archer, items_brute, pc_knight, pc_archer, pc_brute);
+	}
+	std::ofstream outFile(output_file);
+
+	outFile << ss.rdbuf();
+}
+
+void SaveGame::loadGame(const std::string &saved_game_path)
+{
+	std::ifstream file(saved_game_path);
+	std::stringstream ss;
+	if (file) {
+		ss << file.rdbuf();
+	}
+	{
+		cereal::JSONInputArchive ir(ss);
+		ir(inventory, items_knight, items_archer, items_brute, pc_knight, pc_archer, pc_brute);
+		SetInventory(inventory);
+		SetItemsKnight(items_knight);
+		SetItemsArcher(items_archer);
+		SetItemsBrute(items_brute);
+	}
 }

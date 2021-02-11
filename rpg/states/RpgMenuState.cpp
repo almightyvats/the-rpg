@@ -1,10 +1,10 @@
 
+#include "../combat/CombatTest.hpp"
+#include "../combat/Combatant.hpp"
+#include "RpgCombatState.hpp"
 #include "RpgStates.hpp"
 #include "rpg/AssetManager.hpp"
 #include "rpg/RpgSoundManager.hpp"
-#include "RpgCombatState.hpp"
-#include "../combat/Combatant.hpp"
-#include "../combat/CombatTest.hpp"
 #include "rpg/SaveGame.hpp"
 
 SDL_Event RpgMenuState::m_event;
@@ -40,18 +40,17 @@ RpgMenuState::RpgMenuState()
 	m_Labels.push_back(exitLabel);
 
 	m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) {
-		 saveGame = SaveGame();
-		 saveGame.NewGame();
-		 rpgGame->changeState(RpgPlayState::Instance());
-		  }});
-	
-	/*m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) { 
-		InitGlobalTestPCs();
-		rpgGame->changeState(RpgCombatState::Instance(GetTestCombatants(), CombatArena::grass)); }});*/
+		                          saveGame = SaveGame();
+		                          saveGame.NewGame();
+		                          rpgGame->changeState(RpgPlayState::Instance());
+	                          }});
 
+	/*m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) {
+	    InitGlobalTestPCs();
+	    rpgGame->changeState(RpgCombatState::Instance(GetTestCombatants(), CombatArena::grass)); }});*/
 
-
-	m_buttonFucntions.insert({loadGameLabel, [](RpgGame *rpgGame) { std::cout << "Load game item clicked! \n"; }});
+	m_buttonFucntions.insert(
+	    {loadGameLabel, [](RpgGame *rpgGame) { rpgGame->pushState(RpgLoadGameState::Instance()); }});
 	m_buttonFucntions.insert({exitLabel, [](RpgGame *rpgGame) { rpgGame->quitGame(); }});
 
 	RpgSoundManager::setMusicVolume(15);
@@ -154,7 +153,7 @@ void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 					m_Labels[i]->setLabelColor(m_colors[1]);
 					isLabelClicked = false;
 					break;
-				case SDL_MOUSEBUTTONDOWN:	
+				case SDL_MOUSEBUTTONDOWN:
 					m_Labels[i]->setLabelColor(m_colors[1]);
 					if (!isLabelClicked) {
 						labelPressed(m_Labels[i], rpgGame);
