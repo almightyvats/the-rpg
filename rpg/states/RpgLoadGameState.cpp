@@ -20,20 +20,26 @@ RpgLoadGameState::RpgLoadGameState()
 
 	SDL_Color white = {255, 255, 255};
 	int y_shift = 10;
-    headingLabel =
+	headingLabel =
 	    std::make_shared<RpgLabel>(40, m_dialogueBox2.y + y_shift, "Press Esc to close the menu", "Sensation", white);
+	y_shift += 20;
+	if (fs::exists("../game_save/")) {
+		for (auto &p : fs::directory_iterator("../game_save/")) {
+			std::string game_name = p.path().filename().string();
 
-    for(auto& p: fs::directory_iterator("../game_save/")) {
-		std::string game_name = p.path().filename().string();
-        y_shift += 20;
-		auto label = std::make_shared<RpgLabel>(40, m_dialogueBox2.y + y_shift, game_name.c_str(), "Sensation", white);
-        m_labels.push_back(label);
+			auto label =
+			    std::make_shared<RpgLabel>(40, m_dialogueBox2.y + y_shift, game_name.c_str(), "Sensation", white);
+			m_labels.push_back(label);
 
-        m_buttonFucntions.insert({label, [=](RpgGame *rpgGame) {
-			                          SaveGame game;
-			                          game.loadGame(p.path().string());
-			                          rpgGame->changeState(RpgPlayState::Instance());
-		                          }});
+			m_buttonFucntions.insert({label, [=](RpgGame *rpgGame) {
+				                          SaveGame game;
+				                          game.loadGame(p.path().string());
+				                          rpgGame->changeState(RpgPlayState::Instance());
+			                          }});
+		}
+	} else {
+		auto label = std::make_shared<RpgLabel>(40, m_dialogueBox2.y + y_shift, "No saved game!", "Sensation", white);
+		m_labels.push_back(label);
 	}
 }
 
@@ -103,13 +109,13 @@ void RpgLoadGameState::HandleEvents(RpgGame *rpgGame)
 				case SDL_MOUSEMOTION:
 				case SDL_MOUSEBUTTONUP:
 					m_labels[i]->setLabelColor(m_colors[1]);
-                    isLoadGameClicked = false;
+					isLoadGameClicked = false;
 					break;
 				case SDL_MOUSEBUTTONDOWN:
 					m_labels[i]->setLabelColor(m_colors[1]);
 					if (!isLoadGameClicked) {
 						labelPressed(m_labels[i], rpgGame);
-                        isLoadGameClicked = true;
+						isLoadGameClicked = true;
 					}
 					break;
 				default:
@@ -133,7 +139,7 @@ void RpgLoadGameState::Render(RpgGame *rpgGame)
 	SDL_SetRenderDrawColor(RpgGame::renderer, 0, 0, 0, 255);
 	SDL_RenderFillRect(RpgGame::renderer, &m_dialogueBox2);
 
-    headingLabel->Draw();
+	headingLabel->Draw();
 	for (auto &l : m_labels) {
 		l->Draw();
 	}

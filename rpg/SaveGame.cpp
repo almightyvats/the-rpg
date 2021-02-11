@@ -178,6 +178,8 @@ void SaveGame::loadGame(const std::string &saved_game_path)
 	std::stringstream ss;
 	if (file) {
 		ss << file.rdbuf();
+	} else {
+		return;
 	}
 	{
 		cereal::JSONInputArchive ir(ss);
