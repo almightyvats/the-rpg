@@ -14,7 +14,7 @@
 
 const State m_state = statePlay;
 
-Map::Map(std::string path, int mapScale)
+Map::Map(std::string path, int mapScale) : mapFilePath(path)
 {
 	std::ifstream t(path);
 
