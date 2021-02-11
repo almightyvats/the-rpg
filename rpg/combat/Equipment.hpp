@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cereal/types/vector.hpp>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -8,30 +9,30 @@
 
 enum class EquipmentType {
 	sword,
-    axe,
+	axe,
 	bow,
 	shield,
 	heal_item,
 };
 
 enum class EquipmentMaterial {
-    wood,
-    metal,
-    gold,
-    fire,
-    ice,
-    special,
+	wood,
+	metal,
+	gold,
+	fire,
+	ice,
+	special,
 };
 
 class Equipment {
-    public:
+  public:
 	Equipment(const std::string &name, EquipmentType eq_type, EquipmentMaterial eq_mat, int min_level, int agi, int str,
 	          int def, int dex, int perc, int luck);
-        Equipment() = default;
-        ~Equipment();
+	Equipment() = default;
+	~Equipment();
 
-        void AddAttack(Attack attack);
-        void AddAbility(Ability ability);
+	void AddAttack(Attack attack);
+	void AddAbility(Ability ability);
 
 	std::string name() const { return name_; }
 	EquipmentType type() const { return type_; }
@@ -47,7 +48,7 @@ class Equipment {
 	int bonus_perception() const { return bonus_perception_; }
 	int bonus_luck() const { return bonus_luck_; }
 
-        std::string item_info()
+	std::string item_info()
 	{
 		std::stringstream result;
 		switch (type()) {
@@ -103,20 +104,29 @@ class Equipment {
 		return result.str();
 	}
 
-    protected:
-        std::string name_;
-        EquipmentType type_;
-        EquipmentMaterial material_;
+	template <class Archive>
+	void serialize(Archive &archive)
+	{
+		archive(CEREAL_NVP(name_), CEREAL_NVP(min_level_), CEREAL_NVP(bonus_agility_), CEREAL_NVP(bonus_strength_),
+		        CEREAL_NVP(bonus_defense_), CEREAL_NVP(bonus_dexterity_), CEREAL_NVP(bonus_perception_),
+		        CEREAL_NVP(bonus_luck_), CEREAL_NVP(attacks_), CEREAL_NVP(abilities_), CEREAL_NVP(type_),
+		        CEREAL_NVP(material_)); // serialize things by passing them to the archive
+	}
 
-        int min_level_;
+  protected:
+	std::string name_;
+	EquipmentType type_;
+	EquipmentMaterial material_;
 
-        std::vector<Attack> attacks_;
-        std::vector<Ability> abilities_;
+	int min_level_;
 
-        int bonus_agility_;
-        int bonus_strength_;
-        int bonus_defense_;
-        int bonus_dexterity_;
-        int bonus_perception_;
-        int bonus_luck_;  
+	std::vector<Attack> attacks_;
+	std::vector<Ability> abilities_;
+
+	int bonus_agility_;
+	int bonus_strength_;
+	int bonus_defense_;
+	int bonus_dexterity_;
+	int bonus_perception_;
+	int bonus_luck_;
 };
