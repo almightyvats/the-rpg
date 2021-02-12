@@ -69,6 +69,7 @@ class Map {
 	~Map();
 
 	void LoadMap();
+	void ClearMap();
 
 	int height;
 	int width;

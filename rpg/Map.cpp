@@ -13,6 +13,7 @@
 #include <string>
 
 const State m_state = statePlay;
+extern Manager manager;
 
 Map::Map(std::string path, int mapScale) : mapFilePath(path)
 {
@@ -113,6 +114,8 @@ Map::~Map() {}
 
 void Map::LoadMap()
 {
+	ClearMap();
+
 	int counter = 0;
 	for (int layerNumber = 0; layerNumber < setting.layers.size(); layerNumber++) {
 		int tileIndex = 0;
@@ -154,4 +157,25 @@ void Map::LoadMap()
 		                                  Vector2D(projectile.xVel, projectile.yVel), projectile.range,
 		                                  projectile.speed, projectile.spriteId, m_state);
 	}
+}
+
+void Map::ClearMap()
+{
+	auto &tiles(manager.getGroup(RpgPlayState::groupMap));
+	for (auto &tile : tiles) {
+		tile->destroy();
+	}
+	auto &npcs(manager.getGroup(RpgPlayState::groupNpcs));
+	for (auto &npc : npcs) {
+		npc->destroy();
+	}
+	auto &enemies(manager.getGroup(RpgPlayState::groupEnemies));
+	for (auto &enemy : enemies) {
+		enemy->destroy();
+	}
+	auto &projectiles(manager.getGroup(RpgPlayState::groupProjectiles));
+	for (auto &projectile : projectiles) {
+		projectile->destroy();
+	}
+	manager.refresh(m_state);
 }
