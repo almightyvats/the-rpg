@@ -12,9 +12,13 @@ class RpgPlayState : public RpgGameState {
 	RpgPlayState(const RpgPlayState &) = delete;
 	RpgPlayState &operator=(const RpgPlayState &) = delete;
 
-	static RpgPlayState &Instance()
+	static RpgPlayState &Instance(bool loadSaveGame = false)
 	{
 		static RpgPlayState m_ps;
+
+		if (loadSaveGame) {
+			m_ps.LoadPlayerPos();
+		}
 		return m_ps;
 	}
 
@@ -24,6 +28,8 @@ class RpgPlayState : public RpgGameState {
 	void HandleEvents(RpgGame *rpgGame) override;
 	void Update(RpgGame *rpgGame) override;
 	void Render(RpgGame *rpgGame) override;
+
+	void LoadPlayerPos();
 
 	static SDL_Event event;
 };
