@@ -1,5 +1,6 @@
 #include "RpgGame.hpp"
 #include "RpgSoundManager.hpp"
+#include "SaveGame.hpp"
 #include "rpg/states/RpgGameState.hpp"
 
 SDL_Renderer *RpgGame::renderer = nullptr;
@@ -7,6 +8,7 @@ SDL_Renderer *RpgGame::renderer = nullptr;
 SDL_Rect RpgGame::camera = {0, 0, 0, 0};
 
 bool RpgGame::isRunning = false;
+SaveGame saveGame;
 
 RpgGame::RpgGame(){};
 RpgGame::~RpgGame() {}

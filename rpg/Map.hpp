@@ -69,17 +69,15 @@ class Map {
 	~Map();
 
 	void LoadMap();
+	void ClearMap();
 
 	int height;
 	int width;
 	int scale;
 	MapSetting setting;
-
-	std::string getMapFilePath() const {return mapFilePath;}
-
-  private:
 	std::string mapFilePath;
 
+  private:
 	TileSet FindTileset(int tileNumber)
 	{
 		TileSet result;

@@ -4,6 +4,8 @@
 
 namespace fs = std::filesystem;
 
+extern SaveGame saveGame;
+
 RpgLoadGameState::RpgLoadGameState()
 {
 	m_dialogueBox1.x = 25;
@@ -23,8 +25,8 @@ RpgLoadGameState::RpgLoadGameState()
 	headingLabel =
 	    std::make_shared<RpgLabel>(40, m_dialogueBox2.y + y_shift, "Press Esc to close the menu", "Sensation", white);
 	y_shift += 20;
-	if (fs::exists("../game_save/")) {
-		for (auto &p : fs::directory_iterator("../game_save/")) {
+	if (fs::exists("game_save/")) {
+		for (auto &p : fs::directory_iterator("game_save/")) {
 			std::string game_name = p.path().filename().string();
 
 			auto label =
@@ -32,10 +34,10 @@ RpgLoadGameState::RpgLoadGameState()
 			m_labels.push_back(label);
 
 			m_buttonFucntions.insert({label, [=](RpgGame *rpgGame) {
-				                          SaveGame game;
-				                          game.loadGame(p.path().string());
-				                          rpgGame->changeState(RpgPlayState::Instance());
+				                          saveGame.loadGame(p.path().string());
+				                          rpgGame->changeState(RpgPlayState::Instance(true));
 			                          }});
+			y_shift += 20;
 		}
 	} else {
 		auto label = std::make_shared<RpgLabel>(40, m_dialogueBox2.y + y_shift, "No saved game!", "Sensation", white);

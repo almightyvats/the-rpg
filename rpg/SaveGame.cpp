@@ -16,6 +16,7 @@ SaveGame::SaveGame()
       pc_brute(PlayerCombatant("Brute", "c_brute", 0, 0, 0, 0, 0, 0, 0, 0))
 {
 	player_pos = Vector2D(0, 0);
+    player_map = "";
 }
 
 SaveGame::~SaveGame() = default;
@@ -148,15 +149,15 @@ void SaveGame::saveCurrentGame()
 	std::stringstream ss;
 
 	int count = 0;
-	if (!fs::exists("../game_save/")) {
-		fs::create_directories("../game_save/");
+	if (!fs::exists("game_save/")) {
+		fs::create_directories("game_save/");
 	}
 
-	for (auto &p : fs::directory_iterator("../game_save/")) {
+	for (auto &p : fs::directory_iterator("game_save/")) {
 		count++;
 	}
 
-	std::string output_file = "../game_save/saved_game_" + std::to_string(++count) + ".json";
+	std::string output_file = "game_save/saved_game_" + std::to_string(++count) + ".json";
 
 	{
 		cereal::JSONOutputArchive ar(ss);

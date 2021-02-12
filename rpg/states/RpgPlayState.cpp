@@ -18,7 +18,7 @@
 Map *map;
 Manager manager;
 const State m_state = statePlay;
-SaveGame saveGame;
+extern SaveGame saveGame;
 
 extern bool enemy_destroyed;
 static std::time_t last_encounter_escape;
@@ -44,7 +44,6 @@ RpgPlayState::RpgPlayState()
 	RpgGame::assets->AddTexture("fireball", "../rpg/assets/fireball_sprite.png");
 
 	map = new Map("../rpg/assets/map/outdoor_01.json", 3);
-	saveGame.player_map = map->getMapFilePath();
 	map->LoadMap();
 
 	player.addComponent<TransformComponent>(11 * 32 * 3, 88 * 32 * 3, 115, 75, 1);
@@ -101,6 +100,15 @@ void RpgPlayState::Resume()
 	}
 }
 
+void RpgPlayState::LoadPlayerPos()
+{
+	manager.refresh(m_state);
+	map = new Map(saveGame.player_map, 3);
+	map->LoadMap();
+	player.getComponent<TransformComponent>().position = saveGame.player_pos;
+	manager.update(m_state);
+}
+
 bool CheckKonami(SDL_Keycode keyCode)
 {
 	// Check for special input
@@ -146,6 +154,7 @@ void RpgPlayState::HandleEvents(RpgGame *rpgGame)
 				rpgGame->changeState(RpgInventoryState::Instance());
 				break;
 			case SDLK_p:
+				saveGame.player_map = map->mapFilePath;
 				saveGame.saveCurrentGame();
 				break;
 			}
@@ -315,7 +324,7 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 
 		manager.refresh(m_state);
 		map = new Map(newMap, 3);
-		saveGame.player_map = map->getMapFilePath();
+		saveGame.player_map = map->mapFilePath;
 		map->LoadMap();
 
 		// Loading new map finished -> start fading in again
