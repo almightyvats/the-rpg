@@ -46,10 +46,6 @@ RpgPlayState::RpgPlayState()
 	map = new Map("../rpg/assets/map/outdoor_01.json", 3);
 	map->LoadMap();
 
-	if (saveGame.player_map == "") {
-		saveGame.player_map = std::string(map->mapFilePath);
-	}
-
 	player.addComponent<TransformComponent>(11 * 32 * 3, 88 * 32 * 3, 115, 75, 1);
 
 	SpriteSheet spriteSheet(11, 75, 115, 75, 5);
@@ -157,10 +153,8 @@ void RpgPlayState::HandleEvents(RpgGame *rpgGame)
 			case SDLK_i:
 				rpgGame->changeState(RpgInventoryState::Instance());
 				break;
-			case SDLK_t:
-				player.getComponent<TransformComponent>().position = Vector2D(2220.0, 6795.0);
-				break;
 			case SDLK_p:
+				saveGame.player_map = map->mapFilePath;
 				saveGame.saveCurrentGame();
 				break;
 			}
