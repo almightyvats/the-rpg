@@ -48,9 +48,9 @@ void AssetManager::CreateCombatant(Vector2D position, std::string sprite_name, b
 	RpgGame::assets->AddTexture(sprite_name, "../rpg/assets/combatants/" + sprite_name + ".png");
 
 	auto &combatant(manager->addEntity(state));
-	combatant.addComponent<TransformComponent>(position.x, position.y, 100, 75, 1);
+	combatant.addComponent<TransformComponent>(position.x, position.y, 100, 100, 1);
 
-	SpriteSheet spriteSheet(1, 75, 100, 0, 0);
+	SpriteSheet spriteSheet(1, 100, 100, 0, 0);
 	auto &combatantSprite = combatant.addComponent<SpriteComponent>(sprite_name, spriteSheet,
 	                                                                player_team ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
 	{

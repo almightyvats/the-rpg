@@ -11,9 +11,9 @@ namespace fs = std::filesystem;
 extern Manager manager;
 
 SaveGame::SaveGame()
-    : pc_knight(PlayerCombatant("Knight", "c_player", 0, 0, 0, 0, 0, 0, 0, 0)),
-      pc_archer(PlayerCombatant("Archer", "c_player", 0, 0, 0, 0, 0, 0, 0, 0)),
-      pc_brute(PlayerCombatant("Brute", "c_player", 0, 0, 0, 0, 0, 0, 0, 0))
+    : pc_knight(PlayerCombatant("Knight", "c_knight", 0, 0, 0, 0, 0, 0, 0, 0)),
+      pc_archer(PlayerCombatant("Archer", "c_archer", 0, 0, 0, 0, 0, 0, 0, 0)),
+      pc_brute(PlayerCombatant("Brute", "c_brute", 0, 0, 0, 0, 0, 0, 0, 0))
 {
 	player_pos = Vector2D(0, 0);
 }
@@ -23,9 +23,9 @@ SaveGame::~SaveGame() = default;
 void SaveGame::NewGame()
 {
 	// find different sprites for player characters
-	pc_knight = PlayerCombatant("Knight", "c_player", 5, 55, 9, 8, 6, 11, 7, 7);
-	pc_archer = PlayerCombatant("Archer", "c_player", 5, 45, 11, 3, 8, 3, 13, 12);
-	pc_brute = PlayerCombatant("Brute", "c_player", 5, 75, 2, 15, 11, 8, 2, 7);
+	pc_knight = PlayerCombatant("Knight", "c_knight", 5, 55, 9, 8, 6, 11, 7, 7);
+	pc_archer = PlayerCombatant("Archer", "c_archer", 5, 45, 11, 3, 8, 3, 13, 12);
+	pc_brute = PlayerCombatant("Brute", "c_brute", 5, 75, 2, 15, 11, 8, 2, 7);
 
 	// Init items
 

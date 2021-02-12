@@ -37,18 +37,18 @@ Vector2D GetCombatantPosition(bool player_team, int number)
 {
     if (player_team) {
         switch(number) {
-            case 0: return Vector2D(300, 250);
-            case 1: return Vector2D(175, 150);
-            case 2: return Vector2D(50, 250);
-            default: return Vector2D(25, 150);
+            case 0: return Vector2D(288, 250);
+            case 1: return Vector2D(163, 150);
+            case 2: return Vector2D(38, 250);
+            default: return Vector2D(38, 50);
         }
     } else {
         switch(number) {
-            case 0: return Vector2D(549, 250);
-            case 1: return Vector2D(674, 150);
-            case 2: return Vector2D(799, 250);
-            case 3: return Vector2D(924, 150);
-            default: return Vector2D(924, 350);
+            case 0: return Vector2D(537, 250);
+            case 1: return Vector2D(662, 150);
+            case 2: return Vector2D(787, 250);
+            case 3: return Vector2D(912, 150);
+            default: return Vector2D(912, 350);
         }
     }
 }
@@ -111,14 +111,14 @@ void RpgCombatState::GenerateCombat(std::vector<Combatant*> player_combatants, C
     for (Combatant* player_combatant : combat.player_combatants_) {
         Vector2D pos = GetCombatantPosition(true, c++);
         RpgGame::assets->CreateCombatant(pos, player_combatant->sprite_name(), true, m_state);
-        auto l_name = RpgLabel(pos.x + 37,pos.y - 70, player_combatant->name(), FONT_CNAME, color_white);
+        auto l_name = RpgLabel(pos.x + 50,pos.y - 70, player_combatant->name(), FONT_CNAME, color_white);
         l_name.CenterLabelHorizontally();
-        auto l_lvl = RpgLabel(pos.x + 37,pos.y - 35, "Lvl. " + std::to_string(player_combatant->level()), FONT_CLVL, color_white);
+        auto l_lvl = RpgLabel(pos.x + 50,pos.y - 35, "Lvl. " + std::to_string(player_combatant->level()), FONT_CLVL, color_white);
         l_lvl.CenterLabelHorizontally();
-        auto l_state = RpgLabel(pos.x + 37,pos.y + 100, player_combatant->state_string(), FONT_CSTATE, color_white);
+        auto l_state = RpgLabel(pos.x + 50,pos.y + 100, player_combatant->state_string(), FONT_CSTATE, color_white);
         l_state.CenterLabelHorizontally();
-        auto l_cooldown = RpgLabel(pos.x,pos.y + 170, "", FONT_CCD, color_white);
-        auto l_hp = RpgLabel(pos.x,pos.y + 135, "HP: " + std::to_string(player_combatant->hp()), FONT_CHP, color_white);
+        auto l_cooldown = RpgLabel(pos.x + 12,pos.y + 170, "", FONT_CCD, color_white);
+        auto l_hp = RpgLabel(pos.x + 12,pos.y + 135, "HP: " + std::to_string(player_combatant->hp()), FONT_CHP, color_white);
         CombatantLabels l_combatant = {l_name, l_lvl, l_state, l_cooldown, l_hp};
         this->labels_combatants.push_back(l_combatant);
     }
@@ -126,14 +126,14 @@ void RpgCombatState::GenerateCombat(std::vector<Combatant*> player_combatants, C
     for (Combatant* enemy_combatant : combat.enemy_combatants_) {
         Vector2D pos = GetCombatantPosition(false, c++);
         RpgGame::assets->CreateCombatant(pos, enemy_combatant->sprite_name(), false, m_state);
-        auto l_name = RpgLabel(pos.x + 37,pos.y - 70, enemy_combatant->name(), FONT_CNAME, color_white);
+        auto l_name = RpgLabel(pos.x + 50,pos.y - 70, enemy_combatant->name(), FONT_CNAME, color_white);
         l_name.CenterLabelHorizontally();
-        auto l_lvl = RpgLabel(pos.x + 37,pos.y - 35, "Lvl. " + std::to_string(enemy_combatant->level()), FONT_CLVL, color_white);
+        auto l_lvl = RpgLabel(pos.x + 50,pos.y - 35, "Lvl. " + std::to_string(enemy_combatant->level()), FONT_CLVL, color_white);
         l_lvl.CenterLabelHorizontally();
-        auto l_state = RpgLabel(pos.x + 37,pos.y + 100, enemy_combatant->state_string(), FONT_CSTATE, color_white);
+        auto l_state = RpgLabel(pos.x + 50,pos.y + 100, enemy_combatant->state_string(), FONT_CSTATE, color_white);
         l_state.CenterLabelHorizontally();
-        auto l_cooldown = RpgLabel(pos.x,pos.y + 170, "", FONT_CCD, color_white);
-        auto l_hp = RpgLabel(pos.x,pos.y + 135, "HP: " + std::to_string(enemy_combatant->hp()), FONT_CHP, color_white);
+        auto l_cooldown = RpgLabel(pos.x + 12,pos.y + 170, "", FONT_CCD, color_white);
+        auto l_hp = RpgLabel(pos.x + 12,pos.y + 135, "HP: " + std::to_string(enemy_combatant->hp()), FONT_CHP, color_white);
         CombatantLabels l_combatant = {l_name, l_lvl, l_state, l_cooldown, l_hp};
         this->labels_combatants.push_back(l_combatant);
     }

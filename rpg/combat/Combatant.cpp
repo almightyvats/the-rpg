@@ -125,6 +125,7 @@ std::string Combatant::PerformAttack(Attack attack, std::vector<Combatant*> targ
 
             if (target->state_ != CombatantState::dead){
                 if (attack.effect == AttackEffect::ignite) {
+                    target->TakeDamage(0);
                     target->state_ = CombatantState::burning;
                     target->state_reset_countdown_ = BURN_RESET_COOLDOWN;
                     os << target->name() << " is now burning\n";
@@ -164,6 +165,7 @@ std::string Combatant::UseAbility(Ability ability, std::vector<Combatant*> targe
                 target->state_reset_countdown_ = BLOCK_RESET_COOLDOWN;
                 os << target->name() << " started blocking\n";
             } else if (ability.effect == AbilityEffect::ignite) {
+                target->TakeDamage(0);
                 target->state_ = CombatantState::burning;
                 target->state_reset_countdown_ = BURN_RESET_COOLDOWN;
                 os << target->name() << " is now burning\n";
@@ -196,7 +198,6 @@ bool Combatant::TakeDamage(int damage)
 void Combatant::TakeBurnDamage()
 {
     hp_ -= BURN_DAMAGE;
-    std::cout << name() << " took " << BURN_DAMAGE << " burn damage\n";
 }
 
 std::string Combatant::PerformStateReset()
