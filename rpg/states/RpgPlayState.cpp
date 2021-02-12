@@ -1,17 +1,19 @@
 #include "RpgPlayState.hpp"
-#include "RpgMenuState.hpp"
 #include "RpgCombatState.hpp"
+#include "RpgMenuState.hpp"
 #include "rpg/AssetManager.hpp"
 #include "rpg/Collision.hpp"
 #include "rpg/Map.hpp"
 #include "rpg/RpgSoundManager.hpp"
+#include "rpg/SaveGame.hpp"
 #include "rpg/Vector2D.hpp"
 #include "rpg/combat/CombatTest.hpp"
 #include "rpg/ecs/Components.hpp"
 #include "rpg/states/RpgStates.hpp"
-#include "rpg/SaveGame.hpp"
 
 #include <ctime>
+
+#define ENEMY_PHASE_TIME 1.5
 
 Map *map;
 Manager manager;
@@ -20,7 +22,7 @@ SaveGame saveGame;
 
 extern bool enemy_destroyed;
 static std::time_t last_encounter_escape;
-Entity* enemy_encountered;
+Entity *enemy_encountered;
 
 AssetManager *RpgGame::assets = new AssetManager(&manager);
 SDL_Event RpgPlayState::event;
@@ -42,7 +44,7 @@ RpgPlayState::RpgPlayState()
 	RpgGame::assets->AddTexture("fireball", "../rpg/assets/fireball_sprite.png");
 
 	map = new Map("../rpg/assets/map/outdoor_01.json", 3);
-
+	saveGame.player_map = map->getMapFilePath();
 	map->LoadMap();
 
 	player.addComponent<TransformComponent>(11 * 32 * 3, 88 * 32 * 3, 115, 75, 1);
@@ -80,7 +82,9 @@ auto &enemies(manager.getGroup(RpgPlayState::groupEnemies));
 
 void RpgPlayState::Pause()
 {
-	RpgSoundManager::pauseMusic();
+	player.getComponent<TransformComponent>().velocity = Vector2D(0,0);
+	player.getComponent<SpriteComponent>().play("idle_down");
+	//RpgSoundManager::pauseMusic();
 }
 
 void RpgPlayState::Resume()
@@ -140,6 +144,9 @@ void RpgPlayState::HandleEvents(RpgGame *rpgGame)
 				break;
 			case SDLK_i:
 				rpgGame->changeState(RpgInventoryState::Instance());
+				break;
+			case SDLK_p:
+				saveGame.saveCurrentGame();
 				break;
 			}
 			break;
@@ -223,7 +230,7 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 
 		if (e->hasComponent<ColliderComponent>()) {
 			SDL_Rect cCol = e->getComponent<ColliderComponent>().collider;
-			if (Collision::AABB(cCol, playerCol) && std::difftime(time(0), last_encounter_escape) > 1.0) {
+			if (Collision::AABB(cCol, playerCol) && std::difftime(time(0), last_encounter_escape) > ENEMY_PHASE_TIME) {
 				// player.getComponent<TransformComponent>().position = playerPos;
 				std::cout << "ENEMY encountered" << std::endl;
 				// TODO: start combat (for colliding enemy + enemies in certain range?)
@@ -308,6 +315,7 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 
 		manager.refresh(m_state);
 		map = new Map(newMap, 3);
+		saveGame.player_map = map->getMapFilePath();
 		map->LoadMap();
 
 		// Loading new map finished -> start fading in again

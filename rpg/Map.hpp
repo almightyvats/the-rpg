@@ -75,6 +75,8 @@ class Map {
 	int scale;
 	MapSetting setting;
 
+	std::string getMapFilePath() const {return mapFilePath;}
+
   private:
 	std::string mapFilePath;
 

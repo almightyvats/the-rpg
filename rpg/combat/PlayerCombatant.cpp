@@ -97,7 +97,6 @@ std::string PlayerCombatant::GainExp(int exp_gain)
 std::string PlayerCombatant::LevelUp(int tokens, int new_exp)
 {
 	std::ostringstream os;
-	std::srand(std::time(nullptr));
 
 	level_++;
 	exp_ = new_exp;
@@ -106,7 +105,7 @@ std::string PlayerCombatant::LevelUp(int tokens, int new_exp)
 	max_hp_ += hp_increase;
 	hp_ += hp_increase;
 
-	os << "Level Up! " << name() << "is now Lvl. " << level_ << " (+" << hp_increase << " HP";
+	os << "Level Up! " << name() << " is now Lvl. " << level_ << " (+" << hp_increase << " HP";
 
 	int tokens_left = tokens;
 
@@ -164,6 +163,11 @@ Equipment PlayerCombatant::RemoveEquipment(int index)
 	} else {
 		return equipment_.at(index);
 	}
+}
+
+void PlayerCombatant::ClearEquipment()
+{
+	equipment_.clear();
 }
 
 std::vector<Attack> PlayerCombatant::GetAttackList()

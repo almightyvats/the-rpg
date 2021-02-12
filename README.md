@@ -9,4 +9,6 @@ This is the test-build of the RPG created for the PS Advanced C++ of WS2020/21.
 - SDL2_mixer
 - SDL2_ttf
 
+## Credits
 
+Sound effects obtained from https://www.zapsplat.com

@@ -58,9 +58,9 @@ void AssetManager::CreateCombatant(Vector2D position, std::string sprite_name, b
 		combatantSprite.defaultAnimation("idle_down");
 	}
 	if (player_team) {
-		combatant.addGroup(RpgCombatState::groupPlayerCombatants);
+		combatant.addGroup(RpgCombatState::groupCombatPlayerCombatants);
 	} else {
-		combatant.addGroup(RpgCombatState::groupEnemyCombatants);
+		combatant.addGroup(RpgCombatState::groupCombatEnemyCombatants);
 	}
 }
 
@@ -122,7 +122,7 @@ void getSpriteCoords(EquipmentType eqType, EquipmentMaterial eqMat, int &x, int 
 	}
 	// Axes
 	else if (eqType == EquipmentType::axe && eqMat == EquipmentMaterial::wood) {
-		x = 11;
+		x = 14;
 		y = 1;
 	} else if (eqType == EquipmentType::axe && eqMat == EquipmentMaterial::metal) {
 		x = 0;

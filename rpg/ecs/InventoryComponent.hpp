@@ -3,6 +3,7 @@
 #include "../combat/Equipment.hpp"
 #include "Components.hpp"
 #include "rpg/Vector2D.hpp"
+#include <cereal/types/vector.hpp>
 
 enum InventoryAction : std::size_t { actionNone, actionDelete };
 
@@ -31,4 +32,10 @@ struct InventoryComponent : public Component {
 		transform = &entity->getComponent<TransformComponent>();
 	}
 	void update() override{};
+
+	template <class Archive>
+	void serialize(Archive &archive)
+	{
+		archive(CEREAL_NVP(pocketNumber), CEREAL_NVP(equip)); // serialize things by passing them to the archive
+	}
 };

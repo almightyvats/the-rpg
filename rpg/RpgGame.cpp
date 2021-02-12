@@ -26,8 +26,18 @@ void RpgGame::init(std::string title, bool fullScreen)
 			std::cout << "Window created" << std::endl;
 		}
 		RpgSoundManager::init();
+		RpgSoundManager::addMusic("../rpg/assets/music/combat1.wav", "COMBAT1");
 		RpgSoundManager::addMusic("../rpg/assets/music/menu.wav", "MENU");
 		RpgSoundManager::addMusic("../rpg/assets/music/play.wav", "PLAY");
+		RpgSoundManager::addSoundEffect("../rpg/assets/music/effects/explosion.wav", "EXPLOSION");
+		RpgSoundManager::addSoundEffect("../rpg/assets/music/effects/rewind.wav", "REWIND");
+		RpgSoundManager::addSoundEffect("../rpg/assets/music/effects/melee_single.mp3", "MELEE_SINGLE");
+		RpgSoundManager::addSoundEffect("../rpg/assets/music/effects/melee_multi.mp3", "MELEE_MULTI");
+		RpgSoundManager::addSoundEffect("../rpg/assets/music/effects/ranged_single.mp3", "RANGED_SINGLE");
+		RpgSoundManager::addSoundEffect("../rpg/assets/music/effects/ranged_multi.mp3", "RANGED_MULTI");
+		RpgSoundManager::addSoundEffect("../rpg/assets/music/effects/potion.mp3", "POTION");
+		RpgSoundManager::addSoundEffect("../rpg/assets/music/effects/shield.mp3", "SHIELD");
+		RpgSoundManager::addSoundEffect("../rpg/assets/music/effects/ignite.mp3", "IGNITE");
 
 		if (TTF_Init() < 0) {
 			std::cout << "Error in loading TTF: " << TTF_GetError() << std::endl;

@@ -6,6 +6,7 @@
 #include "../Vector2D.hpp"
 #include "../RpgLabel.hpp"
 #include "RpgPlayState.hpp"
+#include "../RpgSoundManager.hpp"
 #include "rpg/states/RpgStates.hpp"
 
 #define FONT_MSG "Ancient"
@@ -82,7 +83,6 @@ RpgCombatState::RpgCombatState(std::vector<Combatant*> player_combatants, Combat
 {
 
     RpgGame::assets->AddFont("Ancient_s", "../rpg/assets/font/ancient.ttf", 35);
-
     GenerateCombat(player_combatants, arena);
 }
 
@@ -138,18 +138,19 @@ void RpgCombatState::GenerateCombat(std::vector<Combatant*> player_combatants, C
         this->labels_combatants.push_back(l_combatant);
     }
     combat_state_changed = true;
+    Resume();
 }
 
-auto &player_c(manager.getGroup(RpgCombatState::groupPlayerCombatants));
-auto &enemy_c(manager.getGroup(RpgCombatState::groupEnemyCombatants));
-auto &projectiles_c(manager.getGroup(RpgCombatState::groupProjectiles));
+auto &player_c(manager.getGroup(RpgCombatState::groupCombatPlayerCombatants));
+auto &enemy_c(manager.getGroup(RpgCombatState::groupCombatEnemyCombatants));
+auto &projectiles_c(manager.getGroup(RpgCombatState::groupCombatProjectiles));
 
 void RpgCombatState::Pause() {
-
+	RpgSoundManager::pauseMusic();
 }
 
 void RpgCombatState::Resume() {
-
+	RpgSoundManager::resumeMusic("COMBAT1");
 }
 
 static Attack attack_copy;
@@ -260,6 +261,14 @@ void RpgCombatState::CleanupCombat(RpgGame *rpgGame)
     for (auto pc : combat.player_combatants_) {
         pc->ResetToIdle();
     }
+
+    for (auto p : player_c) {
+        p->destroy();
+    }
+
+    for (auto e : enemy_c) {
+        e->destroy();
+    }
 }
 
 void RpgCombatState::Update(RpgGame *rpgGame)
@@ -315,8 +324,28 @@ void RpgCombatState::Update(RpgGame *rpgGame)
         label_action_display.setLabelText(FONT_DISPLAY, combat.display_text());
         if (combat.active_turn_chosen_attack() != NULL) {
             label_msg.setLabelText(FONT_MSG, combat.active_combatant()->name() + " uses " + combat.active_turn_chosen_attack()->name);
+            if (combat.active_turn_chosen_attack()->type == AttackType::melee) {
+                if (combat.active_turn_chosen_attack()->target_type == AttackTargetType::single) {
+                    RpgSoundManager::playEffect("MELEE_SINGLE");
+                } else {
+                    RpgSoundManager::playEffect("MELEE_MULTI");
+                }
+            } else {
+                if (combat.active_turn_chosen_attack()->target_type == AttackTargetType::single) {
+                    RpgSoundManager::playEffect("RANGED_SINGLE");
+                } else {
+                    RpgSoundManager::playEffect("RANGED_MULTI");
+                }
+            }
         } else if (combat.active_turn_chosen_ability() != NULL) {
             label_msg.setLabelText(FONT_MSG, combat.active_combatant()->name() + " uses " + combat.active_turn_chosen_ability()->name);
+            if (combat.active_turn_chosen_ability()->effect == AbilityEffect::block) {
+                RpgSoundManager::playEffect("SHIELD");
+            } else if (combat.active_turn_chosen_ability()->effect == AbilityEffect::ignite) {
+                RpgSoundManager::playEffect("IGNITE");
+            } else if (combat.active_turn_chosen_ability()->heal > 0) {
+                RpgSoundManager::playEffect("POTION");
+            }
         } else {
             std::cout << "no action chosen for some reason\n";
         }
