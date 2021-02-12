@@ -233,5 +233,92 @@
  "tilewidth":32,
  "type":"map",
  "version":1.4,
- "width":50
+ "width":50,
+ "enemies": [
+       {
+              "x": 19,
+              "y": 45,
+              "model": "wraith_1"
+       },
+       {
+              "x": 28,
+              "y": 47,
+              "model": "wraith_2"
+       },
+       {
+              "x": 26,
+              "y": 40,
+              "model": "wraith_3"
+       },
+       {
+              "x": 29,
+              "y": 33,
+              "model": "wraith_3"
+       },
+       {
+              "x": 5,
+              "y": 31,
+              "model": "wraith_3"
+       },
+       {
+              "x": 8,
+              "y": 25,
+              "model": "wraith_2"
+       },
+       {
+              "x": 5,
+              "y": 21,
+              "model": "wraith_2"
+       },
+       {
+              "x": 10,
+              "y": 15,
+              "model": "wraith_1"
+       },
+       {
+              "x": 22,
+              "y": 6,
+              "model": "wraith_2"
+       },
+       {
+              "x": 9,
+              "y": 7,
+              "model": "wraith_3"
+       },
+       {
+              "x": 35,
+              "y": 11,
+              "model": "wraith_3"
+       },
+       {
+              "x": 40,
+              "y": 5,
+              "model": "wraith_3"
+       },
+       {
+              "x": 41,
+              "y": 47,
+              "model": "wraith_2"
+       },
+       {
+              "x": 45,
+              "y": 40,
+              "model": "wraith_2"
+       },
+       {
+              "x": 41,
+              "y": 26,
+              "model": "wraith_3"
+       },
+       {
+              "x": 22,
+              "y": 12,
+              "model": "wraith_2"
+       },
+       {
+              "x": 24,
+              "y": 25,
+              "model": "wraith_2"
+       }
+]
 }
