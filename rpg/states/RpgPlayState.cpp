@@ -81,9 +81,9 @@ auto &enemies(manager.getGroup(RpgPlayState::groupEnemies));
 
 void RpgPlayState::Pause()
 {
-	player.getComponent<TransformComponent>().velocity = Vector2D(0,0);
+	player.getComponent<TransformComponent>().velocity = Vector2D(0, 0);
 	player.getComponent<SpriteComponent>().play("idle_down");
-	//RpgSoundManager::pauseMusic();
+	// RpgSoundManager::pauseMusic();
 }
 
 void RpgPlayState::Resume()
@@ -196,9 +196,13 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 				}
 				if (t->hasComponent<DoorComponent>()) {
 					auto &door = t->getComponent<DoorComponent>();
-					newMap = door.targetMap;
-					playerStart = door.playerStart;
-					fade = -5;
+					// Door only passable if in godmode, or any combatant has reached lvl 10
+					if (saveGame.pc_archer.level() >= door.minLvl || saveGame.pc_brute.level() >= door.minLvl
+					    || saveGame.pc_knight.level() >= door.minLvl || godMode) {
+						newMap = door.targetMap;
+						playerStart = door.playerStart;
+						fade = -5;
+					}
 				}
 			}
 		}

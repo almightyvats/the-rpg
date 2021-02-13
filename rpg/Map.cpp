@@ -38,6 +38,9 @@ Map::Map(std::string path, int mapScale) : mapFilePath(path)
 		layer.width = layers[i]["width"].GetInt();
 		layer.name = layers[i]["name"].GetString();
 
+		layer.targetMap = "";
+		layer.playerStart = Vector2D(0, 0);
+		layer.minLvl = 1;
 		if (layers[i].HasMember("properties")) {
 			const rapidjson::Value &properties = layers[i]["properties"];
 			for (rapidjson::SizeType j = 0; j < properties.Size(); j++) { // Uses SizeType instead of size_t^
@@ -51,6 +54,8 @@ Map::Map(std::string path, int mapScale) : mapFilePath(path)
 					layer.playerStart.x = properties[j]["value"].GetInt();
 				} else if (propName.compare("playerStartY") == 0) {
 					layer.playerStart.y = properties[j]["value"].GetInt();
+				} else if (propName.compare("minLvl") == 0) {
+					layer.minLvl = properties[j]["value"].GetInt();
 				}
 			}
 		}
@@ -130,11 +135,15 @@ void Map::LoadMap()
 					int xpos = ((tileNumber % tileset.columns) + 0) * setting.tileWidth;
 					int ypos = ((tileNumber / tileset.columns) + 0) * setting.tileHeight;
 
+					DoorSettings door;
+					door.targetMap = setting.layers[layerNumber].targetMap;
+					door.playerStart = setting.layers[layerNumber].playerStart;
+					door.minLvl = setting.layers[layerNumber].minLvl;
+
 					RpgGame::assets->CreateMapTile(
 					    xpos, ypos, x * setting.ScaledWidth(), y * setting.ScaledHeight(), setting.tileSize,
 					    setting.mapScale, setting.layers[layerNumber].collision, tileset.spriteId,
-					    SpriteSheet(tileset.columns, setting.tileWidth, setting.tileHeight, 0, 0),
-					    setting.layers[layerNumber].targetMap, setting.layers[layerNumber].playerStart, m_state);
+					    SpriteSheet(tileset.columns, setting.tileWidth, setting.tileHeight, 0, 0), door, m_state);
 					counter++;
 				}
 

@@ -15,6 +15,7 @@ struct MapLayer {
 	std::vector<int> tiles;
 	std::string targetMap;
 	Vector2D playerStart;
+	int minLvl;
 };
 
 struct TileSet {

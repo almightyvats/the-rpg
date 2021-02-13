@@ -83,7 +83,7 @@ void AssetManager::CreateProjectile(Vector2D position, Vector2D velocity, int ra
 }
 
 void AssetManager::CreateMapTile(int srcX, int srcY, int destX, int destY, int tsize, int tscale, bool withCollision,
-                                 std::string id, SpriteSheet spriteSheet, std::string map, Vector2D pStart, State state)
+                                 std::string id, SpriteSheet spriteSheet, DoorSettings doorSettings, State state)
 {
 	auto &tile(manager->addEntity(state));
 	tile.addComponent<TransformComponent>(destX, destY, tsize, tsize, tscale);
@@ -92,8 +92,8 @@ void AssetManager::CreateMapTile(int srcX, int srcY, int destX, int destY, int t
 	if (withCollision) {
 		tile.addComponent<ColliderComponent>("MapTile");
 	}
-	if (map != "") {
-		tile.addComponent<DoorComponent>(map, pStart);
+	if (doorSettings.targetMap != "") {
+		tile.addComponent<DoorComponent>(doorSettings.targetMap, doorSettings.playerStart,doorSettings.minLvl);
 	}
 	tile.addGroup(RpgPlayState::groupMap);
 }

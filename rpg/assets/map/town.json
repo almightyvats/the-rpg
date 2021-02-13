@@ -54,6 +54,11 @@
                  "name":"targetMap",
                  "type":"string",
                  "value":"outdoor_02"
+                },
+                {
+                 "name":"minLvl",
+                 "type":"int",
+                 "value":10
                 }],
          "type":"tilelayer",
          "visible":true,
