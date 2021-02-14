@@ -90,7 +90,7 @@ RpgCombatState::~RpgCombatState() = default;
 
 void RpgCombatState::GenerateCombat(std::vector<Combatant*> player_combatants, CombatArena arena)
 {
-    this->enemies = GenerateSimpleEnemies(player_combatants);
+    this->enemies = GenerateSimpleEnemies(player_combatants, arena);
 
     std::vector<Combatant*> enemy_combatants;
     for (auto &enemy : this->enemies) {
@@ -102,6 +102,9 @@ void RpgCombatState::GenerateCombat(std::vector<Combatant*> player_combatants, C
     switch(arena) {
         case CombatArena::grass: 
             combat_arena = TextureManager::LoadTexture("../rpg/assets/arenas/grass_arena_1.png");
+            break;
+        case CombatArena::stone: 
+            combat_arena = TextureManager::LoadTexture("../rpg/assets/arenas/stone_arena_1.png");
             break;
         default:
             combat_arena = TextureManager::LoadTexture("../rpg/assets/arenas/grass_arena_1.png");

@@ -5,4 +5,4 @@
 
 #include <vector>
 
-std::vector<EnemyCombatant> GenerateSimpleEnemies(const std::vector<Combatant*>& player_combatants);
+std::vector<EnemyCombatant> GenerateSimpleEnemies(const std::vector<Combatant*>& player_combatants, CombatArena arena);

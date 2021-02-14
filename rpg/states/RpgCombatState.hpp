@@ -5,10 +5,6 @@
 #include "../TextureManager.hpp"
 #include "../RpgLabel.hpp"
 
-enum class CombatArena {
-    grass,
-};
-
 struct CombatantLabels {
     RpgLabel name;
     RpgLabel lvl;
