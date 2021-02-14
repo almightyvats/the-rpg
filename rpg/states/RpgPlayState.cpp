@@ -66,6 +66,8 @@ RpgPlayState::RpgPlayState()
 	player.addComponent<ColliderComponent>("Player");
 	player.addGroup(groupPlayers);
 
+	RpgSoundManager::resumeMusic("PLAY");
+
 	// RpgGame::assets->AddTexture("icons", "../rpg/assets/icons/Icon Pack_3.png");
 	// RpgGame::assets->CreateItem(0, 0, 13 * 32 * 3, 88 * 32 * 3, "icons");
 }
