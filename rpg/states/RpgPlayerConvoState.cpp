@@ -54,6 +54,7 @@ void RpgPlayerConvoState::HandleEvents(RpgGame *rpgGame)
 			}
 			break;
 		}
+		break;
 	case SDL_KEYUP:
 		switch (m_event.key.keysym.sym) {
 		case SDLK_SPACE:
@@ -63,6 +64,7 @@ void RpgPlayerConvoState::HandleEvents(RpgGame *rpgGame)
 			isKey_cPressed = false;
 			break;
 		}
+		break;
 	default:
 		break;
 	}
