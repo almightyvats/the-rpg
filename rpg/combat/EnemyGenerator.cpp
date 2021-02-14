@@ -3,10 +3,15 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
+
+#define NUMBER_ENEMY_TYPES 9
+#define NUMBER_ENEMIES_GRASS 5
+#define NUMBER_ENEMIES_STONE 6
 
 #define ENEMY_TOTAL_LEVEL_DEVIATION_FACTOR 5
 #define MIN_ENEMY_LEVEL_FACTOR 0.7
-#define MAX_ENEMY_OVERLEVEL 5
+#define MAX_ENEMY_OVERLEVEL 3
 #define MIN_ENEMY_TEAM_SIZE 2
 #define MAX_ENEMY_TEAM_SIZE 4
 
@@ -155,8 +160,82 @@ EnemyCombatant GenerateEnemyMinocow(int lvl, int number)
     return enemy;
 }
 
+static int enemy_counts[NUMBER_ENEMY_TYPES];
 
-std::vector<EnemyCombatant> GenerateSimpleEnemies(const std::vector<Combatant*>& player_combatants)
+EnemyCombatant GenerateGrassEnemy(int lvl)
+{
+    int enemy_type = rand() % NUMBER_ENEMIES_GRASS;
+
+    switch (enemy_type)
+    {
+    case 0:
+        enemy_counts[0]++;
+        return GenerateEnemySpirit(lvl, enemy_counts[0]);
+    case 1:
+        enemy_counts[1]++;
+        return GenerateEnemyWillOWisp(lvl, enemy_counts[1]);
+    case 2:
+        enemy_counts[2]++;
+        return GenerateEnemyNightmare(lvl, enemy_counts[2]);
+    case 3:
+        enemy_counts[3]++;
+        return GenerateEnemyClayGolem(lvl, enemy_counts[3]);
+    case 4:
+        enemy_counts[4]++;
+        return GenerateEnemyWoodGolem(lvl, enemy_counts[4]);
+    default:
+        enemy_counts[0]++;
+        return GenerateEnemySpirit(lvl, enemy_counts[0]);
+    }
+}
+
+EnemyCombatant GenerateStoneEnemy(int lvl)
+{
+    int enemy_type = rand() % NUMBER_ENEMIES_STONE;
+
+    switch (enemy_type)
+    {
+    case 0:
+        enemy_counts[1]++;
+        return GenerateEnemyWillOWisp(lvl, enemy_counts[1]);
+    case 1:
+        enemy_counts[2]++;
+        return GenerateEnemyNightmare(lvl, enemy_counts[2]);
+    case 2:
+        enemy_counts[3]++;
+        return GenerateEnemyClayGolem(lvl, enemy_counts[3]);
+    case 3:
+        enemy_counts[5]++;
+        return GenerateEnemyStoneGolem(lvl, enemy_counts[5]);
+    case 4:
+        enemy_counts[6]++;
+        return GenerateEnemyCultist(lvl, enemy_counts[6]);
+    case 5:
+        enemy_counts[7]++;
+        return GenerateEnemyWarrior(lvl, enemy_counts[7]);
+    case 6:
+        enemy_counts[8]++;
+        return GenerateEnemyMinocow(lvl, enemy_counts[8]);
+    default:
+        enemy_counts[5]++;
+        return GenerateEnemyStoneGolem(lvl, enemy_counts[5]);
+    }
+}
+
+EnemyCombatant GenerateEnemy(int lvl, CombatArena arena)
+{
+    switch (arena)
+    {
+    case CombatArena::grass:
+        return GenerateGrassEnemy(lvl);
+    case CombatArena::stone:
+        return GenerateStoneEnemy(lvl);
+    default:
+        return GenerateGrassEnemy(lvl);
+    }
+}
+
+std::vector<EnemyCombatant> GenerateSimpleEnemies(const std::vector<Combatant*>& player_combatants, CombatArena arena)
 {    
     int total_player_level = 0;
     int max_player_level = 0;
@@ -164,6 +243,8 @@ std::vector<EnemyCombatant> GenerateSimpleEnemies(const std::vector<Combatant*>&
         total_player_level += combatant->level();
         max_player_level = std::max(combatant->level(), max_player_level);
     }
+
+    std::fill(enemy_counts, enemy_counts + NUMBER_ENEMY_TYPES, 0);
 
     std::srand(std::time(nullptr));
 
@@ -173,15 +254,15 @@ std::vector<EnemyCombatant> GenerateSimpleEnemies(const std::vector<Combatant*>&
     int enemy_team_size = (rand() % (MAX_ENEMY_TEAM_SIZE - MIN_ENEMY_TEAM_SIZE + 1)) + MIN_ENEMY_TEAM_SIZE;
 
     std::vector<EnemyCombatant> enemy_combatants;
-    
+
     for (int i = 0; i < enemy_team_size; i++) {
         int expected_enemy_level = total_enemy_level / (enemy_team_size - i);
         int min_enemy_level = (int)(expected_enemy_level * MIN_ENEMY_LEVEL_FACTOR);
         int max_enemy_level = 2*expected_enemy_level - min_enemy_level;
 
         int enemy_level = (rand() % (max_enemy_level - min_enemy_level)) + min_enemy_level;
-        
-        enemy_combatants.push_back(GenerateEnemyWarrior(std::min(enemy_level, max_player_level + MAX_ENEMY_OVERLEVEL), i+1));
+
+        enemy_combatants.push_back(GenerateEnemy(std::min(enemy_level, max_player_level + MAX_ENEMY_OVERLEVEL), arena));
         total_enemy_level -= enemy_level;
     }
 

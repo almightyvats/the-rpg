@@ -90,7 +90,7 @@ RpgCombatState::~RpgCombatState() = default;
 
 void RpgCombatState::GenerateCombat(std::vector<Combatant*> player_combatants, CombatArena arena)
 {
-    this->enemies = GenerateSimpleEnemies(player_combatants);
+    this->enemies = GenerateSimpleEnemies(player_combatants, arena);
 
     std::vector<Combatant*> enemy_combatants;
     for (auto &enemy : this->enemies) {

@@ -7,6 +7,11 @@
 #include "PlayerCombatant.hpp"
 #include "EnemyCombatant.hpp"
 
+enum class CombatArena {
+    grass,
+    stone,
+};
+
 enum class CombatState {
     start,
     turn_start_display,

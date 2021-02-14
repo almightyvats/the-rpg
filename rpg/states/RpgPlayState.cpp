@@ -135,6 +135,14 @@ bool CheckKonami(SDL_Keycode keyCode)
 	return conamiCodeInput[9];
 }
 
+CombatArena DetermineArena() {
+	if (map->mapFilePath.compare("../rpg/assets/map/outdoor_02.json") ==  0) {
+		return CombatArena::stone;
+	} else {
+		return CombatArena::grass;
+	}
+}
+
 void RpgPlayState::HandleEvents(RpgGame *rpgGame)
 {
 	if (SDL_PollEvent(&event) == 1) {
@@ -247,7 +255,7 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 				// player.getComponent<TransformComponent>().position = playerPos;
 				std::cout << "ENEMY encountered" << std::endl;
 				// TODO: start combat (for colliding enemy + enemies in certain range?)
-				rpgGame->pushState(RpgCombatState::Instance(saveGame.FetchCombatants(), CombatArena::grass));
+				rpgGame->pushState(RpgCombatState::Instance(saveGame.FetchCombatants(), DetermineArena()));
 				enemy_encountered = e;
 			}
 		}
