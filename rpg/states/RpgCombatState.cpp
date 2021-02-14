@@ -103,6 +103,9 @@ void RpgCombatState::GenerateCombat(std::vector<Combatant*> player_combatants, C
         case CombatArena::grass: 
             combat_arena = TextureManager::LoadTexture("../rpg/assets/arenas/grass_arena_1.png");
             break;
+        case CombatArena::stone: 
+            combat_arena = TextureManager::LoadTexture("../rpg/assets/arenas/stone_arena_1.png");
+            break;
         default:
             combat_arena = TextureManager::LoadTexture("../rpg/assets/arenas/grass_arena_1.png");
     }
