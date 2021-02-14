@@ -54,15 +54,107 @@ EnemyCombatant GenerateEnemyNightmare(int lvl, int number)
     return enemy;
 }
 
-#define CLAYGOLEM_STATS {(int)(0.5*lvl + 1), 4*lvl, 2*lvl, (int)(0.5*lvl + 1), (int)(0.1*lvl + 1), lvl}
+
+#define GOLEM_ATTACK_SMASH {"Smash", AttackType::melee, AttackTargetType::single, 10, 0, 0.8, 0.1, 1.5, 10, AttackEffect::none}
+#define GOLEM_ATTACK_ROCK_THROW {"Rock Throw", AttackType::ranged, AttackTargetType::single, 10, lvl, 0.7, 0.2, 1.5, 10, AttackEffect::none}
+
+#define CLAYGOLEM_STATS {(int)(0.5*lvl + 1), 4*lvl, 2*lvl, (int)(0.5*lvl + 1), (int)(0.5*lvl + 1), lvl}
 #define CLAYGOLEM_MAX_HP 20 + 7*lvl
+#define CLAYGOLEM_ATTACK_GROUND_SLAM {"Ground Slam", AttackType::melee, AttackTargetType::multi, 5, 0, 0.65, 0.0, 1.0, 12, AttackEffect::none}
 
 EnemyCombatant GenerateEnemyClayGolem(int lvl, int number)
 {
     std::string name = std::string("Clay Golem ") + std::to_string(number);
     EnemyCombatant enemy = EnemyCombatant(name, "c_clay_golem", lvl, CLAYGOLEM_MAX_HP, CLAYGOLEM_STATS, 0);
+    enemy.AddAttack(GOLEM_ATTACK_SMASH);
+    enemy.AddAttack(GOLEM_ATTACK_ROCK_THROW);
+    enemy.AddAttack(CLAYGOLEM_ATTACK_GROUND_SLAM);
     return enemy; 
 }
+
+#define WOODGOLEM_STATS {(int)(0.7*lvl + 1), 3*lvl, 2*lvl, (int)(0.8*lvl + 1), (int)(0.8*lvl + 1), lvl}
+#define WOODGOLEM_MAX_HP 5 + 8*lvl
+#define WOODGOLEM_ATTACK_NATURE {"Nature", AttackType::ranged, AttackTargetType::multi, 12, lvl, 0.5, 0.0, 2.0, 12, AttackEffect::none}
+
+EnemyCombatant GenerateEnemyWoodGolem(int lvl, int number)
+{
+    std::string name = std::string("Wood Golem ") + std::to_string(number);
+    EnemyCombatant enemy = EnemyCombatant(name, "c_wood_golem", lvl, WOODGOLEM_MAX_HP, WOODGOLEM_STATS, 0);
+    enemy.AddAttack(GOLEM_ATTACK_SMASH);
+    enemy.AddAttack(GOLEM_ATTACK_ROCK_THROW);
+    enemy.AddAttack(WOODGOLEM_ATTACK_NATURE);
+    return enemy; 
+}
+
+#define STONEGOLEM_STATS {(int)(0.3*lvl + 1), 2*lvl, 2*lvl, (int)(0.4*lvl + 1), (int)(0.4*lvl + 1), lvl}
+#define STONEGOLEM_MAX_HP 10 + 10*lvl
+#define STONEGOLEM_ABILITY_HARDEN {"Harden", AbilityTargetType::self, lvl, 0, 1.0, 6, AbilityEffect::block}
+
+EnemyCombatant GenerateEnemyStoneGolem(int lvl, int number)
+{
+    std::string name = std::string("Stone Golem ") + std::to_string(number);
+    EnemyCombatant enemy = EnemyCombatant(name, "c_stone_golem", lvl, STONEGOLEM_MAX_HP, STONEGOLEM_STATS, 0);
+    enemy.AddAttack(GOLEM_ATTACK_SMASH);
+    enemy.AddAttack(GOLEM_ATTACK_ROCK_THROW);
+    enemy.AddAbility(STONEGOLEM_ABILITY_HARDEN);
+    return enemy; 
+}
+
+#define MINOTAUR_ATTACK_FAST_STRIKE {"Fast Strike", AttackType::melee, AttackTargetType::single, (int)(0.1*lvl + 5), 0, 0.9, 0.2, 2.0, 4, AttackEffect::none}
+#define MINOTAUR_ATTACK_POWER_STRIKE {"Power Strike", AttackType::melee, AttackTargetType::single, (int)(0.25*lvl + 5), 0, 0.9, 0.2, 2.0, 9, AttackEffect::slow}
+#define MINOTAUR_ABILITY_BLOCK {"Block", AbilityTargetType::self, 0, 0, 1.0, 5, AbilityEffect::block}
+
+#define CULTIST_STATS {(int)(1.1*lvl + 1), 3*lvl, lvl, (int)(1.5*lvl + 1), (int)(1.1*lvl + 1), lvl}
+#define CULTIST_MAX_HP 8*lvl
+#define CULTIST_ARMOR (int)(0.5*lvl + 1)
+#define CULTIST_ATTACK_WARCRY {"Warcry", AttackType::ranged, AttackTargetType::multi, 1, 3*lvl, 10.0, 0.0, 1.0, 12, AttackEffect::none}
+#define CULTIST_ABILITY_CLEANSING {"Cleansing", AbilityTargetType::self, 2*lvl, 0, 1.0, 8, AbilityEffect::ignite}
+
+EnemyCombatant GenerateEnemyCultist(int lvl, int number)
+{
+    std::string name = std::string("Cultist ") + std::to_string(number);
+    EnemyCombatant enemy = EnemyCombatant(name, "c_minotaur_cultist", lvl, CULTIST_MAX_HP, CULTIST_STATS, CULTIST_ARMOR);
+    enemy.AddAttack(MINOTAUR_ATTACK_FAST_STRIKE);
+    enemy.AddAttack(MINOTAUR_ATTACK_POWER_STRIKE);
+    enemy.AddAbility(MINOTAUR_ABILITY_BLOCK);
+    enemy.AddAttack(CULTIST_ATTACK_WARCRY);
+    enemy.AddAbility(CULTIST_ABILITY_CLEANSING);
+    return enemy; 
+}
+
+#define WARRIOR_STATS {(int)(2.0*lvl + 1), 3*lvl, (int)(0.4*lvl + 1), (int)(1.5*lvl + 1), (int)(3.0*lvl + 1), lvl}
+#define WARRIOR_MAX_HP 8*lvl
+#define WARRIOR_ARMOR (int)(1.1*lvl)
+#define WARRIOR_RAMPAGE {"Rampage", AttackType::melee, AttackTargetType::multi, (int)(0.15*lvl + 2), 0, 0.8, 0.1, 1.5, 12, AttackEffect::none}
+#define WARRIOR_PURE_RAGE {"Pure Rage", AttackType::melee, AttackTargetType::single, (int)(0.5*lvl), 0, 0.7, 0.1, 2.0, 10, AttackEffect::armor_breaking}
+
+EnemyCombatant GenerateEnemyWarrior(int lvl, int number)
+{
+    std::string name = std::string("Warrior ") + std::to_string(number);
+    EnemyCombatant enemy = EnemyCombatant(name, "c_minotaur_warrior", lvl, WARRIOR_MAX_HP, WARRIOR_STATS, WARRIOR_ARMOR);
+    enemy.AddAttack(MINOTAUR_ATTACK_FAST_STRIKE);
+    enemy.AddAttack(MINOTAUR_ATTACK_POWER_STRIKE);
+    enemy.AddAbility(MINOTAUR_ABILITY_BLOCK);
+    enemy.AddAttack(WARRIOR_RAMPAGE);
+    enemy.AddAttack(WARRIOR_PURE_RAGE);
+    return enemy;
+}
+
+#define MINOCOW_STATS {(int)(1.5*lvl + 1), 3*lvl, lvl, (int)(1.5*lvl + 1), (int)(1.1*lvl + 1), lvl}
+#define MINOCOW_MAX_HP 7*lvl
+#define MINOCOW_ATTACK_HEADBUTT {"Headbutt", AttackType::melee, AttackTargetType::multi, 3, 0, 0.8, 0.0, 1.0, 1, AttackEffect::slow}
+
+EnemyCombatant GenerateEnemyMinocow(int lvl, int number)
+{
+    std::string name = std::string("Minocow ") + std::to_string(number);
+    EnemyCombatant enemy = EnemyCombatant(name, "c_minotaur_minocow", lvl, MINOCOW_MAX_HP, MINOCOW_STATS, 0);
+    enemy.AddAttack(MINOTAUR_ATTACK_FAST_STRIKE);
+    enemy.AddAttack(MINOTAUR_ATTACK_POWER_STRIKE);
+    enemy.AddAbility(MINOTAUR_ABILITY_BLOCK);
+    enemy.AddAttack(MINOCOW_ATTACK_HEADBUTT);
+    return enemy;
+}
+
 
 std::vector<EnemyCombatant> GenerateSimpleEnemies(const std::vector<Combatant*>& player_combatants)
 {    
@@ -89,7 +181,7 @@ std::vector<EnemyCombatant> GenerateSimpleEnemies(const std::vector<Combatant*>&
 
         int enemy_level = (rand() % (max_enemy_level - min_enemy_level)) + min_enemy_level;
         
-        enemy_combatants.push_back(GenerateEnemyNightmare(std::min(enemy_level, max_player_level + MAX_ENEMY_OVERLEVEL), i+1));
+        enemy_combatants.push_back(GenerateEnemyWarrior(std::min(enemy_level, max_player_level + MAX_ENEMY_OVERLEVEL), i+1));
         total_enemy_level -= enemy_level;
     }
 
