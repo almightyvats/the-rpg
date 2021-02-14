@@ -1,4 +1,5 @@
 #include "RpgPlayerConvoState.hpp"
+#include <fstream>
 
 RpgPlayerConvoState::RpgPlayerConvoState()
 {
@@ -13,12 +14,23 @@ RpgPlayerConvoState::RpgPlayerConvoState()
 	m_dialogueBox2.h = 130;
 
 	SDL_Color white = {255, 255, 255};
-	auto playerDialogueLabel = std::make_shared<RpgLabel>(
+    m_playerDialogueLabel = std::make_shared<RpgLabel>(
 	    40, m_dialogueBox2.y + 10,
-	    "Do you want to have a conversation? Press C to continue or press SPACE and run away in under 5 seconds.",
-	    "Converstation", white);
+	    "Press space to continue",
+	    "Conversation", white);
 
-	m_labels.push_back(playerDialogueLabel);
+	//m_labels.push_back(playerDialogueLabel);
+    m_isPlayerTalking = false;
+    m_scriptPath = "../rpg/assets/scripts/dialogue.txt";
+
+    int number_of_lines = 0;
+    std::string line;
+    std::ifstream myfile(m_scriptPath);
+
+    while (std::getline(myfile, line))
+        ++number_of_lines;
+
+	m_totalLines = number_of_lines;
 
 	m_timer = std::make_unique<RpgTimer>();
 }
@@ -30,7 +42,7 @@ void RpgPlayerConvoState::Pause() {}
 void RpgPlayerConvoState::Resume() {}
 
 bool isSpacePressed = false;
-bool isKey_cPressed = false;
+int current_count = 0;
 
 void RpgPlayerConvoState::HandleEvents(RpgGame *rpgGame)
 {
@@ -44,13 +56,14 @@ void RpgPlayerConvoState::HandleEvents(RpgGame *rpgGame)
 		case SDLK_SPACE:
 			if (!isSpacePressed) {
 				isSpacePressed = true;
-				rpgGame->popState();
-				m_timer->setTimeout([this]() mutable { this->setPlayerReadyToTalk(true); }, 5000);
-			}
-			break;
-		case SDLK_c:
-			if (!isKey_cPressed) {
-				isKey_cPressed = true;
+                m_isPlayerTalking = true;
+				if (current_count == m_totalLines) {
+					rpgGame->popState();
+					m_timer->setTimeout([this]() mutable { this->setPlayerReadyToTalk(true); }, 5000);
+				}
+				else{
+					current_count++;
+				}
 			}
 			break;
 		}
@@ -60,9 +73,6 @@ void RpgPlayerConvoState::HandleEvents(RpgGame *rpgGame)
 		case SDLK_SPACE:
 			isSpacePressed = false;
 			break;
-		case SDLK_c:
-			isKey_cPressed = false;
-			break;
 		}
 		break;
 	default:
@@ -70,7 +80,18 @@ void RpgPlayerConvoState::HandleEvents(RpgGame *rpgGame)
 	}
 }
 
-void RpgPlayerConvoState::Update(RpgGame *rpgGame) {}
+void RpgPlayerConvoState::Update(RpgGame *rpgGame) {
+
+	if (m_isPlayerTalking)
+    {
+		std::string line;
+        std::ifstream myfile(m_scriptPath);
+		for (int i = 0; i < current_count; ++i) {
+            std::getline(myfile, line);
+		}
+		m_playerDialogueLabel->setLabelText("Conversation", line);
+	}
+}
 
 void RpgPlayerConvoState::Render(RpgGame *rpgGame)
 {
@@ -79,9 +100,10 @@ void RpgPlayerConvoState::Render(RpgGame *rpgGame)
 	SDL_SetRenderDrawColor(RpgGame::renderer, 0, 0, 0, 255);
 	SDL_RenderFillRect(RpgGame::renderer, &m_dialogueBox2);
 
-	for (auto &l : m_labels) {
-		l->Draw();
-	}
+//	for (auto &l : m_labels) {
+//		l->Draw();
+//	}
+    m_playerDialogueLabel->Draw();
 	SDL_RenderPresent(RpgGame::renderer);
 }
 

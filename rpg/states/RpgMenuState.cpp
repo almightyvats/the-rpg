@@ -32,7 +32,7 @@ RpgMenuState::RpgMenuState()
 	m_logoPtr = std::make_shared<RpgMenuItem>(0, 0, 400, 500, logoPath, ITEM_TYPE::LOGO);
 
 	RpgGame::assets->AddFont("Ancient", "../rpg/assets/font/ancient.ttf", 45);
-	RpgGame::assets->AddFont("Converstation", "../rpg/assets/font/conversation.ttf", 20);
+	RpgGame::assets->AddFont("Conversation", "../rpg/assets/font/conversation.ttf", 30);
 
 	auto newGameLabel = std::make_shared<RpgLabel>(LabelType::NEWGAME, "New game", "Ancient", m_colors[0]);
 	auto loadGameLabel = std::make_shared<RpgLabel>(LabelType::LOADGAME, "Load game", "Ancient", m_colors[0]);

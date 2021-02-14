@@ -41,11 +41,14 @@ class RpgPlayerConvoState : public RpgGameState {
   private:
 	inline static SDL_Event m_event;
 	inline static bool m_readyToTalk = true;
-
+	bool m_isPlayerTalking;
 	LabelItemList m_labels;
+    LabelItem m_playerDialogueLabel;
 	SDL_Rect m_dialogueBox1;
 	SDL_Rect m_dialogueBox2;
 	std::unique_ptr<RpgTimer> m_timer;
+	std::string m_scriptPath;
+	int m_totalLines;
 };
 
 #endif
