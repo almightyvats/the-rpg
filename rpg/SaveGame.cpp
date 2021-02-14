@@ -2,6 +2,7 @@
 #include "AssetManager.hpp"
 
 #include "combat/LootGenerator.hpp"
+#include <cstdio>
 #include <cstdlib>
 #include <ctime>
 #include <filesystem>
@@ -13,7 +14,8 @@ extern Manager manager;
 SaveGame::SaveGame()
     : pc_knight(PlayerCombatant("Knight", "c_knight", 0, 0, 0, 0, 0, 0, 0, 0)),
       pc_archer(PlayerCombatant("Archer", "c_archer", 0, 0, 0, 0, 0, 0, 0, 0)),
-      pc_brute(PlayerCombatant("Brute", "c_brute", 0, 0, 0, 0, 0, 0, 0, 0))
+      pc_brute(PlayerCombatant("Brute", "c_brute", 0, 0, 0, 0, 0, 0, 0, 0)),
+      save_game_file("")
 {
 	player_pos = Vector2D(0, 0);
     player_map = "";
@@ -171,6 +173,27 @@ void SaveGame::saveCurrentGame()
 	std::ofstream outFile(output_file);
 
 	outFile << ss.rdbuf();
+    
+    save_game_file = output_file;
+}
+
+void SaveGame::saveCurrentGame(const std::string & output_file)
+{
+    std::stringstream ss;
+    std::remove(output_file.c_str());
+
+    {
+		cereal::JSONOutputArchive ar(ss);
+		inventory = FetchInventory();
+		items_knight = FetchItemsKnight();
+		items_archer = FetchItemsArcher();
+		items_brute = FetchItemsBrute();
+
+		ar(inventory, items_knight, items_archer, items_brute, pc_knight, pc_archer, pc_brute, player_pos, player_map);
+	}
+	std::ofstream outFile(output_file);
+
+	outFile << ss.rdbuf();
 }
 
 void SaveGame::loadGame(const std::string &saved_game_path)
@@ -189,5 +212,6 @@ void SaveGame::loadGame(const std::string &saved_game_path)
 		SetItemsKnight(items_knight);
 		SetItemsArcher(items_archer);
 		SetItemsBrute(items_brute);
+        save_game_file = saved_game_path;
 	}
 }

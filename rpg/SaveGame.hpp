@@ -25,6 +25,8 @@ class SaveGame {
 	Vector2D player_pos;
 	std::string player_map;
 
+    std::string save_game_file;
+
 	SaveGame();
 	~SaveGame();
 
@@ -47,5 +49,6 @@ class SaveGame {
 	}
 
 	void saveCurrentGame();
+	void saveCurrentGame(const std::string &saved_game_path);
 	void loadGame(const std::string &saved_game_path);
 };

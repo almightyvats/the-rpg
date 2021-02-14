@@ -165,6 +165,14 @@ void RpgPlayState::HandleEvents(RpgGame *rpgGame)
 				saveGame.player_map = map->mapFilePath;
 				saveGame.saveCurrentGame();
 				break;
+			case SDLK_o:
+				saveGame.player_map = map->mapFilePath;
+				if (saveGame.save_game_file == "") {
+					saveGame.saveCurrentGame();
+				} else {
+					saveGame.saveCurrentGame(saveGame.save_game_file);
+				}
+				break;
 			}
 			break;
 		case SDL_KEYUP:
