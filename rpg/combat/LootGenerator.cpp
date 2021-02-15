@@ -352,7 +352,7 @@ Equipment GenerateLoot(int min_level, int max_level)
 
 	if (r_mat < DROP_RATE_MAT_WOOD) {
 		item_mat = EquipmentMaterial::wood;
-	} else if (r_mat < DROP_RATE_MAT_METAL) {
+	} else if (r_mat < DROP_RATE_MAT_METAL + DROP_RATE_MAT_WOOD) {
 		item_mat = EquipmentMaterial::metal;
 	} else {
 		item_mat = EquipmentMaterial::gold;

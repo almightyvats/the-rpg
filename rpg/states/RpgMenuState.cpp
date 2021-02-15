@@ -2,6 +2,7 @@
 #include "../combat/CombatTest.hpp"
 #include "../combat/Combatant.hpp"
 #include "RpgCombatState.hpp"
+#include "RpgPlayerConvoState.hpp"
 #include "RpgStates.hpp"
 #include "rpg/AssetManager.hpp"
 #include "rpg/RpgSoundManager.hpp"
@@ -31,6 +32,7 @@ RpgMenuState::RpgMenuState()
 	m_logoPtr = std::make_shared<RpgMenuItem>(0, 0, 400, 500, logoPath, ITEM_TYPE::LOGO);
 
 	RpgGame::assets->AddFont("Ancient", "../rpg/assets/font/ancient.ttf", 45);
+	RpgGame::assets->AddFont("Conversation", "../rpg/assets/font/conversation.ttf", 30);
 
 	auto newGameLabel = std::make_shared<RpgLabel>(LabelType::NEWGAME, "New game", "Ancient", m_colors[0]);
 	auto loadGameLabel = std::make_shared<RpgLabel>(LabelType::LOADGAME, "Load game", "Ancient", m_colors[0]);
@@ -125,6 +127,45 @@ void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 		switch (m_event.key.keysym.sym) {
 		case SDLK_SPACE:
 			rpgGame->changeState(RpgPlayState::Instance());
+			break;
+		case SDLK_d:
+
+			// const SDL_MessageBoxButtonData buttons[] = {
+			//     {/* .flags, .buttonid, .text */ 0, 0, "no"},
+			//     {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "yes"},
+			//     {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 2, "cancel"},
+			// };
+			// const SDL_MessageBoxColorScheme colorScheme = {{/* .colors (.r, .g, .b) */
+			//                                                 /* [SDL_MESSAGEBOX_COLOR_BACKGROUND] */
+			//                                                 {255, 0, 0},
+			//                                                 /* [SDL_MESSAGEBOX_COLOR_TEXT] */
+			//                                                 {0, 255, 0},
+			//                                                 /* [SDL_MESSAGEBOX_COLOR_BUTTON_BORDER] */
+			//                                                 {255, 255, 0},
+			//                                                 /* [SDL_MESSAGEBOX_COLOR_BUTTON_BACKGROUND] */
+			//                                                 {0, 0, 255},
+			//                                                 /* [SDL_MESSAGEBOX_COLOR_BUTTON_SELECTED] */
+			//                                                 {255, 0, 255}}};
+			// const SDL_MessageBoxData messageboxdata = {
+			//     SDL_MESSAGEBOX_INFORMATION, /* .flags */
+			//     NULL,                       /* .window */
+			//     "example message box",      /* .title */
+			//     "select a button",          /* .message */
+			//     SDL_arraysize(buttons),     /* .numbuttons */
+			//     buttons,                    /* .buttons */
+			//     &colorScheme                /* .colorScheme */
+			// };
+			// int buttonid;
+			// if (SDL_ShowMessageBox(&messageboxdata, &buttonid) < 0) {
+			// 	SDL_Log("error displaying message box");
+			// 	break;
+			// }
+			// if (buttonid == -1) {
+			// 	SDL_Log("no selection");
+			// } else {
+			// 	SDL_Log("selection was %s", buttons[buttonid].text);
+			// }
+			break;
 		}
 		break;
 	case SDL_MOUSEMOTION:

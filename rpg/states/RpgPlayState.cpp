@@ -1,6 +1,7 @@
 #include "RpgPlayState.hpp"
 #include "RpgCombatState.hpp"
 #include "RpgMenuState.hpp"
+#include "RpgPlayerConvoState.hpp"
 #include "rpg/AssetManager.hpp"
 #include "rpg/Collision.hpp"
 #include "rpg/Map.hpp"
@@ -65,6 +66,8 @@ RpgPlayState::RpgPlayState()
 	player.addComponent<ColliderComponent>("Player");
 	player.addGroup(groupPlayers);
 
+	RpgSoundManager::resumeMusic("PLAY");
+
 	// RpgGame::assets->AddTexture("icons", "../rpg/assets/icons/Icon Pack_3.png");
 	// RpgGame::assets->CreateItem(0, 0, 13 * 32 * 3, 88 * 32 * 3, "icons");
 }
@@ -88,6 +91,7 @@ void RpgPlayState::Pause()
 
 void RpgPlayState::Resume()
 {
+	RpgPlayerConvoState::setPlayerReadyToTalk(false);
 	RpgSoundManager::resumeMusic("PLAY");
 
 	if (enemy_encountered != NULL) {
@@ -135,6 +139,14 @@ bool CheckKonami(SDL_Keycode keyCode)
 	return conamiCodeInput[9];
 }
 
+CombatArena DetermineArena() {
+	if (map->mapFilePath.compare("../rpg/assets/map/outdoor_02.json") ==  0) {
+		return CombatArena::stone;
+	} else {
+		return CombatArena::grass;
+	}
+}
+
 void RpgPlayState::HandleEvents(RpgGame *rpgGame)
 {
 	if (SDL_PollEvent(&event) == 1) {
@@ -156,6 +168,14 @@ void RpgPlayState::HandleEvents(RpgGame *rpgGame)
 			case SDLK_p:
 				saveGame.player_map = map->mapFilePath;
 				saveGame.saveCurrentGame();
+				break;
+			case SDLK_o:
+				saveGame.player_map = map->mapFilePath;
+				if (saveGame.save_game_file == "") {
+					saveGame.saveCurrentGame();
+				} else {
+					saveGame.saveCurrentGame(saveGame.save_game_file);
+				}
 				break;
 			}
 			break;
@@ -214,7 +234,9 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 
 			if (Collision::AABB(cCol, playerCol)) {
 				player.getComponent<TransformComponent>().position = playerPos;
-				std::cout << "NPC encountered" << std::endl;
+				if (RpgPlayerConvoState::isPlayerReadyToTalk()) {
+					rpgGame->pushState(RpgPlayerConvoState::Instance());
+				}
 			}
 		}
 	}
@@ -247,7 +269,7 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 				// player.getComponent<TransformComponent>().position = playerPos;
 				std::cout << "ENEMY encountered" << std::endl;
 				// TODO: start combat (for colliding enemy + enemies in certain range?)
-				rpgGame->pushState(RpgCombatState::Instance(saveGame.FetchCombatants(), CombatArena::grass));
+				rpgGame->pushState(RpgCombatState::Instance(saveGame.FetchCombatants(), DetermineArena()));
 				enemy_encountered = e;
 			}
 		}
