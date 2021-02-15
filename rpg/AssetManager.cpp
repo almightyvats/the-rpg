@@ -7,11 +7,13 @@ AssetManager::AssetManager(Manager *man) : manager(man) {}
 
 AssetManager::~AssetManager() {}
 
-void AssetManager::CreateNpc(Vector2D position, int tileSize, int mapScale, std::string id, State state)
+void AssetManager::CreateNpc(Vector2D position, int tileSize, int mapScale, std::string id, std::string name,
+                             State state)
 {
 	RpgGame::assets->AddTexture(id, "../rpg/assets/" + id + ".png");
 
 	auto &npc(manager->addEntity(state));
+	npc.addComponent<NameComponent>(name);
 	npc.addComponent<TransformComponent>(position.x * tileSize * mapScale, position.y * tileSize * mapScale, 115, 115,
 	                                     1);
 
@@ -93,7 +95,7 @@ void AssetManager::CreateMapTile(int srcX, int srcY, int destX, int destY, int t
 		tile.addComponent<ColliderComponent>("MapTile");
 	}
 	if (doorSettings.targetMap != "") {
-		tile.addComponent<DoorComponent>(doorSettings.targetMap, doorSettings.playerStart,doorSettings.minLvl);
+		tile.addComponent<DoorComponent>(doorSettings.targetMap, doorSettings.playerStart, doorSettings.minLvl);
 	}
 	tile.addGroup(RpgPlayState::groupMap);
 }

@@ -627,7 +627,8 @@
               {
                      "x": 3,
                      "y": 4,
-                     "model": "astrologer"
+                     "model": "astrologer",
+                     "name": "Giles"
               }
        ]
 }

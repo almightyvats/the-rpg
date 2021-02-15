@@ -87,8 +87,8 @@ Map::Map(std::string path, int mapScale) : mapFilePath(path)
 	if (document.HasMember("npcs")) {
 		const rapidjson::Value &npcs = document["npcs"];
 		for (rapidjson::SizeType n = 0; n < npcs.Size(); n++) { // Uses SizeType instead of size_t^
-			setting.npcs.emplace_back<Npc>(
-			    {npcs[n]["x"].GetInt(), npcs[n]["y"].GetInt(), npcs[n]["model"].GetString()});
+			setting.npcs.emplace_back<Npc>({npcs[n]["x"].GetInt(), npcs[n]["y"].GetInt(), npcs[n]["model"].GetString(),
+			                                npcs[n]["name"].GetString()});
 		}
 	}
 
@@ -152,7 +152,8 @@ void Map::LoadMap()
 		}
 	}
 	for (auto npc : setting.npcs) {
-		RpgGame::assets->CreateNpc(Vector2D(npc.xPos, npc.yPos), setting.tileSize, scale, npc.spriteId, m_state);
+		RpgGame::assets->CreateNpc(Vector2D(npc.xPos, npc.yPos), setting.tileSize, scale, npc.spriteId, npc.name,
+		                           m_state);
 	}
 
 	for (auto enemy : setting.enemies) {

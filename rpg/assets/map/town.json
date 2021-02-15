@@ -516,42 +516,56 @@
        {
               "x": 88,
               "y": 80,
-              "model": "citicen"
+              "model": "citicen",
+              "name": "Balda"
        },
        {
               "x": 77,
               "y": 43,
-              "model": "artist"
+              "model": "artist",
+              "name": "Ernard"
        },
        {
               "x": 42,
               "y": 58,
-              "model": "citicen"
+              "model": "citicen",
+              "name": "Freda"
        },
        {
               "x": 60,
               "y": 74,
-              "model": "astrologer"
+              "model": "astrologer",
+              "name": "Marteph"
        },
        {
               "x": 10,
               "y": 86,
-              "model": "herbalist"
+              "model": "herbalist",
+              "name": "Elrers"
        },
        {
               "x": 24,
               "y": 59,
-              "model": "hunter"
+              "model": "hunter",
+              "name": "Bertio"
        },
        {
               "x": 31,
               "y": 36,
-              "model": "astrologer"
+              "model": "astrologer",
+              "name": "Wulfhelm"
        },
        {
               "x": 70,
               "y": 11,
-              "model": "jeweler"
+              "model": "jeweler",
+              "name": "Manne"
+       },
+       {
+              "x": 11,
+              "y": 6,
+              "model": "jeweler",
+              "name": "Gatekeeper"
        }
        ],
        "enemies": [

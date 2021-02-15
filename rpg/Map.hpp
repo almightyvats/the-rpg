@@ -29,6 +29,7 @@ struct Npc {
 	int xPos;
 	int yPos;
 	std::string spriteId;
+	std::string name;
 };
 
 struct Enemy {

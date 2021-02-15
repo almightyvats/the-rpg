@@ -11,7 +11,7 @@
 
 struct DoorSettings {
 	std::string targetMap = "";
-	Vector2D playerStart = Vector2D(0,0);
+	Vector2D playerStart = Vector2D(0, 0);
 	int minLvl = 1;
 };
 
@@ -21,7 +21,7 @@ class AssetManager {
 	~AssetManager();
 
 	// game objects
-	void CreateNpc(Vector2D position, int tileSize, int mapScale, std::string id, State state);
+	void CreateNpc(Vector2D position, int tileSize, int mapScale, std::string id, std::string name, State state);
 	void CreateEnemy(Vector2D position, int tileSize, int mapScale, std::string id, State state);
 	void CreateProjectile(Vector2D position, Vector2D velocity, int range, int speed, std::string id, State state);
 	void CreateMapTile(int srcX, int srcY, int destX, int destY, int tsize, int tscale, bool withCollision,

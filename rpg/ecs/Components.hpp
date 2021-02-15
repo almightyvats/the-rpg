@@ -8,4 +8,5 @@
 #include "ProjectileComponent.hpp"
 #include "DoorComponent.hpp"
 #include "InventoryComponent.hpp"
+#include "NameComponent.hpp"
 

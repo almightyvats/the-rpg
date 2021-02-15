@@ -513,7 +513,8 @@
               {
                      "x": 5,
                      "y": 3,
-                     "model": "astrologer"
+                     "model": "astrologer",
+                     "name": "unnamed old man"
               }
        ],
        "projectiles": [

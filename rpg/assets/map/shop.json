@@ -154,7 +154,8 @@
        {
               "x": 7,
               "y": 4,
-              "model": "astrologer"
+              "model": "astrologer",
+              "name": "Weidre"
        }
 ]
 }

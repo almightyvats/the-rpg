@@ -116,12 +116,14 @@
        {
               "x": 2,
               "y": 8,
-              "model": "jeweler"
+              "model": "jeweler",
+              "name": "Walda"
        },
        {
               "x": 16,
               "y": 9,
-              "model": "blacksmith"
+              "model": "blacksmith",
+              "name": "Sige"
        }
 ]
 }
