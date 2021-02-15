@@ -47,7 +47,7 @@ RpgPlayState::RpgPlayState()
 	map = new Map("../rpg/assets/map/outdoor_01.json", 3);
 	map->LoadMap();
 
-	player.addComponent<TransformComponent>(11 * 32 * 3, 88 * 32 * 3, 115, 75, 1);
+	player.addComponent<TransformComponent>(55 * 32 * 3, 4 * 32 * 3, 115, 75, 1);
 
 	SpriteSheet spriteSheet(11, 75, 115, 75, 5);
 	auto &playerSprite = player.addComponent<SpriteComponent>("player", spriteSheet);
@@ -139,8 +139,9 @@ bool CheckKonami(SDL_Keycode keyCode)
 	return conamiCodeInput[9];
 }
 
-CombatArena DetermineArena() {
-	if (map->mapFilePath.compare("../rpg/assets/map/outdoor_02.json") ==  0) {
+CombatArena DetermineArena()
+{
+	if (map->mapFilePath.compare("../rpg/assets/map/outdoor_02.json") == 0) {
 		return CombatArena::stone;
 	} else {
 		return CombatArena::grass;
@@ -236,6 +237,18 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 				player.getComponent<TransformComponent>().position = playerPos;
 				if (RpgPlayerConvoState::isPlayerReadyToTalk()) {
 					rpgGame->pushState(RpgPlayerConvoState::Instance());
+				}
+				// talking to old man and no inventory - get some items
+				if (n->hasComponent<NameComponent>()) {
+					if (n->getComponent<NameComponent>().name == "unnamed old man") {
+						if (saveGame.FetchInventory().size() == 0) {
+							Equipment sword = Equipment("Wooden Sword", EquipmentType::sword, EquipmentMaterial::wood,
+							                            5, 0, 0, 0, 0, 0, 0);
+							RpgGame::assets->CreateInventoryItem(sword, RpgPlayState::groupItems);
+							RpgGame::assets->CreateInventoryItem(sword, RpgPlayState::groupItems);
+							RpgGame::assets->CreateInventoryItem(sword, RpgPlayState::groupItems);
+						}
+					}
 				}
 			}
 		}
