@@ -19,15 +19,18 @@ RpgLabel::RpgLabel(LabelType type, std::string labelText, std::string fontId, SD
 {
 	setLabelText(fontId, labelText);
 
-	if (type == LabelType::NEWGAME) {
+	if (type == LabelType::CONTINUE) {
 		m_position.x = (RpgGame::SCREEN_WIDTH / 2 - m_position.w / 2);
 		m_position.y = ((RpgGame::SCREEN_HEIGHT / 2 - m_position.h / 2) + 100);
-	} else if (type == LabelType::LOADGAME) {
+	} else if (type == LabelType::NEWGAME) {
 		m_position.x = (RpgGame::SCREEN_WIDTH / 2 - m_position.w / 2);
 		m_position.y = ((RpgGame::SCREEN_HEIGHT / 2 - m_position.h / 2) + 155);
-	} else if (type == LabelType::EXIT) {
+	} else if (type == LabelType::LOADGAME) {
 		m_position.x = (RpgGame::SCREEN_WIDTH / 2 - m_position.w / 2);
 		m_position.y = ((RpgGame::SCREEN_HEIGHT / 2 - m_position.h / 2) + 210);
+	} else if (type == LabelType::EXIT) {
+		m_position.x = (RpgGame::SCREEN_WIDTH / 2 - m_position.w / 2);
+		m_position.y = ((RpgGame::SCREEN_HEIGHT / 2 - m_position.h / 2) + 265);
 	}
 }
 
@@ -70,11 +73,13 @@ void RpgLabel::getLabelDims(SDL_Rect &dims)
 	};
 }
 
-void RpgLabel::CenterLabelHorizontally() {
+void RpgLabel::CenterLabelHorizontally()
+{
 	m_position.x -= m_position.w / 2;
 }
 
-void RpgLabel::RealignLabelHorizontally() {
+void RpgLabel::RealignLabelHorizontally()
+{
 	m_position.x += m_position.w / 2;
 }
 

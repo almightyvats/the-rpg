@@ -35,23 +35,25 @@ RpgMenuState::RpgMenuState()
 	RpgGame::assets->AddFont("Ancient", "../rpg/assets/font/ancient.ttf", 45);
 	RpgGame::assets->AddFont("Conversation", "../rpg/assets/font/conversation.ttf", 30);
 
+	auto continueGameLabel = std::make_shared<RpgLabel>(LabelType::CONTINUE, "Continue", "Ancient", m_colors[0]);
 	auto newGameLabel = std::make_shared<RpgLabel>(LabelType::NEWGAME, "New game", "Ancient", m_colors[0]);
 	auto loadGameLabel = std::make_shared<RpgLabel>(LabelType::LOADGAME, "Load game", "Ancient", m_colors[0]);
 	auto exitLabel = std::make_shared<RpgLabel>(LabelType::EXIT, "Exit", "Ancient", m_colors[0]);
+	m_Labels.push_back(continueGameLabel);
 	m_Labels.push_back(newGameLabel);
 	m_Labels.push_back(loadGameLabel);
 	m_Labels.push_back(exitLabel);
 
+	m_buttonFucntions.insert({continueGameLabel, [](RpgGame *rpgGame) {
+		                          if (!game_over) {
+			                          rpgGame->changeState(RpgPlayState::Instance());
+		                          }
+	                          }});
 	m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) {
 		                          saveGame = SaveGame();
 		                          saveGame.NewGame();
 		                          rpgGame->changeState(RpgPlayState::Instance(true));
 	                          }});
-
-	/*m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) {
-	    InitGlobalTestPCs();
-	    rpgGame->changeState(RpgCombatState::Instance(GetTestCombatants(), CombatArena::grass)); }});*/
-
 	m_buttonFucntions.insert(
 	    {loadGameLabel, [](RpgGame *rpgGame) { rpgGame->pushState(RpgLoadGameState::Instance()); }});
 	m_buttonFucntions.insert({exitLabel, [](RpgGame *rpgGame) { rpgGame->quitGame(); }});
@@ -184,7 +186,7 @@ void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 				bool insideLabel = true;
 
 				if (mousePosX < menuItemDims.x || mousePosX > (menuItemDims.x + menuItemDims.w)
-					|| mousePosY < menuItemDims.y || mousePosY > (menuItemDims.y + menuItemDims.h)) {
+				    || mousePosY < menuItemDims.y || mousePosY > (menuItemDims.y + menuItemDims.h)) {
 					insideLabel = false;
 				}
 
@@ -215,8 +217,8 @@ void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 
 			bool insideMuteButton = true;
 
-			if (mousePosX < menuItemDims.x || mousePosX > (menuItemDims.x + menuItemDims.w) || mousePosY < menuItemDims.y
-				|| mousePosY > (menuItemDims.y + menuItemDims.h)) {
+			if (mousePosX < menuItemDims.x || mousePosX > (menuItemDims.x + menuItemDims.w)
+			    || mousePosY < menuItemDims.y || mousePosY > (menuItemDims.y + menuItemDims.h)) {
 				insideMuteButton = false;
 			}
 
@@ -230,9 +232,9 @@ void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 				case SDL_MOUSEBUTTONDOWN:
 					if (!isMuteBtnClicked) {
 						m_muteBtnWithStates[m_volumeButton] =
-							m_muteBtnWithStates[m_volumeButton] == MUTE_BUTTON_STATE::BUTTON_SPRITE_UNMUTED
-								? MUTE_BUTTON_STATE::BUTTON_SPRITE_MUTED
-								: MUTE_BUTTON_STATE::BUTTON_SPRITE_UNMUTED;
+						    m_muteBtnWithStates[m_volumeButton] == MUTE_BUTTON_STATE::BUTTON_SPRITE_UNMUTED
+						        ? MUTE_BUTTON_STATE::BUTTON_SPRITE_MUTED
+						        : MUTE_BUTTON_STATE::BUTTON_SPRITE_UNMUTED;
 						muteBtnPressed();
 						isMuteBtnClicked = true;
 					}

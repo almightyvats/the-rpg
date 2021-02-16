@@ -5,7 +5,7 @@
 #include <string>
 #include "Vector2D.hpp"
 
-enum class LabelType { NONE = -1, NEWGAME = 0, LOADGAME = 1, EXIT = 2 };
+enum class LabelType { NONE = -1, NEWGAME = 0, LOADGAME = 1, EXIT = 2, CONTINUE = 3 };
 class RpgLabel {
   private:
 	SDL_Rect m_position;
