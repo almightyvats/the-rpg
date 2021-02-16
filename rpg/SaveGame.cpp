@@ -42,6 +42,9 @@ void SaveGame::NewGame()
 		pc_brute.AddEquipment(GenerateLoot(3, 5));
 		pc_brute.AddEquipment(GenerateLoot(3, 5));
 	}
+
+    player_map = "../rpg/assets/map/outdoor_01.json";
+    player_pos = Vector2D(55 * 32 * 3, 4 * 32 * 3);
 }
 
 std::vector<Combatant *> SaveGame::FetchCombatants()

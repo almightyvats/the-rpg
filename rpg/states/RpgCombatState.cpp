@@ -32,6 +32,7 @@ const State m_state = stateCombat;
 
 static bool combat_state_changed = true;
 bool enemy_destroyed = false;
+bool game_over = false;
 
 Vector2D GetCombatantPosition(bool player_team, int number)
 {
@@ -90,6 +91,7 @@ RpgCombatState::~RpgCombatState() = default;
 
 void RpgCombatState::GenerateCombat(std::vector<Combatant*> player_combatants, CombatArena arena)
 {
+    game_over = false;
     this->enemies = GenerateSimpleEnemies(player_combatants, arena);
 
     std::vector<Combatant*> enemy_combatants;
@@ -159,20 +161,22 @@ void RpgCombatState::Resume() {
 static Attack attack_copy;
 static Ability ability_copy;
 
-void RpgCombatState::HandleEvents(RpgGame *rpgGame) {
+void RpgCombatState::HandleEvents(RpgGame *rpgGame)
+{
     if (SDL_PollEvent(&event) == 1) {
 		switch (event.type) {
 		case SDL_QUIT:
 			rpgGame->quitGame();
 			break;
         case SDL_KEYUP:
-            if (combat.state() == CombatState::loot_display || combat.state() == CombatState::escape_screen) {
+            if (combat.state() == CombatState::loot_display || combat.state() == CombatState::escape_screen || combat.state() == CombatState::losing_screen) {
                 switch (event.key.keysym.sym)
                 {
                 case SDLK_SPACE:
                 case SDLK_RETURN:
                     CleanupCombat(rpgGame);
                     enemy_destroyed = (combat.state() == CombatState::loot_display);
+                    game_over = (combat.state() == CombatState::losing_screen);
                     rpgGame->popState();
                     break;
                 default:
@@ -219,9 +223,10 @@ void RpgCombatState::HandleEvents(RpgGame *rpgGame) {
                     index++;
                 }
             } else if (event.type == SDL_MOUSEBUTTONDOWN) {
-                if (combat.state() == CombatState::loot_display || combat.state() == CombatState::escape_screen) {
+                if (combat.state() == CombatState::loot_display || combat.state() == CombatState::escape_screen || combat.state() == CombatState::losing_screen) {
                     CleanupCombat(rpgGame);
                     enemy_destroyed = (combat.state() == CombatState::loot_display);
+                    game_over = (combat.state() == CombatState::losing_screen);
                     rpgGame->popState();
                 } else {
                     combat.Progress(NULL,NULL,NULL);

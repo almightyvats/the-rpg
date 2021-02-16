@@ -12,6 +12,7 @@ SDL_Event RpgMenuState::m_event;
 
 extern Manager manager;
 extern SaveGame saveGame;
+extern bool game_over;
 const State m_state = stateMenu;
 
 RpgMenuState::RpgMenuState()
@@ -44,7 +45,7 @@ RpgMenuState::RpgMenuState()
 	m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) {
 		                          saveGame = SaveGame();
 		                          saveGame.NewGame();
-		                          rpgGame->changeState(RpgPlayState::Instance());
+		                          rpgGame->changeState(RpgPlayState::Instance(true));
 	                          }});
 
 	/*m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) {
@@ -118,130 +119,133 @@ void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 {
 	bool buttonClicked = false;
 
-	SDL_PollEvent(&m_event);
-	switch (m_event.type) {
-	case SDL_QUIT:
-		rpgGame->quitGame();
-		break;
-	case SDL_KEYDOWN:
-		switch (m_event.key.keysym.sym) {
-		case SDLK_SPACE:
-			rpgGame->changeState(RpgPlayState::Instance());
+	if (SDL_PollEvent(&m_event) == 1) {
+		switch (m_event.type) {
+		case SDL_QUIT:
+			rpgGame->quitGame();
 			break;
-		case SDLK_d:
+		case SDL_KEYDOWN:
+			switch (m_event.key.keysym.sym) {
+			case SDLK_SPACE:
+				if (!game_over) {
+					rpgGame->changeState(RpgPlayState::Instance());
+				}
+				break;
+			case SDLK_d:
 
-			// const SDL_MessageBoxButtonData buttons[] = {
-			//     {/* .flags, .buttonid, .text */ 0, 0, "no"},
-			//     {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "yes"},
-			//     {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 2, "cancel"},
-			// };
-			// const SDL_MessageBoxColorScheme colorScheme = {{/* .colors (.r, .g, .b) */
-			//                                                 /* [SDL_MESSAGEBOX_COLOR_BACKGROUND] */
-			//                                                 {255, 0, 0},
-			//                                                 /* [SDL_MESSAGEBOX_COLOR_TEXT] */
-			//                                                 {0, 255, 0},
-			//                                                 /* [SDL_MESSAGEBOX_COLOR_BUTTON_BORDER] */
-			//                                                 {255, 255, 0},
-			//                                                 /* [SDL_MESSAGEBOX_COLOR_BUTTON_BACKGROUND] */
-			//                                                 {0, 0, 255},
-			//                                                 /* [SDL_MESSAGEBOX_COLOR_BUTTON_SELECTED] */
-			//                                                 {255, 0, 255}}};
-			// const SDL_MessageBoxData messageboxdata = {
-			//     SDL_MESSAGEBOX_INFORMATION, /* .flags */
-			//     NULL,                       /* .window */
-			//     "example message box",      /* .title */
-			//     "select a button",          /* .message */
-			//     SDL_arraysize(buttons),     /* .numbuttons */
-			//     buttons,                    /* .buttons */
-			//     &colorScheme                /* .colorScheme */
-			// };
-			// int buttonid;
-			// if (SDL_ShowMessageBox(&messageboxdata, &buttonid) < 0) {
-			// 	SDL_Log("error displaying message box");
-			// 	break;
-			// }
-			// if (buttonid == -1) {
-			// 	SDL_Log("no selection");
-			// } else {
-			// 	SDL_Log("selection was %s", buttons[buttonid].text);
-			// }
+				// const SDL_MessageBoxButtonData buttons[] = {
+				//     {/* .flags, .buttonid, .text */ 0, 0, "no"},
+				//     {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "yes"},
+				//     {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 2, "cancel"},
+				// };
+				// const SDL_MessageBoxColorScheme colorScheme = {{/* .colors (.r, .g, .b) */
+				//                                                 /* [SDL_MESSAGEBOX_COLOR_BACKGROUND] */
+				//                                                 {255, 0, 0},
+				//                                                 /* [SDL_MESSAGEBOX_COLOR_TEXT] */
+				//                                                 {0, 255, 0},
+				//                                                 /* [SDL_MESSAGEBOX_COLOR_BUTTON_BORDER] */
+				//                                                 {255, 255, 0},
+				//                                                 /* [SDL_MESSAGEBOX_COLOR_BUTTON_BACKGROUND] */
+				//                                                 {0, 0, 255},
+				//                                                 /* [SDL_MESSAGEBOX_COLOR_BUTTON_SELECTED] */
+				//                                                 {255, 0, 255}}};
+				// const SDL_MessageBoxData messageboxdata = {
+				//     SDL_MESSAGEBOX_INFORMATION, /* .flags */
+				//     NULL,                       /* .window */
+				//     "example message box",      /* .title */
+				//     "select a button",          /* .message */
+				//     SDL_arraysize(buttons),     /* .numbuttons */
+				//     buttons,                    /* .buttons */
+				//     &colorScheme                /* .colorScheme */
+				// };
+				// int buttonid;
+				// if (SDL_ShowMessageBox(&messageboxdata, &buttonid) < 0) {
+				// 	SDL_Log("error displaying message box");
+				// 	break;
+				// }
+				// if (buttonid == -1) {
+				// 	SDL_Log("no selection");
+				// } else {
+				// 	SDL_Log("selection was %s", buttons[buttonid].text);
+				// }
+				break;
+			}
 			break;
-		}
-		break;
-	case SDL_MOUSEMOTION:
-	case SDL_MOUSEBUTTONDOWN:
-	case SDL_MOUSEBUTTONUP: {
-		int mousePosX, mousePosY;
-		SDL_GetMouseState(&mousePosX, &mousePosY);
+		case SDL_MOUSEMOTION:
+		case SDL_MOUSEBUTTONDOWN:
+		case SDL_MOUSEBUTTONUP: {
+			int mousePosX, mousePosY;
+			SDL_GetMouseState(&mousePosX, &mousePosY);
 
-		for (int i = 0; i < m_Labels.size(); i++) {
-			SDL_Rect menuItemDims;
-			m_Labels[i]->getLabelDims(menuItemDims);
+			for (int i = 0; i < m_Labels.size(); i++) {
+				SDL_Rect menuItemDims;
+				m_Labels[i]->getLabelDims(menuItemDims);
 
-			bool insideLabel = true;
+				bool insideLabel = true;
 
-			if (mousePosX < menuItemDims.x || mousePosX > (menuItemDims.x + menuItemDims.w)
-			    || mousePosY < menuItemDims.y || mousePosY > (menuItemDims.y + menuItemDims.h)) {
-				insideLabel = false;
+				if (mousePosX < menuItemDims.x || mousePosX > (menuItemDims.x + menuItemDims.w)
+					|| mousePosY < menuItemDims.y || mousePosY > (menuItemDims.y + menuItemDims.h)) {
+					insideLabel = false;
+				}
+
+				if (!insideLabel) {
+					m_Labels[i]->setLabelColor(m_colors[0]);
+				} else {
+					switch (m_event.type) {
+					case SDL_MOUSEMOTION:
+					case SDL_MOUSEBUTTONUP:
+						m_Labels[i]->setLabelColor(m_colors[1]);
+						isLabelClicked = false;
+						break;
+					case SDL_MOUSEBUTTONDOWN:
+						m_Labels[i]->setLabelColor(m_colors[1]);
+						if (!isLabelClicked) {
+							labelPressed(m_Labels[i], rpgGame);
+							isLabelClicked = true;
+						}
+						break;
+					default:
+						break;
+					}
+				}
 			}
 
-			if (!insideLabel) {
-				m_Labels[i]->setLabelColor(m_colors[0]);
+			SDL_Rect menuItemDims;
+			m_volumeButton[0]->getMenuItemDims(menuItemDims);
+
+			bool insideMuteButton = true;
+
+			if (mousePosX < menuItemDims.x || mousePosX > (menuItemDims.x + menuItemDims.w) || mousePosY < menuItemDims.y
+				|| mousePosY > (menuItemDims.y + menuItemDims.h)) {
+				insideMuteButton = false;
+			}
+
+			if (!insideMuteButton) {
+
 			} else {
 				switch (m_event.type) {
-				case SDL_MOUSEMOTION:
 				case SDL_MOUSEBUTTONUP:
-					m_Labels[i]->setLabelColor(m_colors[1]);
-					isLabelClicked = false;
+					isMuteBtnClicked = false;
 					break;
 				case SDL_MOUSEBUTTONDOWN:
-					m_Labels[i]->setLabelColor(m_colors[1]);
-					if (!isLabelClicked) {
-						labelPressed(m_Labels[i], rpgGame);
-						isLabelClicked = true;
+					if (!isMuteBtnClicked) {
+						m_muteBtnWithStates[m_volumeButton] =
+							m_muteBtnWithStates[m_volumeButton] == MUTE_BUTTON_STATE::BUTTON_SPRITE_UNMUTED
+								? MUTE_BUTTON_STATE::BUTTON_SPRITE_MUTED
+								: MUTE_BUTTON_STATE::BUTTON_SPRITE_UNMUTED;
+						muteBtnPressed();
+						isMuteBtnClicked = true;
 					}
 					break;
 				default:
 					break;
 				}
 			}
+
+		} break;
+		default:
+			break;
 		}
-
-		SDL_Rect menuItemDims;
-		m_volumeButton[0]->getMenuItemDims(menuItemDims);
-
-		bool insideMuteButton = true;
-
-		if (mousePosX < menuItemDims.x || mousePosX > (menuItemDims.x + menuItemDims.w) || mousePosY < menuItemDims.y
-		    || mousePosY > (menuItemDims.y + menuItemDims.h)) {
-			insideMuteButton = false;
-		}
-
-		if (!insideMuteButton) {
-
-		} else {
-			switch (m_event.type) {
-			case SDL_MOUSEBUTTONUP:
-				isMuteBtnClicked = false;
-				break;
-			case SDL_MOUSEBUTTONDOWN:
-				if (!isMuteBtnClicked) {
-					m_muteBtnWithStates[m_volumeButton] =
-					    m_muteBtnWithStates[m_volumeButton] == MUTE_BUTTON_STATE::BUTTON_SPRITE_UNMUTED
-					        ? MUTE_BUTTON_STATE::BUTTON_SPRITE_MUTED
-					        : MUTE_BUTTON_STATE::BUTTON_SPRITE_UNMUTED;
-					muteBtnPressed();
-					isMuteBtnClicked = true;
-				}
-				break;
-			default:
-				break;
-			}
-		}
-
-	} break;
-	default:
-		break;
 	}
 }
 

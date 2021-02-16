@@ -22,6 +22,8 @@ const State m_state = statePlay;
 extern SaveGame saveGame;
 
 extern bool enemy_destroyed;
+extern bool game_over;
+bool playsession_reloadable = true;
 static std::time_t last_encounter_escape;
 Entity *enemy_encountered;
 
@@ -91,6 +93,7 @@ void RpgPlayState::Pause()
 
 void RpgPlayState::Resume()
 {
+	playsession_reloadable = true;
 	RpgPlayerConvoState::setPlayerReadyToTalk(false);
 	RpgSoundManager::resumeMusic("PLAY");
 
@@ -160,9 +163,6 @@ void RpgPlayState::HandleEvents(RpgGame *rpgGame)
 			case SDLK_ESCAPE:
 				rpgGame->changeState(RpgMenuState::Instance());
 				break;
-			case SDLK_SPACE:
-				rpgGame->changeState(RpgMenuState::Instance());
-				break;
 			case SDLK_i:
 				rpgGame->changeState(RpgInventoryState::Instance());
 				break;
@@ -201,6 +201,12 @@ Vector2D playerStart;
 
 void RpgPlayState::Update(RpgGame *rpgGame)
 {
+	if (game_over) {
+		playsession_reloadable = false;
+		game_over = false;
+		rpgGame->changeState(RpgMenuState::Instance());
+	}
+
 	SDL_Rect playerCol = player.getComponent<ColliderComponent>().collider;
 	Vector2D playerPos = player.getComponent<TransformComponent>().position;
 	saveGame.player_pos = playerPos;

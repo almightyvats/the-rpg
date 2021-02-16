@@ -105,6 +105,7 @@ void RpgGame::changeState(RpgGameState &state)
 	}
 
 	m_states.emplace_back(state);
+	m_states.back().get().Resume();
 }
 
 void RpgGame::popState()
@@ -112,6 +113,6 @@ void RpgGame::popState()
 	if (!m_states.empty())
 		m_states.pop_back();
 	if (!m_states.empty()) {
-		m_states.back().get().Resume(); // Implement Resume in PlayState
+		m_states.back().get().Resume();
 	}
 }
