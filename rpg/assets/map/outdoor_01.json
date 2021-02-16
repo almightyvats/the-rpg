@@ -403,6 +403,91 @@
               "x": 79,
               "y": 5,
               "model": "wraith_2"
+       },
+       {
+              "x": 10,
+              "y": 67,
+              "model": "wraith_2"
+       },
+       {
+              "x": 23,
+              "y": 65,
+              "model": "wraith_2"
+       },
+       {
+              "x": 8,
+              "y": 78,
+              "model": "wraith_2"
+       },
+       {
+              "x": 15,
+              "y": 81,
+              "model": "wraith_1"
+       },
+       {
+              "x": 15,
+              "y": 90,
+              "model": "wraith_3"
+       },
+       {
+              "x": 31,
+              "y": 91,
+              "model": "wraith_1"
+       },
+       {
+              "x": 47,
+              "y": 82,
+              "model": "wraith_3"
+       },
+       {
+              "x": 40,
+              "y": 70,
+              "model": "wraith_2"
+       },
+       {
+              "x": 69,
+              "y": 51,
+              "model": "wraith_2"
+       },
+       {
+              "x": 77,
+              "y": 61,
+              "model": "wraith_1"
+       },
+       {
+              "x": 79,
+              "y": 72,
+              "model": "wraith_1"
+       },
+       {
+              "x": 87,
+              "y": 84,
+              "model": "wraith_3"
+       },
+       {
+              "x": 94,
+              "y": 66,
+              "model": "wraith_1"
+       },
+       {
+              "x": 94,
+              "y": 56,
+              "model": "wraith_1"
+       },
+       {
+              "x": 83,
+              "y": 38,
+              "model": "wraith_3"
+       },
+       {
+              "x": 98,
+              "y": 30,
+              "model": "wraith_1"
+       },
+       {
+              "x": 90,
+              "y": 17,
+              "model": "wraith_2"
        }
 ]
 }
