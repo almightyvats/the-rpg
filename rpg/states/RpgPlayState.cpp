@@ -25,6 +25,7 @@ extern bool enemy_destroyed;
 extern bool game_over;
 bool playsession_reloadable = true;
 static std::time_t last_encounter_escape;
+static std::time_t last_conversation_or_combat;
 Entity *enemy_encountered;
 
 AssetManager *RpgGame::assets = new AssetManager(&manager);
@@ -94,7 +95,6 @@ void RpgPlayState::Pause()
 void RpgPlayState::Resume()
 {
 	playsession_reloadable = true;
-	RpgPlayerConvoState::setPlayerReadyToTalk(false);
 	RpgSoundManager::resumeMusic("PLAY");
 
 	if (enemy_encountered != NULL) {
@@ -242,7 +242,7 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 			if (Collision::AABB(cCol, playerCol)) {
 				player.getComponent<TransformComponent>().position = playerPos;
 				if (RpgPlayerConvoState::isPlayerReadyToTalk()) {
-					rpgGame->pushState(RpgPlayerConvoState::Instance());
+					rpgGame->pushState(RpgPlayerConvoState::Instance(n->getComponent<NameComponent>().name));
 				}
 				// talking to old man and no inventory - get some items
 				if (n->hasComponent<NameComponent>()) {

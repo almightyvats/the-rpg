@@ -22,9 +22,10 @@ class RpgPlayerConvoState : public RpgGameState {
 	RpgPlayerConvoState(const RpgPlayerConvoState &) = delete;
 	RpgPlayerConvoState &operator=(const RpgPlayerConvoState &) = delete;
 
-	static RpgPlayerConvoState &Instance()
+	static RpgPlayerConvoState &Instance(std::string npcName)
 	{
 		static RpgPlayerConvoState m_pcs;
+		m_pcs.NewConversation(npcName);
 		return m_pcs;
 	}
 
@@ -37,6 +38,7 @@ class RpgPlayerConvoState : public RpgGameState {
 
 	static bool isPlayerReadyToTalk();
 	static void setPlayerReadyToTalk(bool talkOrNot);
+	void NewConversation(std::string npcName);
 
   private:
 	inline static SDL_Event m_event;

@@ -18,21 +18,6 @@ RpgPlayerConvoState::RpgPlayerConvoState()
 	    40, m_dialogueBox2.y + 10,
 	    "Press space to continue",
 	    "Conversation", white);
-
-	//m_labels.push_back(playerDialogueLabel);
-    m_isPlayerTalking = false;
-    m_scriptPath = "../rpg/assets/scripts/dialogue.txt";
-
-    int number_of_lines = 0;
-    std::string line;
-    std::ifstream myfile(m_scriptPath);
-
-    while (std::getline(myfile, line))
-        ++number_of_lines;
-
-	m_totalLines = number_of_lines;
-
-	m_timer = std::make_unique<RpgTimer>();
 }
 
 RpgPlayerConvoState::~RpgPlayerConvoState() {}
@@ -44,39 +29,66 @@ void RpgPlayerConvoState::Resume() {}
 bool isSpacePressed = false;
 int current_count = 0;
 
+void RpgPlayerConvoState::NewConversation(std::string npcName)
+{
+	SDL_Color white = {255, 255, 255};
+    m_playerDialogueLabel = std::make_shared<RpgLabel>(
+	    40, m_dialogueBox2.y + 10,
+	    "Press space to continue",
+	    "Conversation", white);
+
+	m_isPlayerTalking = false;
+    m_scriptPath = "../rpg/assets/scripts/" + npcName + ".txt";
+
+    int number_of_lines = 0;
+    std::string line;
+    std::ifstream myfile(m_scriptPath);
+
+    while (std::getline(myfile, line))
+        ++number_of_lines;
+
+	m_totalLines = number_of_lines;
+
+	m_timer = std::make_unique<RpgTimer>();
+
+	current_count = 0;
+	isSpacePressed = false;
+}
+
 void RpgPlayerConvoState::HandleEvents(RpgGame *rpgGame)
 {
-	SDL_PollEvent(&m_event);
-	switch (m_event.type) {
-	case SDL_QUIT:
-		rpgGame->quitGame();
-		break;
-	case SDL_KEYDOWN:
-		switch (m_event.key.keysym.sym) {
-		case SDLK_SPACE:
-			if (!isSpacePressed) {
-				isSpacePressed = true;
-                m_isPlayerTalking = true;
-				if (current_count == m_totalLines) {
-					rpgGame->popState();
-					m_timer->setTimeout([this]() mutable { this->setPlayerReadyToTalk(true); }, 5000);
+	if (SDL_PollEvent(&m_event) == 1) {
+		switch (m_event.type) {
+		case SDL_QUIT:
+			rpgGame->quitGame();
+			break;
+		case SDL_KEYDOWN:
+			switch (m_event.key.keysym.sym) {
+			case SDLK_SPACE:
+				if (!isSpacePressed) {
+					isSpacePressed = true;
+					m_isPlayerTalking = true;
+					if (current_count == m_totalLines) {
+						rpgGame->popState();
+						setPlayerReadyToTalk(false);
+						m_timer->setTimeout([this]() mutable { this->setPlayerReadyToTalk(true); }, 5000);
+					} else {
+						current_count++;
+					}
 				}
-				else{
-					current_count++;
-				}
+				break;
 			}
 			break;
-		}
-		break;
-	case SDL_KEYUP:
-		switch (m_event.key.keysym.sym) {
-		case SDLK_SPACE:
-			isSpacePressed = false;
+		case SDL_KEYUP:
+			switch (m_event.key.keysym.sym) {
+			case SDLK_SPACE:
+				isSpacePressed = false;
+				break;
+			}
+			break;
+		default:
 			break;
 		}
-		break;
-	default:
-		break;
 	}
 }
 
