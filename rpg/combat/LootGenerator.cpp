@@ -378,3 +378,30 @@ Equipment GenerateLoot(int min_level, int max_level)
 	RpgGame::assets->CreateInventoryItem(item, RpgPlayState::groupItems);
 	return item;
 }
+
+Equipment GenerateBaseLoot(int min_level, int max_level)
+{
+	EquipmentType item_type = item_types[std::rand() % (sizeof(item_types) / sizeof(*item_types))];
+	int item_level = (std::rand() % (max_level - min_level + 1)) + min_level;
+	EquipmentMaterial item_mat = EquipmentMaterial::wood;
+
+	Equipment item;
+	switch (item_type) {
+	case EquipmentType::sword:
+		item = GenerateSword(item_level, item_mat);
+		break;
+	case EquipmentType::axe:
+		item = GenerateAxe(item_level, item_mat);
+		break;
+	case EquipmentType::bow:
+		item = GenerateBow(item_level, item_mat);
+		break;
+	case EquipmentType::shield:
+		item = GenerateShield(item_level, item_mat);
+		break;
+	case EquipmentType::heal_item:
+		item = GenerateHealItem(item_level, item_mat);
+	}
+	RpgGame::assets->CreateInventoryItem(item, RpgPlayState::groupItems);
+	return item;
+}
