@@ -116,3 +116,16 @@ bool RpgSoundManager::isMusicMuted()
 {
 	return m_isMuted;
 }
+
+void RpgSoundManager::cleanupSoundFiles()
+{
+	for (auto it = m_MusicStore.begin(); it != m_MusicStore.end(); ++it) {
+		Mix_FreeMusic(it->second);
+	}
+	m_MusicStore.clear();
+
+	for (auto it = m_ChunkStore.begin(); it != m_ChunkStore.end(); ++it) {
+		Mix_FreeChunk(it->second);
+	}
+	m_ChunkStore.clear();
+}

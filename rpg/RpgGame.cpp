@@ -86,6 +86,7 @@ void RpgGame::clean()
 	SDL_Quit();
 	Mix_CloseAudio();
 	Mix_Quit();
+	RpgSoundManager::cleanupSoundFiles();
 	std::cout << "cleaned" << std::endl;
 };
 

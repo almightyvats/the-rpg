@@ -36,6 +36,8 @@ class RpgSoundManager {
 	static void toggleMuteVolume();
 	static bool isMusicMuted();
 	static int getLastSetMusicVolume();
+
+	static void cleanupSoundFiles();
 };
 
 #endif
