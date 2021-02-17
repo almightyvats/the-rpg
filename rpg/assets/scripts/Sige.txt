@@ -1,0 +1,12 @@
+There are multiple different equipment classes.
+Each class brings different potential attacks, abilities and bonus stats.
+This results in different strengths, weaknesses and usages.
+Swords are balanced melee weapons that offer a variety of attacks ...
+... with different cooldowns and damage outputs.
+Axes bring higher average damage and can offer bonus strength, ...
+... but for the tradeoff of higher cooldowns.
+As ranged weapons, bow represent a consistent damage output in the hands of ...
+... a skilled user against enemies with low perception.
+Shields are pure defensive items that offer bonuses to the defense stat.
+Finally, potions are items that offer healing abilities that can be used indefinitely.
+Think closely about which of combatants should carry which combination of items.
