@@ -11,3 +11,5 @@ enum class LootMaterial {
 };
 
 Equipment GenerateLoot(int min_level, int max_level);
+
+Equipment GenerateBaseLoot(int min_level, int max_level);

@@ -23,25 +23,38 @@ SaveGame::SaveGame()
 
 SaveGame::~SaveGame() = default;
 
+void DeleteItems(Group group)
+{
+	auto &invItems(manager.getGroup(group));
+	for (auto item : invItems) {
+		item->destroy();
+	}
+}
+
+void SetItems(Group group, std::vector<InventoryComponent> items)
+{
+	for (auto item : items) {
+		RpgGame::assets->CreateInventoryItem(item.equip, group, item.pocketNumber);
+	}
+}
+
 void SaveGame::NewGame()
 {
-	// find different sprites for player characters
 	pc_knight = PlayerCombatant("Knight", "c_knight", 5, 55, 9, 8, 6, 11, 7, 7);
 	pc_archer = PlayerCombatant("Archer", "c_archer", 5, 45, 11, 3, 8, 3, 13, 12);
 	pc_brute = PlayerCombatant("Brute", "c_brute", 5, 75, 2, 15, 11, 8, 2, 7);
 
-	// Init items
+    DeleteItems(RpgPlayState::groupItems);
+    DeleteItems(RpgPlayState::groupEquipmentCombatant1);
+    DeleteItems(RpgPlayState::groupEquipmentCombatant2);
+    DeleteItems(RpgPlayState::groupEquipmentCombatant3);
 
-	// test items:
-	if (manager.getGroup(RpgPlayState::groupItems).size() == 0) {
-		std::srand(std::time(nullptr));
-		pc_knight.AddEquipment(GenerateLoot(3, 5));
-		pc_knight.AddEquipment(GenerateLoot(3, 5));
-		pc_archer.AddEquipment(GenerateLoot(3, 5));
-		pc_archer.AddEquipment(GenerateLoot(3, 5));
-		pc_brute.AddEquipment(GenerateLoot(3, 5));
-		pc_brute.AddEquipment(GenerateLoot(3, 5));
-	}
+	GenerateLoot(2, 4);
+	GenerateBaseLoot(2, 4);
+	GenerateBaseLoot(2, 4);
+	GenerateBaseLoot(2, 4);
+	GenerateBaseLoot(2, 4);
+	GenerateBaseLoot(2, 4);
 
     player_map = "../rpg/assets/map/outdoor_01.json";
     player_pos = Vector2D(55 * 32 * 3, 4 * 32 * 3);
@@ -90,21 +103,6 @@ std::vector<InventoryComponent> SaveGame::FetchItemsArcher()
 std::vector<InventoryComponent> SaveGame::FetchItemsBrute()
 {
 	return FetchItems(RpgPlayState::groupEquipmentCombatant3);
-}
-
-void DeleteItems(Group group)
-{
-	auto &invItems(manager.getGroup(group));
-	for (auto item : invItems) {
-		item->destroy();
-	}
-}
-
-void SetItems(Group group, std::vector<InventoryComponent> items)
-{
-	for (auto item : items) {
-		RpgGame::assets->CreateInventoryItem(item.equip, group, item.pocketNumber);
-	}
 }
 
 void SaveGame::SetInventory(std::vector<InventoryComponent> items)

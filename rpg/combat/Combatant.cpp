@@ -101,7 +101,7 @@ std::string Combatant::PerformAttack(Attack attack, std::vector<Combatant*> targ
 
         bool crit_hit = CheckCritHit(attacker_stats.luck, target_stats.luck, attack.crit_chance, attack.effect);
 
-        int damage = (crit_hit ? attack.damage : (int)(attack.damage * attack.crit_multiplier));
+        int damage = (crit_hit ? (int)(attack.damage * attack.crit_multiplier) : attack.damage);
         int attack_damage;
 
         int target_defense = target_stats.defense;
