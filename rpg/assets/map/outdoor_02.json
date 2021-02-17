@@ -234,6 +234,14 @@
  "type":"map",
  "version":1.4,
  "width":50,
+ "npcs": [
+       {
+              "x": 16,
+              "y": 5,
+              "model": "citicen",
+              "name": "Mordekai"
+       }
+],
  "enemies": [
        {
               "x": 19,
