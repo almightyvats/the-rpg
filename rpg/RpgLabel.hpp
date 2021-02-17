@@ -13,6 +13,7 @@ class RpgLabel {
 	std::string m_labelFontId;
 	SDL_Color m_color;
 	SDL_Texture *m_labelTexture;
+	bool drawable;
 
   public:
 	RpgLabel() = default;

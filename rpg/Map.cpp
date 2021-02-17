@@ -115,7 +115,9 @@ Map::Map(std::string path, int mapScale) : mapFilePath(path)
 	scale = setting.mapScale;
 }
 
-Map::~Map() {}
+Map::~Map() {
+	ClearMap();
+}
 
 void Map::LoadMap()
 {

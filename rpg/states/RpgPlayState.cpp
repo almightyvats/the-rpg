@@ -47,8 +47,8 @@ RpgPlayState::RpgPlayState()
 	RpgGame::assets->AddTexture("player", "../rpg/assets/playerSpriteSheet.png");
 	RpgGame::assets->AddTexture("fireball", "../rpg/assets/fireball_sprite.png");
 
-	map = new Map("../rpg/assets/map/outdoor_01.json", 3);
-	map->LoadMap();
+	/*map = new Map("../rpg/assets/map/outdoor_01.json", 3);
+	map->LoadMap();*/
 
 	player.addComponent<TransformComponent>(55 * 32 * 3, 4 * 32 * 3, 115, 75, 1);
 
