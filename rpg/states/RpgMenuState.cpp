@@ -12,7 +12,7 @@ SDL_Event RpgMenuState::m_event;
 
 extern Manager manager;
 extern SaveGame saveGame;
-extern bool game_over;
+extern bool playsession_reloadable;
 const State m_state = stateMenu;
 
 RpgMenuState::RpgMenuState()
@@ -45,7 +45,7 @@ RpgMenuState::RpgMenuState()
 	m_Labels.push_back(exitLabel);
 
 	m_buttonFucntions.insert({continueGameLabel, [](RpgGame *rpgGame) {
-		                          if (!game_over) {
+		                          if (playsession_reloadable) {
 			                          rpgGame->changeState(RpgPlayState::Instance());
 		                          }
 	                          }});
@@ -129,7 +129,7 @@ void RpgMenuState::HandleEvents(RpgGame *rpgGame)
 		case SDL_KEYDOWN:
 			switch (m_event.key.keysym.sym) {
 			case SDLK_SPACE:
-				if (!game_over) {
+				if (playsession_reloadable) {
 					rpgGame->changeState(RpgPlayState::Instance());
 				}
 				break;

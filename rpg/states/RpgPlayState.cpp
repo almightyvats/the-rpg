@@ -23,7 +23,7 @@ extern SaveGame saveGame;
 
 extern bool enemy_destroyed;
 extern bool game_over;
-bool playsession_reloadable = true;
+bool playsession_reloadable = false;
 static std::time_t last_encounter_escape;
 static std::time_t last_conversation_or_combat;
 Entity *enemy_encountered;
