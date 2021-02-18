@@ -1,11 +1,7 @@
 #pragma once
 
 #include "Vector2D.hpp"
-#include <SDL.h>
-#include <SDL_image.h>
-#include <iostream>
-#include <string>
-#include <vector>
+#include "RpgGame.hpp"
 
 struct MapLayer {
 	int id;

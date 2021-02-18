@@ -1,10 +1,7 @@
 #include "SaveGame.hpp"
 #include "AssetManager.hpp"
-
 #include "combat/LootGenerator.hpp"
 #include <cstdio>
-#include <cstdlib>
-#include <ctime>
 #include <filesystem>
 
 namespace fs = std::filesystem;

@@ -6,10 +6,8 @@
 #include "RpgMenuItem.hpp"
 #include "rpg/RpgGame.hpp"
 #include "rpg/RpgLabel.hpp"
-#include <functional>
 #include <map>
 #include <memory>
-#include <vector>
 
 enum MUTE_BUTTON_STATE { BUTTON_SPRITE_UNMUTED = 0, BUTTON_SPRITE_MUTED = 1 };
 

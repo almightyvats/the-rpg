@@ -2,8 +2,6 @@
 
 #include <cereal/types/vector.hpp>
 #include <sstream>
-#include <string>
-#include <vector>
 
 #include "Combatant.hpp"
 

@@ -1,9 +1,6 @@
 #include "RpgLabel.hpp"
-#include "AssetManager.hpp"
-#include "RpgGame.hpp"
 #include "TextureManager.hpp"
 #include "states/RpgPlayState.hpp"
-#include <iostream>
 
 RpgLabel::RpgLabel(int xPosition, int yPosition, std::string labelText, std::string fontId, SDL_Color &color)
     : m_labelText(labelText), m_labelFontId(fontId), m_color(color), m_labelTexture(nullptr), drawable(false)

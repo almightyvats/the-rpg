@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../AssetManager.hpp"
-#include "../SpriteSheet.hpp"
+#include "rpg/AssetManager.hpp"
+#include "rpg/SpriteSheet.hpp"
 #include "Components.hpp"
 #include "animation.hpp"
 #include "rpg/RpgGame.hpp"

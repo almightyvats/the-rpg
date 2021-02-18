@@ -1,5 +1,4 @@
 #include "GameObject.hpp"
-#include "RpgGame.hpp"
 #include "TextureManager.hpp"
 
 GameObject::GameObject(std::string textureSheet, int x, int y)

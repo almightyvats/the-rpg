@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../RpgGame.hpp"
-#include "../RpgLabel.hpp"
-#include "../TextureManager.hpp"
-#include "../combat/Combat.hpp"
-#include "../combat/EnemyCombatant.hpp"
+#include "rpg/RpgGame.hpp"
+#include "rpg/RpgLabel.hpp"
+#include "rpg/TextureManager.hpp"
+#include "rpg/combat/Combat.hpp"
+#include "rpg/combat/EnemyCombatant.hpp"
 #include "RpgGameState.hpp"
 
 struct CombatantLabels {

@@ -2,10 +2,6 @@
 #define RPG_MENUITEM_HPP
 
 #include "RpgMenuState.hpp"
-#include <SDL.h>
-#include <SDL_image.h>
-#include <functional>
-#include <string>
 
 enum class ITEM_TYPE { MUTE_BUTTON = 0, UNMUTE_BUTTON = 1, LOGO = 2, BACKGROUND = 3 };
 class RpgMenuItem {

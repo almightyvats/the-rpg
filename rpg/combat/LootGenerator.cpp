@@ -1,12 +1,10 @@
 #include "LootGenerator.hpp"
-#include "../RpgGame.hpp"
-#include "../states/RpgStates.hpp"
+#include "rpg/RpgGame.hpp"
+#include "rpg/states/RpgStates.hpp"
 #include "Equipment.hpp"
 
-#include <algorithm>
 #include <cstdlib>
-#include <ctime>
-#include <iostream>
+
 
 #define SWORD_ATTACK_SWORD_SWING \
 	{ \

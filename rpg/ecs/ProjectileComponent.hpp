@@ -2,7 +2,6 @@
 
 #include "../Vector2D.hpp"
 #include "Components.hpp"
-#include "ecs.hpp"
 
 class ProjectileComponent : public Component {
   public:

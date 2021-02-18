@@ -1,12 +1,7 @@
 #include "RpgCombatState.hpp"
 
-#include "../Map.hpp"
-#include "../RpgLabel.hpp"
-#include "../RpgSoundManager.hpp"
-#include "../Vector2D.hpp"
-#include "../combat/EnemyGenerator.hpp"
-#include "../ecs/ecs.hpp"
-#include "RpgPlayState.hpp"
+#include "rpg/RpgSoundManager.hpp"
+#include "rpg/combat/EnemyGenerator.hpp"
 #include "rpg/states/RpgStates.hpp"
 
 #define FONT_MSG "Ancient"

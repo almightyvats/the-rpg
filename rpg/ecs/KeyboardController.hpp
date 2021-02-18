@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Components.hpp"
-#include "ecs.hpp"
 #include "rpg/RpgGame.hpp"
 #include "rpg/states/RpgPlayState.hpp"
 

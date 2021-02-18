@@ -1,6 +1,4 @@
-#include "RpgPlayState.hpp"
 #include "RpgCombatState.hpp"
-#include "RpgMenuState.hpp"
 #include "RpgPlayerConvoState.hpp"
 #include "rpg/AssetManager.hpp"
 #include "rpg/Collision.hpp"

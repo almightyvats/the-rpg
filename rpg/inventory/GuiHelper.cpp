@@ -1,10 +1,9 @@
 #include "GuiHelper.hpp"
 #include "../../vendor/rapidjson/document.h"
 #include "../../vendor/rapidjson/stringbuffer.h"
-#include "../../vendor/rapidjson/writer.h"
+
 #include <fstream>
 #include <iostream>
-#include <sstream>
 
 GuiHelper::GuiHelper(std::string xmlFile)
 {

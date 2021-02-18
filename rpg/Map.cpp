@@ -1,16 +1,11 @@
 #include "Map.hpp"
 #include "../vendor/rapidjson/document.h"
 #include "../vendor/rapidjson/stringbuffer.h"
-#include "../vendor/rapidjson/writer.h"
-#include "RpgGame.hpp"
-#include "TextureManager.hpp"
-#include "ecs/Components.hpp"
+
 #include "ecs/ecs.hpp"
 #include "states/RpgStates.hpp"
 #include <fstream>
-#include <iostream>
-#include <sstream>
-#include <string>
+
 
 const State m_state = statePlay;
 extern Manager manager;
