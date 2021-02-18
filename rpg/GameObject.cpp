@@ -26,5 +26,4 @@ void GameObject::Update()
 void GameObject::Render()
 {
 	SDL_RenderCopy(RpgGame::renderer, objTexture, NULL, &destRect);
-	// SDL_RenderCopy(renderer, objTexture, &scrRect, &destRect);
 }
