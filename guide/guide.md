@@ -1,4 +1,4 @@
-# The Ultimate RPG
+# The Ultimate Guide
 
 This is the guide for The Ultimate RPG. Only use this guide if you want information an specific attack capabilities and enemy profiles.
 
