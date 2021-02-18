@@ -52,7 +52,7 @@ class RpgMenuState : public RpgGameState {
 	std::map<MenuItem, MUTE_BUTTON_STATE> m_muteBtnWithStates;
 	std::shared_ptr<RpgMenuItem> m_menuBackgroundPtr;
 	std::shared_ptr<RpgMenuItem> m_logoPtr;
-	std::map<LabelItem, std::function<void(RpgGame *)>> m_buttonFucntions;
+	std::map<LabelItem, std::function<void(RpgGame *)>> m_buttonFunctions;
 	MenuLabelList m_Labels;
 	SDL_Color m_colors[2] = {{255, 255, 255}, {255, 0, 0}};
 };

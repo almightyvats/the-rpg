@@ -42,7 +42,7 @@ class RpgLoadGameState : public RpgGameState {
 	LabelItemList m_labels;
 	SDL_Rect m_dialogueBox1;
 	SDL_Rect m_dialogueBox2;
-	std::map<LabelItem, std::function<void(RpgGame *)>> m_buttonFucntions;
+	std::map<LabelItem, std::function<void(RpgGame *)>> m_buttonFunctions;
 	SDL_Color m_colors[2] = {{255, 255, 255}, {255, 0, 0}};
 };
 
