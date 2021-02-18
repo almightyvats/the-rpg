@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Vector2D.hpp"
 #include <SDL.h>
 #include <SDL_image.h>

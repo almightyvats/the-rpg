@@ -1,4 +1,5 @@
 #pragma once
+
 #include "../RpgLabel.hpp"
 #include "../combat/Equipment.hpp"
 #include "RpgGameState.hpp"

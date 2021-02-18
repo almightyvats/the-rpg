@@ -1,5 +1,3 @@
-
-#include "../combat/CombatTest.hpp"
 #include "../combat/Combatant.hpp"
 #include "RpgCombatState.hpp"
 #include "RpgPlayerConvoState.hpp"
@@ -61,7 +59,6 @@ RpgMenuState::RpgMenuState()
 	RpgSoundManager::setMusicVolume(15);
 	int oldVolume = RpgSoundManager::getMusicVolume();
 	auto volumeMinusLabel = std::make_shared<RpgLabel>(50, 10, "-", "Ancient", m_colors[0]);
-	// auto volumeNumberLabel = std::make_shared<RpgLabel>(150, 10, std::to_string(oldVolume), "Ancient", m_colors[0]);
 	auto volumePlusLabel = std::make_shared<RpgLabel>(200, 10, "+", "Ancient", m_colors[0]);
 
 	m_buttonFucntions.insert({volumeMinusLabel, [](RpgGame *rpgGame) {
@@ -82,7 +79,6 @@ RpgMenuState::RpgMenuState()
 	                          }});
 
 	m_Labels.push_back(volumeMinusLabel);
-	// m_Labels.push_back(volumeNumberLabel);
 	m_Labels.push_back(volumePlusLabel);
 
 	RpgSoundManager::playMusic("MENU");

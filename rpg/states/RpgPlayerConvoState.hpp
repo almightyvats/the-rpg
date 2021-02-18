@@ -45,7 +45,7 @@ class RpgPlayerConvoState : public RpgGameState {
 	inline static bool m_readyToTalk = true;
 	bool m_isPlayerTalking;
 	LabelItemList m_labels;
-    LabelItem m_playerDialogueLabel;
+	LabelItem m_playerDialogueLabel;
 	SDL_Rect m_dialogueBox1;
 	SDL_Rect m_dialogueBox2;
 	std::unique_ptr<RpgTimer> m_timer;

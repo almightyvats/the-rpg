@@ -29,7 +29,7 @@ class RpgGameState {
 		groupCombatPlayerCombatants,
 		groupCombatEnemyCombatants,
 		groupCombatProjectiles
-	};	
+	};
 };
 
 #endif // RPG_RPGGAMESTATE_HPP

@@ -61,7 +61,7 @@ class KeyboardController : public Component {
 				break;
 			case SDLK_d:
 				transform->velocity.x = 0;
-				sprite->play("idle_left");//is flipped
+				sprite->play("idle_left"); // is flipped
 				break;
 			default:
 				break;

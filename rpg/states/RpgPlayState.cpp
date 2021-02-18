@@ -8,7 +8,6 @@
 #include "rpg/RpgSoundManager.hpp"
 #include "rpg/SaveGame.hpp"
 #include "rpg/Vector2D.hpp"
-#include "rpg/combat/CombatTest.hpp"
 #include "rpg/ecs/Components.hpp"
 #include "rpg/states/RpgStates.hpp"
 
@@ -77,7 +76,6 @@ auto &colliders(manager.getGroup(RpgPlayState::groupColliders));
 auto &projectiles(manager.getGroup(RpgPlayState::groupProjectiles));
 auto &npcs(manager.getGroup(RpgPlayState::groupNpcs));
 auto &enemies(manager.getGroup(RpgPlayState::groupEnemies));
-// auto &items(manager.getGroup(RpgPlayState::groupItems));
 
 void RpgPlayState::Pause()
 {
@@ -278,9 +276,6 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 		if (e->hasComponent<ColliderComponent>()) {
 			SDL_Rect cCol = e->getComponent<ColliderComponent>().collider;
 			if (Collision::AABB(cCol, playerCol) && std::difftime(time(0), last_encounter_escape) > ENEMY_PHASE_TIME) {
-				// player.getComponent<TransformComponent>().position = playerPos;
-				std::cout << "ENEMY encountered" << std::endl;
-				// TODO: start combat (for colliding enemy + enemies in certain range?)
 				rpgGame->pushState(RpgCombatState::Instance(saveGame.FetchCombatants(), DetermineArena()));
 				enemy_encountered = e;
 			}
@@ -296,8 +291,6 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 
 	rpgGame->camera.x = player.getComponent<TransformComponent>().position.x - rpgGame->camera.w / 2; //-half screen
 	rpgGame->camera.y = player.getComponent<TransformComponent>().position.y - rpgGame->camera.h / 2; //-half screen
-
-	// TODO - nach camera set verschwinden dinge: return;
 
 	if (rpgGame->camera.x < 0) {
 		rpgGame->camera.x = 0;

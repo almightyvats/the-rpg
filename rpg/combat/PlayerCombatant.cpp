@@ -1,18 +1,24 @@
 #include "PlayerCombatant.hpp"
 
-#include <sstream>
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <sstream>
 
 #define TOKENS_PER_LEVEL_UP 3
-#define EXP_FOR_LEVEL_UP (level_*level_)
+#define EXP_FOR_LEVEL_UP (level_ * level_)
 #define MAX_EQUIPMENT 4
 
-#define ATTACK_SUCKER_PUNCH {"Sucker Punch", AttackType::melee, AttackTargetType::single, 5, 0, 0.95, 0.0, 1.0, 5, AttackEffect::none}
-#define ABILITY_BLOCK {"Block", AbilityTargetType::self, 0, 0, 1.0, 5, AbilityEffect::block}
+#define ATTACK_SUCKER_PUNCH \
+	{ \
+		"Sucker Punch", AttackType::melee, AttackTargetType::single, 5, 0, 0.95, 0.0, 1.0, 5, AttackEffect::none \
+	}
+#define ABILITY_BLOCK \
+	{ \
+		"Block", AbilityTargetType::self, 0, 0, 1.0, 5, AbilityEffect::block \
+	}
 
-PlayerCombatant::PlayerCombatant(const std::string &name, const std::string& sprite_name, int level)
+PlayerCombatant::PlayerCombatant(const std::string &name, const std::string &sprite_name, int level)
 {
 	name_ = name;
 	sprite_name_ = sprite_name;
@@ -38,16 +44,16 @@ PlayerCombatant::PlayerCombatant(const std::string &name, const std::string& spr
 	Attack base_attack1 = ATTACK_SUCKER_PUNCH;
 	base_attacks_.push_back(base_attack1);
 
-    Ability base_ability1 = ABILITY_BLOCK;
-    base_abilities_.push_back(base_ability1);
+	Ability base_ability1 = ABILITY_BLOCK;
+	base_abilities_.push_back(base_ability1);
 
 	while (level_ < level) {
 		LevelUp(TOKENS_PER_LEVEL_UP, 0);
 	}
 }
 
-PlayerCombatant::PlayerCombatant(const std::string &name, const std::string& sprite_name, int level, int max_hp, int agility, int strength, int defense,
-                                 int dexterity, int perception, int luck)
+PlayerCombatant::PlayerCombatant(const std::string &name, const std::string &sprite_name, int level, int max_hp,
+                                 int agility, int strength, int defense, int dexterity, int perception, int luck)
 {
 	name_ = name;
 	sprite_name_ = sprite_name;
@@ -59,7 +65,7 @@ PlayerCombatant::PlayerCombatant(const std::string &name, const std::string& spr
 	hp_ = max_hp_;
 	state_ = CombatantState::normal;
 	cooldown_ = 0;
-    state_reset_countdown_ = 0;
+	state_reset_countdown_ = 0;
 
 	agility_ = agility;
 	strength_ = strength;
@@ -71,8 +77,8 @@ PlayerCombatant::PlayerCombatant(const std::string &name, const std::string& spr
 	Attack base_attack1 = ATTACK_SUCKER_PUNCH;
 	base_attacks_.push_back(base_attack1);
 
-    Ability base_ability1 = ABILITY_BLOCK;
-    base_abilities_.push_back(base_ability1);
+	Ability base_ability1 = ABILITY_BLOCK;
+	base_abilities_.push_back(base_ability1);
 }
 
 PlayerCombatant::~PlayerCombatant()
@@ -90,7 +96,7 @@ std::string PlayerCombatant::GainExp(int exp_gain)
 		os << "\n";
 		os << LevelUp(TOKENS_PER_LEVEL_UP, exp_ - EXP_FOR_LEVEL_UP);
 	}
-	os << "   . . .  "  << exp_ << "/" << EXP_FOR_LEVEL_UP << " Exp. until next Level Up\n";
+	os << "   . . .  " << exp_ << "/" << EXP_FOR_LEVEL_UP << " Exp. until next Level Up\n";
 	return os.str();
 }
 
@@ -208,137 +214,4 @@ CombatantStats PlayerCombatant::CalculateStats()
 	}
 
 	return stats;
-}
-
-Combatant *ChooseSingleTarget(std::vector<Combatant *> combatants)
-{
-	std::cout << "Available targets: \n";
-	int c = 0;
-
-	for (Combatant *combatant : combatants) {
-		std::cout << c++ << " - " << combatant->name() << "\n";
-	}
-
-	int target_number;
-
-	std::cout << "Choose target: ";
-	std::cin >> target_number;
-
-	while (target_number < 0 || target_number >= combatants.size()) {
-		std::cout << "Target number our of range. Choose target: ";
-		std::cin >> target_number;
-	}
-
-	return combatants.at(target_number);
-}
-
-void PlayerCombatant::ChooseAndPerformAction(const std::vector<Combatant *> player_combatants,
-                                             std::vector<Combatant *> enemy_combatants)
-{
-
-	std::vector<Attack> attacks = GetAttackList();
-	std::vector<Ability> abilities = GetAbilityList();
-
-	while (true) {
-
-		std::cout << "Available actions:\n0 - attack\n1 - use ability\nChoose action: ";
-		
-		int action_number;
-		std::cin >> action_number;
-
-		while (action_number < 0 || action_number > 1) {
-			std::cout << "Action number our of range. Choose action: ";
-			std::cin >> action_number;
-		}
-
-		if (action_number == 0) {
-			std::cout << "Available attacks:\n";
-			int c = 0;
-
-			for (Attack attack : attacks) {
-				std::cout << c++ << " - " << attack.name << "\n";
-			}
-			std::cout << c << " - BACK\n"; 
-
-			int attack_number;
-
-			std::cout << "Choose attack: ";
-			std::cin >> attack_number;
-
-			while (attack_number < 0 || attack_number > c) {
-				std::cout << "Attack number our of range. Choose attack: ";
-				std::cin >> attack_number;
-			}
-
-			if (attack_number != c) {
-				ChooseAttackTargetAndPerformAttack(attacks.at(attack_number), enemy_combatants);
-				break;	
-			}
-		} else {
-			std::cout << "Available abilities:\n";
-			int c = 0;
-
-			for (Ability ability : abilities) {
-				std::cout << c++ << " - " << ability.name << "\n";
-			}
-			std::cout << c << " - BACK\n"; 
-
-			int ability_number;
-
-			std::cout << "Choose ability: ";
-			std::cin >> ability_number;
-
-			while (ability_number < 0 || ability_number > c) {
-				std::cout << "Ability number our of range. Choose ability: ";
-				std::cin >> ability_number;
-			}
-
-			if (ability_number != c) {
-				ChooseAbilityTargetAndUseAbility(abilities.at(ability_number), player_combatants, enemy_combatants);
-				break;	
-			}
-		}	
-	}
-}
-
-void PlayerCombatant::ChooseAttackTargetAndPerformAttack(Attack attack, std::vector<Combatant *> enemy_combatants)
-{
-	std::vector<Combatant *> targets;
-
-	if (attack.target_type == AttackTargetType::single) {
-		targets.push_back(ChooseSingleTarget(enemy_combatants));
-	} else {
-		targets = enemy_combatants;
-	}
-
-	PerformAttack(attack, targets);
-}
-
-void PlayerCombatant::ChooseAbilityTargetAndUseAbility(Ability ability, const std::vector<Combatant *> player_combatants, std::vector<Combatant *> enemy_combatants)
-{
-	std::vector<Combatant *> targets;
-
-	switch (ability.target_type)
-	{
-	case AbilityTargetType::self:
-		targets.push_back(this);
-		break;
-	case AbilityTargetType::enemy_single:
-		targets.push_back(ChooseSingleTarget(enemy_combatants));
-		break;
-	case AbilityTargetType::enemy_multi:
-		targets = enemy_combatants;
-		break;
-	case AbilityTargetType::team_single:
-		targets.push_back(ChooseSingleTarget(player_combatants));
-		break;
-	case AbilityTargetType::team_multi:
-		targets = player_combatants;
-		break;
-	case AbilityTargetType::all:
-		targets.insert(targets.end(), player_combatants.begin(), player_combatants.end());
-		targets.insert(targets.end(), enemy_combatants.begin(), enemy_combatants.end());
-	}
-
-	UseAbility(ability, targets);
 }
