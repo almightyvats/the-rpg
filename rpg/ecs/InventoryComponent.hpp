@@ -19,7 +19,6 @@ struct InventoryComponent : public Component {
 	Equipment equip;
 
 	InventoryComponent() = default;
-	// InventoryComponent(int pocketNumber) { this->pocketNumber = pocketNumber; }
 	InventoryComponent(int pocketNumber) { this->pocketNumber = pocketNumber; }
 	~InventoryComponent() {}
 

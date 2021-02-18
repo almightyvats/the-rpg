@@ -112,9 +112,6 @@ void RpgPlayerConvoState::Render(RpgGame *rpgGame)
 	SDL_SetRenderDrawColor(RpgGame::renderer, 0, 0, 0, 255);
 	SDL_RenderFillRect(RpgGame::renderer, &m_dialogueBox2);
 
-//	for (auto &l : m_labels) {
-//		l->Draw();
-//	}
     m_playerDialogueLabel->Draw();
 	SDL_RenderPresent(RpgGame::renderer);
 }

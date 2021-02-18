@@ -47,9 +47,6 @@ RpgPlayState::RpgPlayState()
 	RpgGame::assets->AddTexture("player", "../rpg/assets/playerSpriteSheet.png");
 	RpgGame::assets->AddTexture("fireball", "../rpg/assets/fireball_sprite.png");
 
-	/*map = new Map("../rpg/assets/map/outdoor_01.json", 3);
-	map->LoadMap();*/
-
 	player.addComponent<TransformComponent>(55 * 32 * 3, 4 * 32 * 3, 115, 75, 1);
 
 	SpriteSheet spriteSheet(11, 75, 115, 75, 5);
@@ -70,9 +67,6 @@ RpgPlayState::RpgPlayState()
 	player.addGroup(groupPlayers);
 
 	RpgSoundManager::resumeMusic("PLAY");
-
-	// RpgGame::assets->AddTexture("icons", "../rpg/assets/icons/Icon Pack_3.png");
-	// RpgGame::assets->CreateItem(0, 0, 13 * 32 * 3, 88 * 32 * 3, "icons");
 }
 
 RpgPlayState::~RpgPlayState() = default;
@@ -300,14 +294,6 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 		}
 	}
 
-	// for (auto &p : projectiles) {
-	// 	SDL_Rect cCol = p->getComponent<ColliderComponent>().collider;
-	// 	if (Collision::AABB(cCol, playerCol)) {
-	// 		std::cout << "Player hit" << std::endl;
-	// 		p->destroy();
-	// 	}
-	// }
-
 	rpgGame->camera.x = player.getComponent<TransformComponent>().position.x - rpgGame->camera.w / 2; //-half screen
 	rpgGame->camera.y = player.getComponent<TransformComponent>().position.y - rpgGame->camera.h / 2; //-half screen
 
@@ -403,10 +389,6 @@ void RpgPlayState::Render(RpgGame *rpgGame)
 	for (auto &e : enemies) {
 		e->draw(alpha, m_state);
 	}
-
-	// for (auto &i : items) {
-	// 	i->draw(alpha);
-	// }
 
 	SDL_RenderPresent(rpgGame->renderer);
 }

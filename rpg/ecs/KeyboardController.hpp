@@ -63,9 +63,6 @@ class KeyboardController : public Component {
 				transform->velocity.x = 0;
 				sprite->play("idle_left");//is flipped
 				break;
-			// case SDLK_ESCAPE:
-			// 	RpgGame::isRunning = false;
-			// 	break;
 			default:
 				break;
 			}
