@@ -1,9 +1,10 @@
 #ifndef RPG_LABEL_HPP
 #define RPG_LABEL_HPP
+
+#include "Vector2D.hpp"
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <string>
-#include "Vector2D.hpp"
 
 enum class LabelType { NONE = -1, NEWGAME = 0, LOADGAME = 1, EXIT = 2, CONTINUE = 3 };
 class RpgLabel {

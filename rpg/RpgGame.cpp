@@ -21,12 +21,9 @@ void RpgGame::init(std::string title, bool fullScreen)
 			flags = SDL_WINDOW_FULLSCREEN;
 		}
 
-		std::cout << "Initialized ..." << std::endl;
 		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH,
 		                          SCREEN_HEIGHT, flags);
-		if (window) {
-			std::cout << "Window created" << std::endl;
-		}
+
 		RpgSoundManager::init();
 		RpgSoundManager::addMusic("../rpg/assets/music/combat1.wav", "COMBAT1");
 		RpgSoundManager::addMusic("../rpg/assets/music/menu.wav", "MENU");
@@ -43,8 +40,6 @@ void RpgGame::init(std::string title, bool fullScreen)
 
 		if (TTF_Init() < 0) {
 			std::cout << "Error in loading TTF: " << TTF_GetError() << std::endl;
-		} else {
-			std::cout << "TTF initialised" << std::endl;
 		}
 
 		int w, h;
@@ -55,7 +50,6 @@ void RpgGame::init(std::string title, bool fullScreen)
 		renderer = SDL_CreateRenderer(window, -1, 0);
 		if (renderer) {
 			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-			std::cout << "Renderer created" << std::endl;
 		}
 
 		isRunning = true;
@@ -87,7 +81,6 @@ void RpgGame::clean()
 	Mix_CloseAudio();
 	Mix_Quit();
 	RpgSoundManager::cleanupSoundFiles();
-	std::cout << "cleaned" << std::endl;
 };
 
 void RpgGame::pushState(RpgGameState &state)

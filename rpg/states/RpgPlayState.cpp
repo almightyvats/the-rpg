@@ -8,7 +8,6 @@
 #include "rpg/RpgSoundManager.hpp"
 #include "rpg/SaveGame.hpp"
 #include "rpg/Vector2D.hpp"
-#include "rpg/combat/CombatTest.hpp"
 #include "rpg/ecs/Components.hpp"
 #include "rpg/states/RpgStates.hpp"
 
@@ -70,9 +69,6 @@ RpgPlayState::RpgPlayState()
 	player.addGroup(groupPlayers);
 
 	RpgSoundManager::resumeMusic("PLAY");
-
-	// RpgGame::assets->AddTexture("icons", "../rpg/assets/icons/Icon Pack_3.png");
-	// RpgGame::assets->CreateItem(0, 0, 13 * 32 * 3, 88 * 32 * 3, "icons");
 }
 
 RpgPlayState::~RpgPlayState() = default;
@@ -83,7 +79,6 @@ auto &colliders(manager.getGroup(RpgPlayState::groupColliders));
 auto &projectiles(manager.getGroup(RpgPlayState::groupProjectiles));
 auto &npcs(manager.getGroup(RpgPlayState::groupNpcs));
 auto &enemies(manager.getGroup(RpgPlayState::groupEnemies));
-// auto &items(manager.getGroup(RpgPlayState::groupItems));
 
 void RpgPlayState::Pause()
 {
@@ -284,9 +279,6 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 		if (e->hasComponent<ColliderComponent>()) {
 			SDL_Rect cCol = e->getComponent<ColliderComponent>().collider;
 			if (Collision::AABB(cCol, playerCol) && std::difftime(time(0), last_encounter_escape) > ENEMY_PHASE_TIME) {
-				// player.getComponent<TransformComponent>().position = playerPos;
-				std::cout << "ENEMY encountered" << std::endl;
-				// TODO: start combat (for colliding enemy + enemies in certain range?)
 				rpgGame->pushState(RpgCombatState::Instance(saveGame.FetchCombatants(), DetermineArena()));
 				enemy_encountered = e;
 			}
@@ -300,18 +292,8 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 		}
 	}
 
-	// for (auto &p : projectiles) {
-	// 	SDL_Rect cCol = p->getComponent<ColliderComponent>().collider;
-	// 	if (Collision::AABB(cCol, playerCol)) {
-	// 		std::cout << "Player hit" << std::endl;
-	// 		p->destroy();
-	// 	}
-	// }
-
 	rpgGame->camera.x = player.getComponent<TransformComponent>().position.x - rpgGame->camera.w / 2; //-half screen
 	rpgGame->camera.y = player.getComponent<TransformComponent>().position.y - rpgGame->camera.h / 2; //-half screen
-
-	// TODO - nach camera set verschwinden dinge: return;
 
 	if (rpgGame->camera.x < 0) {
 		rpgGame->camera.x = 0;
@@ -403,10 +385,6 @@ void RpgPlayState::Render(RpgGame *rpgGame)
 	for (auto &e : enemies) {
 		e->draw(alpha, m_state);
 	}
-
-	// for (auto &i : items) {
-	// 	i->draw(alpha);
-	// }
 
 	SDL_RenderPresent(rpgGame->renderer);
 }

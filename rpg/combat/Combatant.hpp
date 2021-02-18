@@ -101,8 +101,6 @@ class Combatant {
 	virtual std::vector<Attack> GetAttackList() = 0;
 	virtual std::vector<Ability> GetAbilityList() = 0;
 	virtual CombatantStats CalculateStats() = 0;
-	virtual void ChooseAndPerformAction(const std::vector<Combatant *> player_combatants,
-	                                    std::vector<Combatant *> enemy_combatants) = 0;
 
 	std::string PerformAttack(Attack attack, std::vector<Combatant *> targets);
 	std::string UseAbility(Ability ability, std::vector<Combatant *> targets);

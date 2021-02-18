@@ -12,8 +12,6 @@ void RpgSoundManager::init()
 
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
 		std::cout << "Couldn't init audio: " << Mix_GetError();
-	} else {
-		std::cout << "Sound initialised" << std::endl;
 	}
 }
 
@@ -47,7 +45,6 @@ void RpgSoundManager::playMusic(const std::string &musicId)
 {
 	auto itr = m_MusicStore.find(musicId);
 	if (itr != m_MusicStore.end()) {
-		std::cout << "Music Found!\n";
 		Mix_Music *music = itr->second;
 		if (m_isMusicPlaying) {
 			Mix_HaltMusic();

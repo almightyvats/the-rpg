@@ -123,7 +123,4 @@ Vector2D Vector2D::Normalize(const Vector2D &vec)
 {
 	float length = Vector2D::Length(vec);
 	return Vector2D(vec.x * (1.0f / length), vec.y * (1.0f / length));
-	// std::cout << Vector2D(vec.x, vec.y) << " * " << (1 / Vector2D(this->x, this->y).Length()) << "="
-	//           << Vector2D(this->x, this->y) * (1 / Vector2D(this->x, this->y).Length()) << std::endl;
-	//return vec * (1.0f / length);
 }

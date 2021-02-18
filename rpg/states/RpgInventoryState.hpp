@@ -1,4 +1,5 @@
 #pragma once
+
 #include "../RpgLabel.hpp"
 #include "../combat/Equipment.hpp"
 #include "RpgGameState.hpp"
@@ -27,12 +28,4 @@ class RpgInventoryState : public RpgGameState {
 	void Render(RpgGame *rpgGame) override;
 
 	static SDL_Event m_event;
-
-	// MenuItem m_volumeButton;
-	// std::map<MenuItem, MUTE_BUTTON_STATE> m_muteBtnWithStates;
-	// std::shared_ptr<RpgMenuItem> m_menuBackgroundPtr;
-	// std::shared_ptr<RpgMenuItem> m_logoPtr;
-	// std::map<LabelItem, std::function<void(RpgGame *)>> m_buttonFucntions;
-	// MenuLabelList m_Labels;
-	// SDL_Color m_colors[2] = {{255, 255, 255}, {255, 0, 0}};
 };

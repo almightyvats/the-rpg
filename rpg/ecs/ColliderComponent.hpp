@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Components.hpp"
 #include <string>
 
@@ -34,6 +35,6 @@ class ColliderComponent : public Component {
 		collider.x = static_cast<int>(transform->position.x);
 		collider.y = static_cast<int>(transform->position.y);
 		collider.h = transform->height * transform->scale;
-		collider.w = transform->width * transform->scale;		
-	}	
+		collider.w = transform->width * transform->scale;
+	}
 };

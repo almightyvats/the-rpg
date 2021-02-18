@@ -151,7 +151,7 @@ RpgInventoryState::RpgInventoryState()
 	createCombatantItemSlots(1);
 	createCombatantItemSlots(2);
 	createCombatantItemSlots(3);
-	
+
 	background = TextureManager::LoadTexture("../rpg/assets/game_background_4.png");
 
 	labelItemName = std::make_shared<RpgLabel>(50, 10, "ItemName", "Ancient.20", orange);

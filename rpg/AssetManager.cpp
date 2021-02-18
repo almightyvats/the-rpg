@@ -238,8 +238,6 @@ void AssetManager::AddFont(const std::string &id, const std::string &path, const
 	auto openFontPtr = TTF_OpenFont(path.c_str(), fontSize);
 	if (openFontPtr == nullptr) {
 		std::cout << "Problem with open font\n";
-	} else {
-		std::cout << "Font loaded\n";
 	}
 	m_fonts.emplace(id, openFontPtr);
 }
