@@ -33,7 +33,7 @@ EnemyCombatant GenerateEnemySpirit(int lvl, int number)
 
 #define WILLOWISP_STATS {(int)(1.4*lvl), (int)(0.5*lvl + 1), (int)(0.7*lvl + 1), (int)(0.5*lvl + 1), 2*lvl, lvl}
 #define WILLOWISP_MAX_HP 15 + 4*lvl
-#define WILLOWISP_ATTACK_FIREBALL {"Fireball", AttackType::ranged, AttackTargetType::single, (int)(0.15*lvl+2), lvl, 0.7, 0.0, 1.0, 7, AttackEffect::ignite}
+#define WILLOWISP_ATTACK_FIREBALL {"Fireball", AttackType::ranged, AttackTargetType::single, (int)(0.3*lvl+2), lvl, 0.7, 0.0, 1.0, 7, AttackEffect::ignite}
 #define WILLOWISP_ABILITY_WILDFIRE {"Wildfire", AbilityTargetType::enemy_multi, 0, 0, 1.0, 12, AbilityEffect::ignite}
 
 EnemyCombatant GenerateEnemyWillOWisp(int lvl, int number)
@@ -45,7 +45,7 @@ EnemyCombatant GenerateEnemyWillOWisp(int lvl, int number)
     return enemy;
 }
 
-#define NIGHTMARE_STATS {lvl, 0, lvl, 3*lvl, 3*lvl, lvl}
+#define NIGHTMARE_STATS {lvl, 0, lvl, 3*lvl, 3*lvl, 3*lvl}
 #define NIGHTMARE_MAX_HP 13
 #define NIGHTMARE_ABILITY_HAUNT {"Haunt", AbilityTargetType::enemy_single, 0, 3*lvl, 1.0, 7, AbilityEffect::none}
 #define NIGHTMARE_ABILITY_FEAR {"Fear", AbilityTargetType::self, 0, 0, 1.0, 3, AbilityEffect::block}
@@ -79,7 +79,7 @@ EnemyCombatant GenerateEnemyClayGolem(int lvl, int number)
 
 #define WOODGOLEM_STATS {(int)(0.7*lvl + 1), 3*lvl, 2*lvl, (int)(0.8*lvl + 1), (int)(0.8*lvl + 1), lvl}
 #define WOODGOLEM_MAX_HP 5 + 8*lvl
-#define WOODGOLEM_ATTACK_NATURE {"Nature", AttackType::ranged, AttackTargetType::multi, (int)(0.4*lvl+8), lvl, 0.5, 0.0, 2.0, 12, AttackEffect::none}
+#define WOODGOLEM_ATTACK_NATURE {"Nature", AttackType::ranged, AttackTargetType::multi, (int)(0.4*lvl+8), lvl, 0.5, 0.0, 1.0, 12, AttackEffect::none}
 
 EnemyCombatant GenerateEnemyWoodGolem(int lvl, int number)
 {
@@ -92,7 +92,7 @@ EnemyCombatant GenerateEnemyWoodGolem(int lvl, int number)
 }
 
 #define STONEGOLEM_STATS {(int)(0.3*lvl + 1), 2*lvl, 2*lvl, (int)(0.4*lvl + 1), (int)(0.4*lvl + 1), lvl}
-#define STONEGOLEM_MAX_HP 10 + 10*lvl
+#define STONEGOLEM_MAX_HP 10 + 9*lvl
 #define STONEGOLEM_ABILITY_HARDEN {"Harden", AbilityTargetType::self, lvl, 0, 1.0, 6, AbilityEffect::block}
 
 EnemyCombatant GenerateEnemyStoneGolem(int lvl, int number)
@@ -110,9 +110,9 @@ EnemyCombatant GenerateEnemyStoneGolem(int lvl, int number)
 #define MINOTAUR_ABILITY_BLOCK {"Block", AbilityTargetType::self, 0, 0, 1.0, 5, AbilityEffect::block}
 
 #define CULTIST_STATS {(int)(1.1*lvl + 1), 3*lvl, lvl, (int)(1.5*lvl + 1), (int)(1.1*lvl + 1), lvl}
-#define CULTIST_MAX_HP 8*lvl
+#define CULTIST_MAX_HP 7*lvl
 #define CULTIST_ARMOR (int)(0.5*lvl + 1)
-#define CULTIST_ATTACK_WARCRY {"Warcry", AttackType::ranged, AttackTargetType::multi, (int)(0.1*lvl+1), 3*lvl, 10.0, 0.0, 1.0, 12, AttackEffect::none}
+#define CULTIST_ATTACK_WARCRY {"Warcry", AttackType::ranged, AttackTargetType::multi, (int)(0.15*lvl+1), 3*lvl, 10.0, 0.0, 1.0, 12, AttackEffect::none}
 #define CULTIST_ABILITY_CLEANSING {"Cleansing", AbilityTargetType::self, 2*lvl, 0, 1.0, 8, AbilityEffect::ignite}
 
 EnemyCombatant GenerateEnemyCultist(int lvl, int number)

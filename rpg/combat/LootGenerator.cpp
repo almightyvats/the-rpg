@@ -184,7 +184,7 @@ Equipment GenerateAxe(int level, EquipmentMaterial material)
 #define BOW_ATTACK_PRECISION_SHOT \
 	{ \
 		"Precision Shot", AttackType::ranged, AttackTargetType::single, (int)(0.7 * level + 8), penetration, 0.8, 0.3, \
-		    3.0, 6, AttackEffect::none \
+		    3.0, 8, AttackEffect::none \
 	}
 #define BOW_ATTACK_TRIP_ARROW \
 	{ \

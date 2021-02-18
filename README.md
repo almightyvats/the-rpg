@@ -33,7 +33,7 @@ Other important concepts:
 
 - Slow: Taking damage by a slowing attack increases the cooldown of the defender.
 
-- Armor-Breaking: Some attacks in this game have a armor-breaking effect. When calculating the damage of such attack, potential bonus defence offered by the defenders equipment is ignored.
+- Armor-Breaking: Some attacks in this game have an armor-breaking effect. When calculating the damage of such attack, potential bonus defence offered by the defenders equipment is ignored.
 
 ## Inventory
 
@@ -59,6 +59,10 @@ Each combatant and enemy has different stats that influence all facets of combat
 - Dexterity (DEX): When performing a melee attack, the ratio between the dexterity of the attacker and the dexterity of the defender is used to influence the accuracy of the attack.
 - Perception (PER): When performing a ranged attack, the ratio between the perception of the attacker and the perception of the defender is used to influence the accuracy of the attack.
 - Luck: When performing an attack that has a chance to critically hit, the ratio between the luck of the attacker and the luck of the defender is used to influence the chance to achieve such a critical hit.
+
+## Guide
+
+The text guide in the guide folder contains additional information about attacks, weapons and enemies.
 
 ## Credits
 
