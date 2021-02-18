@@ -93,7 +93,7 @@ void RpgGame::clean()
 void RpgGame::pushState(RpgGameState &state)
 {
 	if (!m_states.empty()) {
-		m_states.back().get().Pause(); // Implement Pause in PlayState
+		m_states.back().get().Pause();
 	}
 
 	m_states.emplace_back(state);

@@ -207,8 +207,8 @@ Equipment GenerateBow(int level, EquipmentMaterial material)
 	case EquipmentMaterial::wood:
 		agility = 0;
 		perception = (r_factor < 4) ? (std::rand() % level) + level / 2 : 0;
-		penetration = (r_factor >= 4 && r_factor < 8) ? 2 * ((std::rand() % level) + level / 2)
-		                                              : (int)(1.5 * ((std::rand() % level) + level / 2));
+		penetration = (r_factor >= 4 && r_factor < 8) ? 2 * level
+		                                              : (int)(1.5 * level);
 		item = Equipment("Wooden Bow", EquipmentType::bow, EquipmentMaterial::wood, level, agility, 0, 0, 0, perception,
 		                 0);
 		item.AddAttack(BOW_ATTACK_ARROW_SHOT);
@@ -219,8 +219,8 @@ Equipment GenerateBow(int level, EquipmentMaterial material)
 
 	case EquipmentMaterial::metal:
 		agility = (r_factor < 4) ? ((std::rand() % level) + level / 2) : 0;
-		perception = (r_factor >= 4 && r_factor < 8) ? (int)(2.5 * ((std::rand() % level) + level / 2))
-		                                             : 2 * ((std::rand() % level) + level / 2);
+		perception = (r_factor >= 4 && r_factor < 8) ? (int)(2.5 * level)
+		                                             : 2 * level;
 		penetration = (std::rand() % level) + level / 2;
 		item = Equipment("Metal Bow", EquipmentType::bow, EquipmentMaterial::metal, level, agility, 0, 0, 0, perception,
 		                 0);
@@ -233,8 +233,8 @@ Equipment GenerateBow(int level, EquipmentMaterial material)
 		break;
 	case EquipmentMaterial::gold:
 		agility = (r_factor < 4) ? 2 * ((std::rand() % level) + level / 2) : (std::rand() % level) + level / 2;
-		perception = (r_factor >= 4 && r_factor < 8) ? 3 * ((std::rand() % level) + level / 2)
-		                                             : (int)(2.5 * ((std::rand() % level) + level / 2));
+		perception = (r_factor >= 4 && r_factor < 8) ? 3 * level
+		                                             : (int)(2.5 * level);
 		penetration = (r_factor >= 8) ? 2 * ((std::rand() % level) + level / 2) : (std::rand() % level) + level / 2;
 		item = Equipment("Golden Bow", EquipmentType::bow, EquipmentMaterial::gold, level, agility, 0, 0, 0, perception,
 		                 0);
