@@ -143,16 +143,14 @@ void RpgCombatState::GenerateCombat(std::vector<Combatant*> player_combatants, C
         this->labels_combatants.push_back(l_combatant);
     }
     combat_state_changed = true;
-    Resume();
+    RpgSoundManager::resumeMusic("COMBAT1");
 }
 
 auto &player_c(manager.getGroup(RpgCombatState::groupCombatPlayerCombatants));
 auto &enemy_c(manager.getGroup(RpgCombatState::groupCombatEnemyCombatants));
 auto &projectiles_c(manager.getGroup(RpgCombatState::groupCombatProjectiles));
 
-void RpgCombatState::Pause() {
-	RpgSoundManager::pauseMusic();
-}
+void RpgCombatState::Pause() {}
 
 void RpgCombatState::Resume() {
 	RpgSoundManager::resumeMusic("COMBAT1");

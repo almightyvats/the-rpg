@@ -89,7 +89,6 @@ void RpgPlayState::Pause()
 {
 	player.getComponent<TransformComponent>().velocity = Vector2D(0, 0);
 	player.getComponent<SpriteComponent>().play("idle_down");
-	// RpgSoundManager::pauseMusic();
 }
 
 void RpgPlayState::Resume()
