@@ -42,26 +42,26 @@ RpgMenuState::RpgMenuState()
 	m_Labels.push_back(loadGameLabel);
 	m_Labels.push_back(exitLabel);
 
-	m_buttonFucntions.insert({continueGameLabel, [](RpgGame *rpgGame) {
+	m_buttonFunctions.insert({continueGameLabel, [](RpgGame *rpgGame) {
 		                          if (playsession_reloadable) {
 			                          rpgGame->changeState(RpgPlayState::Instance());
 		                          }
 	                          }});
-	m_buttonFucntions.insert({newGameLabel, [](RpgGame *rpgGame) {
+	m_buttonFunctions.insert({newGameLabel, [](RpgGame *rpgGame) {
 		                          saveGame = SaveGame();
 		                          saveGame.NewGame();
 		                          rpgGame->changeState(RpgPlayState::Instance(true));
 	                          }});
-	m_buttonFucntions.insert(
+	m_buttonFunctions.insert(
 	    {loadGameLabel, [](RpgGame *rpgGame) { rpgGame->pushState(RpgLoadGameState::Instance()); }});
-	m_buttonFucntions.insert({exitLabel, [](RpgGame *rpgGame) { rpgGame->quitGame(); }});
+	m_buttonFunctions.insert({exitLabel, [](RpgGame *rpgGame) { rpgGame->quitGame(); }});
 
 	RpgSoundManager::setMusicVolume(15);
 	int oldVolume = RpgSoundManager::getMusicVolume();
 	auto volumeMinusLabel = std::make_shared<RpgLabel>(50, 10, "-", "Ancient", m_colors[0]);
 	auto volumePlusLabel = std::make_shared<RpgLabel>(200, 10, "+", "Ancient", m_colors[0]);
 
-	m_buttonFucntions.insert({volumeMinusLabel, [](RpgGame *rpgGame) {
+	m_buttonFunctions.insert({volumeMinusLabel, [](RpgGame *rpgGame) {
 		                          if (!RpgSoundManager::isMusicMuted()) {
 			                          int oldVolume = RpgSoundManager::getMusicVolume();
 			                          int newVolume = (oldVolume - 15 <= 0) ? 0 : oldVolume - 15;
@@ -69,7 +69,7 @@ RpgMenuState::RpgMenuState()
 		                          }
 	                          }});
 
-	m_buttonFucntions.insert({volumePlusLabel, [](RpgGame *rpgGame) {
+	m_buttonFunctions.insert({volumePlusLabel, [](RpgGame *rpgGame) {
 		                          if (!RpgSoundManager::isMusicMuted()) {
 			                          int oldVolume = RpgSoundManager::getMusicVolume();
 			                          int newVolume =
@@ -88,7 +88,7 @@ RpgMenuState::~RpgMenuState() {}
 
 void RpgMenuState::labelPressed(LabelItem item, RpgGame *rpgGame)
 {
-	for (auto button : m_buttonFucntions) {
+	for (auto button : m_buttonFunctions) {
 		if (button.first == item) {
 			button.second(rpgGame);
 		}

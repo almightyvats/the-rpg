@@ -9,7 +9,7 @@ class RpgMenuItem {
 	float m_xPosition, m_yPosition;
 	float m_height, m_width;
 
-	std::function<void(void)> m_callbackFucntion;
+	std::function<void(void)> m_callbackFunction;
 
 	SDL_Texture *m_menuItemTexture;
 	SDL_Rect m_srcRect;

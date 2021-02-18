@@ -33,7 +33,7 @@ RpgLoadGameState::RpgLoadGameState()
 			    std::make_shared<RpgLabel>(40, m_dialogueBox2.y + y_shift, game_name.c_str(), "Sensation", white);
 			m_labels.push_back(label);
 
-			m_buttonFucntions.insert({label, [=](RpgGame *rpgGame) {
+			m_buttonFunctions.insert({label, [=](RpgGame *rpgGame) {
 				                          saveGame.loadGame(p.path().string());
 				                          rpgGame->changeState(RpgPlayState::Instance(true));
 			                          }});
@@ -47,7 +47,7 @@ RpgLoadGameState::RpgLoadGameState()
 
 void RpgLoadGameState::labelPressed(LabelItem item, RpgGame *rpgGame)
 {
-	for (auto button : m_buttonFucntions) {
+	for (auto button : m_buttonFunctions) {
 		if (button.first == item) {
 			button.second(rpgGame);
 		}
