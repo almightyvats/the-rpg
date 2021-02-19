@@ -37,8 +37,12 @@ Other important concepts:
 
 ## Inventory
 
-Manage your equipment by drag-and-dropping the desired items onto one of your combatants itemslots. Each combatant can carry up to 4 items, which influence your abilities and stats during combat.
-By dragging an item to the red framed pocket, the item will be permanently deleted.
+Manage your equipment by drag-and-dropping the desired items onto one of your combatants itemslots. Each combatant can carry up to 4 items, which influence your abilities and stats during combat. By dragging an item to the red framed pocket, the item will be permanently deleted.
+
+Order of itemslots (from top to bottom):
+- Knight
+- Archer
+- Brute
 
 ## Combatants
 

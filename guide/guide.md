@@ -2,9 +2,12 @@
 
 This is the guide for The Ultimate RPG. Only use this guide if you want information on specific attack capabilities and enemy profiles.
 
-## Map Tips
+## General Tips
 
-- certain plants in the river may be walkable.
+- don't forget to pick up the weapons in the cave
+- items with higher levels tend to have better stats, so remember to check your inventory
+- certain plants in the river may be walkable
+- don't forget to save
 
 ## Attacks and Abilities (Player)
  
