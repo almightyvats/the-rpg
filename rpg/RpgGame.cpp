@@ -37,6 +37,7 @@ void RpgGame::init(std::string title, bool fullScreen)
 		RpgSoundManager::addSoundEffect("../rpg/assets/music/effects/potion.wav", "POTION");
 		RpgSoundManager::addSoundEffect("../rpg/assets/music/effects/shield.wav", "SHIELD");
 		RpgSoundManager::addSoundEffect("../rpg/assets/music/effects/ignite.wav", "IGNITE");
+		RpgSoundManager::addSoundEffect("../rpg/assets/music/effects/fox_mating_call.wav", "FOX");
 
 		if (TTF_Init() < 0) {
 			std::cout << "Error in loading TTF: " << TTF_GetError() << std::endl;

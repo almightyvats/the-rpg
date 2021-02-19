@@ -365,7 +365,9 @@ void RpgCombatState::Update(RpgGame *rpgGame)
 				RpgSoundManager::playEffect("IGNITE");
 			} else if (combat.active_turn_chosen_ability()->heal > 0) {
 				RpgSoundManager::playEffect("POTION");
-			}
+			} else {
+				RpgSoundManager::playEffect("FOX");
+            }
 		} else {
 			std::cout << "no action chosen for some reason\n";
 		}
