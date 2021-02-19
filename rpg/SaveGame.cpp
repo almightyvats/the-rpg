@@ -46,13 +46,6 @@ void SaveGame::NewGame()
     DeleteItems(RpgPlayState::groupEquipmentCombatant2);
     DeleteItems(RpgPlayState::groupEquipmentCombatant3);
 
-	GenerateLoot(2, 4);
-	GenerateBaseLoot(2, 4);
-	GenerateBaseLoot(2, 4);
-	GenerateBaseLoot(2, 4);
-	GenerateBaseLoot(2, 4);
-	GenerateBaseLoot(2, 4);
-
     player_map = "../rpg/assets/map/outdoor_01.json";
     player_pos = Vector2D(55 * 32 * 3, 4 * 32 * 3);
 }

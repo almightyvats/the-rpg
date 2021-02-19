@@ -8,6 +8,7 @@
 #include "rpg/Vector2D.hpp"
 #include "rpg/ecs/Components.hpp"
 #include "rpg/states/RpgStates.hpp"
+#include "rpg/combat/LootGenerator.hpp"
 
 #include <ctime>
 
@@ -237,11 +238,13 @@ void RpgPlayState::Update(RpgGame *rpgGame)
 				if (n->hasComponent<NameComponent>()) {
 					if (n->getComponent<NameComponent>().name == "unnamed old man") {
 						if (saveGame.FetchInventory().size() == 0) {
-							Equipment sword = Equipment("Wooden Sword", EquipmentType::sword, EquipmentMaterial::wood,
-							                            5, 0, 0, 0, 0, 0, 0);
-							RpgGame::assets->CreateInventoryItem(sword, RpgPlayState::groupItems);
-							RpgGame::assets->CreateInventoryItem(sword, RpgPlayState::groupItems);
-							RpgGame::assets->CreateInventoryItem(sword, RpgPlayState::groupItems);
+
+							GenerateLoot(2, 4);
+							GenerateBaseLoot(2, 4);
+							GenerateBaseLoot(2, 4);
+							GenerateBaseLoot(2, 4);
+							GenerateBaseLoot(2, 4);
+							GenerateBaseLoot(2, 4);
 						}
 					}
 				}
